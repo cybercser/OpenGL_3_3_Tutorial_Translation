@@ -1,0 +1,17 @@
+﻿Tutorial 5 : A Textured Cube
+第五课：纹理方块
+关于UV坐标
+自行加载.BMP图片
+在OpenGL中使用纹理
+什么是滤波和mipmap？怎样使用？
+	线性滤波（Linear filtering）
+	各向异性滤波（Anisotropic filtering）
+	Mipmap
+怎样用GLFW中加载纹理？
+压缩纹理
+	创建压缩纹理
+	使用压缩纹理
+	Inversing the UVs
+总结
+练习
+参考文献
