@@ -1,0 +1,9 @@
+﻿Tutorial 7 : Model loading
+模型加载
+加载OBJ模型
+OBJ文件示例
+读取OBJ文件
+处理数据
+使用加载的数据
+结果
+其他模型格式及加载器
