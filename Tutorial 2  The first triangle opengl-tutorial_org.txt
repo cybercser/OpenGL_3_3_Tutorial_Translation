@@ -1,0 +1,215 @@
+第二课：画第一个三角形
+
+<!-- Include required JS files -->
+<script type="text/javascript" src="js/shCore.js"></script><!--     At least one brush, here we choose JS. You need to include a brush for every     language you want to highlight --><script type="text/javascript" src="css/shBrushCpp.js"></script>
+
+这将又是一篇长教程。
+
+OpenGL 3 使一些复杂的东西实现起来容易，但是所付出的代价是画一个简单的三角形变得十分困难。
+
+不要忘了定期地剪切和粘贴代码。
+<blockquote><span style="color: #ff0000;">如果程序在启动的时候崩溃了，很可能是你从错误的目录下运行了。请仔细地阅读第一课中讲到的如何配置Visual Studio！</span></blockquote>
+<h1>顶点数组对象</h1>
+我现在将不去深入细节，但是你需要创建一个顶点数组对象，并将它设置为当前对象：
+<pre class="brush: cpp">GLuint VertexArrayID;
+glGenVertexArrays(1, &amp;VertexArrayID);
+glBindVertexArray(VertexArrayID);</pre>
+一旦你的窗口创建成功就做这一步工作（相当于在OpenGL上下文创建后），并且是在任何其他OpenGL调用前完成。
+
+如果你真的想知道更多关于顶点数组对象，还有其他的一些教程可以参考，但是这不是很重要。
+<h1>屏幕坐标系</h1>
+一个三角形由三个点构成。当我们在三维计算机图形中谈论“点”时，我们经常使用“顶点”。一个顶点有三个坐标：X，Y和Z。你可以用下列方式来考虑这三个坐标：
+<ul>
+	<li>X 在你的右方</li>
+	<li>Y 在你的上方</li>
+	<li>Z 朝着你的背的方向（是的，在背后，而不是在你前面）</li>
+</ul>
+但是这里有一个更好的方法来形象化表示：使用右手法则
+<ul>
+	<li>X 是你的拇指</li>
+	<li>Y 是你的食指</li>
+	<li>Z 是你的中指。如果你把你的拇指指向右边，食指指向天空，那么中指将指向你的背后。</li>
+</ul>
+让Z指向这个方向很奇怪，为什么是这样呢？简单地回答：因为100年的右手定则数学将给你很多有用的工具。唯一的缺点是一个非直觉的Z方向。
+
+补充说明，注意到你可以自由地移动你的手：你的X，Y和Z也将跟着移动。这个后面会提到更多。
+
+因此我们需要三个三维点来组成一个三角形；现在开始：
+<pre class="brush: cpp">// An array of 3 vectors which represents 3 vertices
+static const GLfloat g_vertex_buffer_data[] = {
+   -1.0f, -1.0f, 0.0f,
+   1.0f, -1.0f, 0.0f,
+   0.0f,? 1.0f, 0.0f,
+};</pre>
+第一个顶点是（-1，-1,0）。这个意思是<em>除非我们以某种方式变换它</em>，否则它将显示在屏幕的（-1,-1）位置。这是什么意思？屏幕的原点在中间，X在右方，Y在上方。这就是在大屏幕上给出的坐标系：
+
+<a href="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/screenCoordinates.png"><img class="alignnone size-medium wp-image-16" title="screenCoordinates" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/screenCoordinates-300x165.png" alt="" width="300" height="165" /></a>
+
+这是一些你不能改变的东西，它建立在你的显卡上。因此（-1，-1）是屏幕的左下角，（1，-1）是右下角，（0,1）在中上位置。因此这个三角形应该占了大部分屏幕。
+<h1>画我们的三角形</h1>
+下一步就是把这个三角形给OpenGL。我们通过创建一个缓冲区来完成：
+<pre class="brush: cpp">?
+// This will identify our vertex buffer
+GLuint vertexbuffer;
+
+// Generate 1 buffer, put the resulting identifier in vertexbuffer
+glGenBuffers(1, &amp;vertexbuffer);
+
+// The following commands will talk about our 'vertexbuffer' buffer
+glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+
+// Give our vertices to OpenGL.
+glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);</pre>
+这只需要做一次。
+
+现在，在我们的主循环中，那个曾经画“nothing”的地方，就能画我们宏伟的三角形了：
+<pre class="brush: cpp">// 1rst attribute buffer : vertices
+glEnableVertexAttribArray(0);
+glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+glVertexAttribPointer(
+   0,????????????????? // attribute 0. No particular reason for 0, but must match the layout in the shader.
+   3,????????????????? // size
+   GL_FLOAT,?????????? // type
+   GL_FALSE,?????????? // normalized?
+   0,????????????????? // stride
+   (void*)0??????????? // array buffer offset
+);
+
+// Draw the triangle !
+glDrawArrays(GL_TRIANGLES, 0, 3); // Starting from vertex 0; 3 vertices total -&gt; 1 triangle
+
+glDisableVertexAttribArray(0);</pre>
+这里是结果：
+
+<a href="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/triangle_no_shader.png"><img class="alignnone size-medium wp-image-17" title="triangle_no_shader" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/triangle_no_shader-300x232.png" alt="" width="300" height="232" /></a>
+
+现在这是一些无聊的白色。让我们来看看怎么将它涂成红色。这就需要使用到一个叫着色器的东西。
+<h1>着色器</h1>
+<h2>着色器的编译</h2>
+在最简单的配置下，你将需要两个着色器：一个叫顶点着色器，它将作用于每个顶点上；另一个叫片元着色器，它将作用于每一个样本。而且既然我们使用的4倍反走样，那么在每个像素中就有四个取样。
+
+着色器被程序化为一种语言，叫GLSL：GL着色语言，是属于OpenGL的一部分。与C或者Java不同，GLSL必须在运行时编译，这就意味着每一次你启动应用程序，所有的着色器将重新编译。
+
+这两个着色器通常放在单独的文件中。这个例子里，我们有SimpleFragmentShader.fragmentshader和SimpleVertexShader.vertexshader两个着色器。他们的扩展名是无关紧要的，可以是.txt或者.glsl。
+
+这里是代码。完全理解这个不是非常重要，因为你经常在一个程序中只做一次这个，因此一些注释就够了。不过既然这个函数将在所有其他的教程中用到，那就把它放在一个单独的文件中：common/loadShader.cpp。需要注意，如同缓冲区，着色器不能直接访问：我们仅仅有一个ID。实际上实现是隐藏在驱动程序中。
+<pre class="brush: cpp">GLuint LoadShaders(const char * vertex_file_path,const char * fragment_file_path){
+
+    // Create the shaders
+    GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
+    GLuint FragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
+
+    // Read the Vertex Shader code from the file
+    std::string VertexShaderCode;
+    std::ifstream VertexShaderStream(vertex_file_path, std::ios::in);
+    if(VertexShaderStream.is_open())
+    {
+        std::string Line = "";
+        while(getline(VertexShaderStream, Line))
+            VertexShaderCode += "n" + Line;
+        VertexShaderStream.close();
+    }
+
+    // Read the Fragment Shader code from the file
+    std::string FragmentShaderCode;
+    std::ifstream FragmentShaderStream(fragment_file_path, std::ios::in);
+    if(FragmentShaderStream.is_open()){
+        std::string Line = "";
+        while(getline(FragmentShaderStream, Line))
+            FragmentShaderCode += "n" + Line;
+        FragmentShaderStream.close();
+    }
+
+    GLint Result = GL_FALSE;
+    int InfoLogLength;
+
+    // Compile Vertex Shader
+    printf("Compiling shader : %sn", vertex_file_path);
+    char const * VertexSourcePointer = VertexShaderCode.c_str();
+    glShaderSource(VertexShaderID, 1, &amp;VertexSourcePointer , NULL);
+    glCompileShader(VertexShaderID);
+
+    // Check Vertex Shader
+    glGetShaderiv(VertexShaderID, GL_COMPILE_STATUS, &amp;Result);
+    glGetShaderiv(VertexShaderID, GL_INFO_LOG_LENGTH, &amp;InfoLogLength);
+    std::vector VertexShaderErrorMessage(InfoLogLength);
+    glGetShaderInfoLog(VertexShaderID, InfoLogLength, NULL, &amp;VertexShaderErrorMessage[0]);
+    fprintf(stdout, "%sn", &amp;VertexShaderErrorMessage[0]);
+
+    // Compile Fragment Shader
+    printf("Compiling shader : %sn", fragment_file_path);
+    char const * FragmentSourcePointer = FragmentShaderCode.c_str();
+    glShaderSource(FragmentShaderID, 1, &amp;FragmentSourcePointer , NULL);
+    glCompileShader(FragmentShaderID);
+
+    // Check Fragment Shader
+    glGetShaderiv(FragmentShaderID, GL_COMPILE_STATUS, &amp;Result);
+    glGetShaderiv(FragmentShaderID, GL_INFO_LOG_LENGTH, &amp;InfoLogLength);
+    std::vector FragmentShaderErrorMessage(InfoLogLength);
+    glGetShaderInfoLog(FragmentShaderID, InfoLogLength, NULL, &amp;FragmentShaderErrorMessage[0]);
+    fprintf(stdout, "%sn", &amp;FragmentShaderErrorMessage[0]);
+
+    // Link the program
+    fprintf(stdout, "Linking programn");
+    GLuint ProgramID = glCreateProgram();
+    glAttachShader(ProgramID, VertexShaderID);
+    glAttachShader(ProgramID, FragmentShaderID);
+    glLinkProgram(ProgramID);
+
+    // Check the program
+    glGetProgramiv(ProgramID, GL_LINK_STATUS, &amp;Result);
+    glGetProgramiv(ProgramID, GL_INFO_LOG_LENGTH, &amp;InfoLogLength);
+    std::vector ProgramErrorMessage( max(InfoLogLength, int(1)) );
+    glGetProgramInfoLog(ProgramID, InfoLogLength, NULL, &amp;ProgramErrorMessage[0]);
+    fprintf(stdout, "%sn", &amp;ProgramErrorMessage[0]);
+
+    glDeleteShader(VertexShaderID);
+    glDeleteShader(FragmentShaderID);
+
+    return ProgramID;
+}</pre>
+<h2>我们的顶点着色器</h2>
+让我们先来写顶点着色器。
+第一行告诉编译器我们将用OpenGL 3 的语法。
+<pre class="brush: vs">#version 330 core</pre>
+第二行声明输入数据：
+<pre class="brush: vs">layout(location = 0) in vec3 Position;</pre>
+让我们具体地来解释这一行：
+<ul>
+	<li>“vec3”在GLSL中表示一个有三个分量的向量。类似于（但不相同）以前我们用来声明三角形的glm::vec3。最重要的是如果我们在C++中使用三个分量，那么在GLSL中也使用三个分量。</li>
+	<li>"layout(location = 0)"指的是我们用来赋给<em>位置</em>属性的缓冲区。每个顶点能有多种属性：位置，一种或几种颜色，一个或多个纹理坐标，等等很多其他东西。OpenGL并不知道什么是颜色：它只是看到一个vec3.因此我们必须告诉它哪个缓冲对应哪个输入。我们可以通过将glvertexAttribPointer函数第一个参数值赋给 layout来完成。参数值“0”并不重要，它可以是12（但是不大于?glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &amp;v) ），而重要的是两边参数值保持一致。 </li>
+	<li>“位置”可能是别的什么。它将包含每个顶点着色器运行所需的顶点位置值。</li>
+	<li>“in”的意思是这是一些输入数据。不久我们将会看到“out”关键词。</li>
+</ul>
+
+
+和C语言里一样，调用每个顶点的函数是main函数：
+<pre class="brush: vs">void main(){</pre>
+我们的main函数仅仅是将缓冲区里的值赋给顶点的位置值，而无论缓冲区里值是多少。因此如果我们给出位置值（1,1），那么三角形将有一个顶点在屏幕的右上角。在下一课的教程中我们将看到怎样对输入的位置做一些更有趣的计算。
+<pre class="brush: vs">    gl_Position.xyz = Position;
+}</pre>
+gl_Position是为数不多的内置变量：你<em>必须 </em>赋值给它。任何其他操作都是可选的，我们将在第四课中看到“任何其他”是什么意思。
+<h2>我们的片元着色器</h2>
+作为我们的第一个片元着色器，我们将做一些简单的事情：设置每个片元的颜色为红色。（记住，每一个像素有4个片元，因为我们使用的4倍反走样）
+<pre class="brush: fs">out vec3 color;
+
+void main(){
+    color = vec3(1,0,0);
+}</pre>
+所以呀，vec3(1,0,0)意思是红色。这是因为在计算机屏幕上，颜色由红，绿，黄三元组按这个顺序来表示。因此（1,0,0）意思是全红，没有绿色，也没有蓝色。
+<h1>把它们放在一起</h1>
+在main循环前，调用我们的LoadShaders函数：
+<pre class="brush: cpp">// Create and compile our GLSL program from the shaders
+GLuint programID = LoadShaders( "SimpleVertexShader.vertexshader", "SimpleFragmentShader.fragmentshader" );</pre>
+现在在main循环中，首先清屏：
+<pre class="brush: cpp">glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);</pre>
+然后告诉OpenGL你想用你的哪个着色器：
+<pre class="brush: cpp">// Use our shader
+glUseProgram(programID);
+
+// Draw triangle...</pre>
+...接着转眼间，这就是你的红色三角形！
+
+<a href="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/red_triangle.png"><img class="alignnone size-medium wp-image-15" title="red_triangle" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/red_triangle-300x231.png" alt="" width="300" height="231" /></a>
+
+下一课中我们将学习变换：如何设置你的相机位置，移动物体等等。
