@@ -9,16 +9,16 @@ OpenGL 3 Ê¹Ò»Ð©¸´ÔÓµÄ¶«Î÷ÊµÏÖÆðÀ´ÈÝÒ×£¬µ«ÊÇËù¸¶³öµÄ´ú¼ÛÊÇ»­Ò»¸ö¼òµ¥µÄÈý½ÇÐÎ±äµÃÊ
 
 ²»ÒªÍüÁË¶¨ÆÚµØ¼ôÇÐºÍÕ³Ìù´úÂë¡£
 <blockquote><span style="color: #ff0000;">Èç¹û³ÌÐòÔÚÆô¶¯µÄÊ±ºò±ÀÀ£ÁË£¬ºÜ¿ÉÄÜÊÇÄã´Ó´íÎóµÄÄ¿Â¼ÏÂÔËÐÐÁË¡£Çë×ÐÏ¸µØÔÄ¶ÁµÚÒ»¿ÎÖÐ½²µ½µÄÈçºÎÅäÖÃVisual Studio£¡</span></blockquote>
-<h1>¶¥µãÊý×é¶ÔÏó</h1>
+<h1>¶¥µãÊý×é¶ÔÏó(VAO)</h1>
 ÎÒÏÖÔÚ½«²»È¥ÉîÈëÏ¸½Ú£¬µ«ÊÇÄãÐèÒª´´½¨Ò»¸ö¶¥µãÊý×é¶ÔÏó£¬²¢½«ËüÉèÖÃÎªµ±Ç°¶ÔÏó£º
 <pre class="brush: cpp">GLuint VertexArrayID;
 glGenVertexArrays(1, &amp;VertexArrayID);
 glBindVertexArray(VertexArrayID);</pre>
 Ò»µ©ÄãµÄ´°¿Ú´´½¨³É¹¦¾Í×öÕâÒ»²½¹¤×÷£¨Ïàµ±ÓÚÔÚOpenGLÉÏÏÂÎÄ´´½¨ºó£©£¬²¢ÇÒÊÇÔÚÈÎºÎÆäËûOpenGLµ÷ÓÃÇ°Íê³É¡£
 
-Èç¹ûÄãÕæµÄÏëÖªµÀ¸ü¶à¹ØÓÚ¶¥µãÊý×é¶ÔÏó£¬»¹ÓÐÆäËûµÄÒ»Ð©½Ì³Ì¿ÉÒÔ²Î¿¼£¬µ«ÊÇÕâ²»ÊÇºÜÖØÒª¡£
+Èç¹ûÄãÈ·ÊµÏë½øÒ»²½ÁË½âVAO£¬¿ÉÒÔ²Î¿¼ÆäËû½Ì³Ì,µ«ÊÇÕâ²»ÊÇºÜÖØÒª¡£
 <h1>ÆÁÄ»×ø±êÏµ</h1>
-Ò»¸öÈý½ÇÐÎÓÉÈý¸öµã¹¹³É¡£µ±ÎÒÃÇÔÚÈýÎ¬¼ÆËã»úÍ¼ÐÎÖÐÌ¸ÂÛ¡°µã¡±Ê±£¬ÎÒÃÇ¾­³£Ê¹ÓÃ¡°¶¥µã¡±¡£Ò»¸ö¶¥µãÓÐÈý¸ö×ø±ê£ºX£¬YºÍZ¡£Äã¿ÉÒÔÓÃÏÂÁÐ·½Ê½À´¿¼ÂÇÕâÈý¸ö×ø±ê£º
+Ò»¸öÈý½ÇÐÎÓÉÈý¸öµã¹¹³É¡£µ±ÎÒÃÇÔÚÈýÎ¬¼ÆËã»úÍ¼ÐÎÖÐÌ¸ÂÛ¡°µã¡±Ê±£¬ÎÒÃÇ¾­³£Ê¹ÓÃ¡°¶¥µã¡±¡£Ò»¸ö¶¥µãÓÐÈý¸ö×ø±ê£ºX£¬YºÍZ¡£Äã¿ÉÒÔÓÃÏÂÁÐ·½Ê½À´ÏëÏóÕâÈý¸ö×ø±ê£º
 <ul>
 	<li>X ÔÚÄãµÄÓÒ·½</li>
 	<li>Y ÔÚÄãµÄÉÏ·½</li>
@@ -30,7 +30,7 @@ glBindVertexArray(VertexArrayID);</pre>
 	<li>Y ÊÇÄãµÄÊ³Ö¸</li>
 	<li>Z ÊÇÄãµÄÖÐÖ¸¡£Èç¹ûÄã°ÑÄãµÄÄ´Ö¸Ö¸ÏòÓÒ±ß£¬Ê³Ö¸Ö¸ÏòÌì¿Õ£¬ÄÇÃ´ÖÐÖ¸½«Ö¸ÏòÄãµÄ±³ºó¡£</li>
 </ul>
-ÈÃZÖ¸ÏòÕâ¸ö·½ÏòºÜÆæ¹Ö£¬ÎªÊ²Ã´ÊÇÕâÑùÄØ£¿¼òµ¥µØ»Ø´ð£ºÒòÎª100ÄêµÄÓÒÊÖ¶¨ÔòÊýÑ§½«¸øÄãºÜ¶àÓÐÓÃµÄ¹¤¾ß¡£Î¨Ò»µÄÈ±µãÊÇÒ»¸ö·ÇÖ±¾õµÄZ·½Ïò¡£
+ÈÃZÖ¸ÏòÕâ¸ö·½ÏòºÜÆæ¹Ö£¬ÎªÊ²Ã´ÊÇÕâÑùÄØ£¿¼òµ¥µØ»Ø´ð£ºÒòÎªÓÒÊÖ¶¨ÔòÓÃÁË100¶àÄê£¬ÓÐ²»ÉÙÓÐÓÃµÄ¾­ÑéÖµµÃ½è¼ø¡£Î¨Ò»µÄÈ±µãÊÇZ·½Ïò²»Ö±¹Û¡£
 
 ²¹³äËµÃ÷£¬×¢Òâµ½Äã¿ÉÒÔ×ÔÓÉµØÒÆ¶¯ÄãµÄÊÖ£ºÄãµÄX£¬YºÍZÒ²½«¸ú×ÅÒÆ¶¯¡£Õâ¸öºóÃæ»áÌáµ½¸ü¶à¡£
 
@@ -41,11 +41,11 @@ static const GLfloat g_vertex_buffer_data[] = {
    1.0f, -1.0f, 0.0f,
    0.0f,? 1.0f, 0.0f,
 };</pre>
-µÚÒ»¸ö¶¥µãÊÇ£¨-1£¬-1,0£©¡£Õâ¸öÒâË¼ÊÇ<em>³ý·ÇÎÒÃÇÒÔÄ³ÖÖ·½Ê½±ä»»Ëü</em>£¬·ñÔòËü½«ÏÔÊ¾ÔÚÆÁÄ»µÄ£¨-1,-1£©Î»ÖÃ¡£ÕâÊÇÊ²Ã´ÒâË¼£¿ÆÁÄ»µÄÔ­µãÔÚÖÐ¼ä£¬XÔÚÓÒ·½£¬YÔÚÉÏ·½¡£Õâ¾ÍÊÇÔÚ´óÆÁÄ»ÉÏ¸ø³öµÄ×ø±êÏµ£º
+µÚÒ»¸ö¶¥µãÊÇ£¨-1£¬-1,0£©¡£ÕâÒâÎ¶×Å<em>³ý·ÇÎÒÃÇÒÔÄ³ÖÖ·½Ê½±ä»»Ëü</em>£¬·ñÔòËü½«ÏÔÊ¾ÔÚÆÁÄ»µÄ£¨-1,-1£©Î»ÖÃ¡£ÕâÊÇÊ²Ã´ÒâË¼£¿ÆÁÄ»µÄÔ­µãÔÚÖÐ¼ä£¬XÔÚÓÒ·½£¬YÔÚÉÏ·½¡£Õâ¾ÍÊÇÔÚ´óÆÁÄ»ÉÏ¸ø³öµÄ×ø±êÏµ£º
 
 <a href="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/screenCoordinates.png"><img class="alignnone size-medium wp-image-16" title="screenCoordinates" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/screenCoordinates-300x165.png" alt="" width="300" height="165" /></a>
 
-ÕâÊÇÒ»Ð©Äã²»ÄÜ¸Ä±äµÄ¶«Î÷£¬Ëü½¨Á¢ÔÚÄãµÄÏÔ¿¨ÉÏ¡£Òò´Ë£¨-1£¬-1£©ÊÇÆÁÄ»µÄ×óÏÂ½Ç£¬£¨1£¬-1£©ÊÇÓÒÏÂ½Ç£¬£¨0,1£©ÔÚÖÐÉÏÎ»ÖÃ¡£Òò´ËÕâ¸öÈý½ÇÐÎÓ¦¸ÃÕ¼ÁË´ó²¿·ÖÆÁÄ»¡£
+ÕâÐ©»úÖÆÄÚÖÃÓÚÏÔ¿¨£¬ÎÞ·¨¸Ä±ä¡£Òò´Ë£¨-1£¬-1£©ÊÇÆÁÄ»µÄ×óÏÂ½Ç£¬£¨1£¬-1£©ÊÇÓÒÏÂ½Ç£¬£¨0,1£©ÔÚÖÐÉÏÎ»ÖÃ¡£Òò´ËÕâ¸öÈý½ÇÐÎÓ¦¸ÃÕ¼ÁË´ó²¿·ÖÆÁÄ»¡£
 <h1>»­ÎÒÃÇµÄÈý½ÇÐÎ</h1>
 ÏÂÒ»²½¾ÍÊÇ°ÑÕâ¸öÈý½ÇÐÎ¸øOpenGL¡£ÎÒÃÇÍ¨¹ý´´½¨Ò»¸ö»º³åÇøÀ´Íê³É£º
 <pre class="brush: cpp">?
@@ -86,7 +86,7 @@ glDisableVertexAttribArray(0);</pre>
 ÏÖÔÚÕâÊÇÒ»Ð©ÎÞÁÄµÄ°×É«¡£ÈÃÎÒÃÇÀ´¿´¿´ÔõÃ´½«ËüÍ¿³ÉºìÉ«¡£Õâ¾ÍÐèÒªÊ¹ÓÃµ½Ò»¸ö½Ð×ÅÉ«Æ÷µÄ¶«Î÷¡£
 <h1>×ÅÉ«Æ÷</h1>
 <h2>×ÅÉ«Æ÷µÄ±àÒë</h2>
-ÔÚ×î¼òµ¥µÄÅäÖÃÏÂ£¬Äã½«ÐèÒªÁ½¸ö×ÅÉ«Æ÷£ºÒ»¸ö½Ð¶¥µã×ÅÉ«Æ÷£¬Ëü½«×÷ÓÃÓÚÃ¿¸ö¶¥µãÉÏ£»ÁíÒ»¸ö½ÐÆ¬Ôª×ÅÉ«Æ÷£¬Ëü½«×÷ÓÃÓÚÃ¿Ò»¸öÑù±¾¡£¶øÇÒ¼ÈÈ»ÎÒÃÇÊ¹ÓÃµÄ4±¶·´×ßÑù£¬ÄÇÃ´ÔÚÃ¿¸öÏñËØÖÐ¾ÍÓÐËÄ¸öÈ¡Ñù¡£
+ÔÚ×î¼òµ¥µÄÅäÖÃÏÂ£¬Äã½«ÐèÒªÁ½¸ö×ÅÉ«Æ÷£ºÒ»¸ö½Ð¶¥µã×ÅÉ«Æ÷£¬Ëü½«×÷ÓÃÓÚÃ¿¸ö¶¥µãÉÏ£»ÁíÒ»¸ö½ÐÆ¬Ôª×ÅÉ«Æ÷£¬Ëü½«×÷ÓÃÓÚÃ¿Ò»¸ö²ÉÑù¡£¶øÇÒ¼ÈÈ»ÎÒÃÇÊ¹ÓÃµÄ4±¶·´×ßÑù£¬ÄÇÃ´ÔÚÃ¿¸öÏñËØÖÐ¾ÍÓÐËÄ¸öÈ¡Ñù¡£
 
 ×ÅÉ«Æ÷±»³ÌÐò»¯ÎªÒ»ÖÖÓïÑÔ£¬½ÐGLSL£ºGL×ÅÉ«ÓïÑÔ£¬ÊÇÊôÓÚOpenGLµÄÒ»²¿·Ö¡£ÓëC»òÕßJava²»Í¬£¬GLSL±ØÐëÔÚÔËÐÐÊ±±àÒë£¬Õâ¾ÍÒâÎ¶×ÅÃ¿Ò»´ÎÄãÆô¶¯Ó¦ÓÃ³ÌÐò£¬ËùÓÐµÄ×ÅÉ«Æ÷½«ÖØÐÂ±àÒë¡£
 
