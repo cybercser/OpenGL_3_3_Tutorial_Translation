@@ -1,0 +1,6 @@
+﻿In Tutorial 2, section "Our vertex shader", I remplaced "Position" with "vertexPosition_modelspace" everywhere (at least 4 times).
+At the end of the vertex shader I also added gl_Position.w = 1.0;
+The source code is modified too but not released yet (many changes, needs tests)
+
+In Tutorial 1, I added a "Note for Code::Blocks" section.
+--update time 2012-11-12 09:50:00
