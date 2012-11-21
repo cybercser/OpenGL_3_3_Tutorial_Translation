@@ -49,7 +49,7 @@ static const GLfloat g_vertex_buffer_data[] = {
 该机制内置于显卡，无法改变。因此(-1, -1)是屏幕的左下角，(1, -1)是右下角，(0, 1)在中上位置。这个三角形应该占满了大部分屏幕。
 <h1>画我们的三角形</h1>
 下一步把这个三角形传给OpenGL。我们通过创建一个缓冲区完成：
-<pre class="brush: cpp">?
+<pre class="brush: cpp">
 // This will identify our vertex buffer
 GLuint vertexbuffer;
 
@@ -88,7 +88,7 @@ glDisableVertexAttribArray(0);</pre>
 <h2>编译着色器</h2>
 在最简单的配置下，你将需要两个着色器：一个叫顶点着色器，它将作用于每个顶点上；另一个叫片断（Fragment）着色器，它将作用于每一个采样点。我们使用4倍反走样，因此每像素有四个采样点。
 
-着色器编程使用GLSL(GL Shader Language取首字母)语言：即GL着色语言，它是OpenGL的一部分。与C或Java不同，GLSL必须在运行时编译，这意味着每次启动程序，所有的着色器将重新编译。
+着色器编程使用GLSL(GL Shader Language，GL着色语言)，它是OpenGL的一部分。与C或Java不同，GLSL必须在运行时编译，这意味着每次启动程序，所有的着色器将重新编译。
 
 这两个着色器通常放在单独的文件里。本例中，我们有SimpleFragmentShader.fragmentshader和SimpleVertexShader.vertexshader两个着色器。他们的扩展名是无关紧要的，可以是.txt或者.glsl。
 
