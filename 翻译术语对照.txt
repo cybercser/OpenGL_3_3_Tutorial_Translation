@@ -11,3 +11,4 @@ quaternions, 四元组, 四元数
 Z-Buffer Algorithm, 深度缓存算法, Z-缓冲（区/器）算法 Z缓存（区/器）算法
 fragment, 片断, 片元 片段
 buffer, 缓冲区 缓冲, 缓冲器 缓存
+backface, 隐藏面, 隐面
