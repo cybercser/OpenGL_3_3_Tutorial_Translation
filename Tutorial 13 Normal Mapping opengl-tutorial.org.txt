@@ -1,4 +1,4 @@
-Welcome for our 13th tutorial ! Today we will talk about normal mapping.
+ÔªøWelcome for our 13th tutorial ! Today we will talk about normal mapping.
 
 Since <a title="Tutorial 8 : Basic shading" href="http://www.opengl-tutorial.org/beginners-tutorials/tutorial-8-basic-shading/">Tutorial 8 : Basic shading</a> , you know how to get decent shading using triangle normals. One caveat is that until now, we only had one normal per vertex : inside each triangle, they vary smoothly, on the opposite to the colour, which samples a texture. The basic idea of normal mapping is to give normals similar variations.
 <h1>Normal textures</h1>
@@ -363,7 +363,7 @@ Appending the space of each vector in their names ("..._modelspace") helps fixin
 </ul>
 <h1>References</h1>
 <ul>
-	<li><a href="http://www.terathon.com/code/tangent.html">Lengyel, Eric. °∞Computing Tangent Space Basis Vectors for an Arbitrary Mesh°±. Terathon Software 3D Graphics Library, 2001.</a></li>
+	<li><a href="http://www.terathon.com/code/tangent.html">Lengyel, Eric. ‚ÄúComputing Tangent Space Basis Vectors for an Arbitrary Mesh‚Äù. Terathon Software 3D Graphics Library, 2001.</a></li>
 	<li><a href="http://www.amazon.com/dp/1568814240">Real Time Rendering, third edition</a></li>
 	<li><a href="http://www.amazon.com/dp/1584504250">ShaderX4</a></li>
 </ul>

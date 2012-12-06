@@ -1,73 +1,73 @@
-µÚÊ®¿Î£ºÍ¸Ã÷
+ï»¿ç¬¬åè¯¾ï¼šé€æ˜
 
-<h1>alphaÍ¨µÀThe alpha channel</h1>
-alphaÍ¨µÀµÄ¸ÅÄîºÜ¼òµ¥¡£Ö»ĞèÒª°Ñ½á¹ûÓÉRGB¸ÄÎªRGBA¡£The concept of the alpha channel is pretty simple. Instead of a writing an RGB result, you write an RGBA :
+<h1>alphaé€šé“The alpha channel</h1>
+alphaé€šé“çš„æ¦‚å¿µå¾ˆç®€å•ã€‚åªéœ€è¦æŠŠç»“æœç”±RGBæ”¹ä¸ºRGBAã€‚The concept of the alpha channel is pretty simple. Instead of a writing an RGB result, you write an RGBA :
 <pre class="brush:fs">// Ouput data : it's now a vec4
 out vec4 color;</pre>
-Ç°Èı¸ö·ÖÁ¿ÈÔÈ»¿ÉÒÔÍ¨¹ıswizzle²Ù×÷·û.xyzÀ´·ÃÎÊ£¬×îºóÒ»¸ö·ÖÁ¿Í¨¹ı.aÀ´·ÃÎÊ£ºthe first 3 components are still accessed with the .xyz swiggle operator, while the last one is accessed with .a :
+å‰ä¸‰ä¸ªåˆ†é‡ä»ç„¶å¯ä»¥é€šè¿‡swizzleæ“ä½œç¬¦.xyzæ¥è®¿é—®ï¼Œæœ€åä¸€ä¸ªåˆ†é‡é€šè¿‡.aæ¥è®¿é—®ï¼šthe first 3 components are still accessed with the .xyz swiggle operator, while the last one is accessed with .a :
 <pre class="brush:fs">color.a = 0.3;</pre>
-ÕâÒ²Ğí²»Ì«Ö±¹Û£ºalpha´ú±í²»Í¸Ã÷¶È£¬Òò´Ëalpha = 1´ú±íÍêÈ«²»Í¸Ã÷£¬alpha = 0´ú±íÍêÈ«Í¸Ã÷¡£Unintuitively, alpha = opaqueness, so alpha = 1 means fully opaque while alpha = 0 means fully transparent.
+è¿™ä¹Ÿè®¸ä¸å¤ªç›´è§‚ï¼šalphaä»£è¡¨ä¸é€æ˜åº¦ï¼Œå› æ­¤alpha = 1ä»£è¡¨å®Œå…¨ä¸é€æ˜ï¼Œalpha = 0ä»£è¡¨å®Œå…¨é€æ˜ã€‚Unintuitively, alpha = opaqueness, so alpha = 1 means fully opaque while alpha = 0 means fully transparent.
 
-ÕâÀïÎÒÃÇ¼òµ¥µØ½«alphaÓ²±àÂëÎª0.3£¬µ«¸ü³£¼ûµÄ×ö·¨ÊÇÓÃÒ»¸öuniform±äÁ¿±íÊ¾alphaÖµ£¬»òÕß´ÓRGBAÎÆÀíÖĞ¶ÁÈ¡£¨TGA¸ñÊ½Ö§³ÖalphaÍ¨µÀ£¬¶øGLFWÖ§³ÖTGA£©¡£Here, we simply hardcode the alpha channel at 0.3, but you probably want to use a uniform, or read it from a RGBA texture ( TGA supports the alpha channel, and GLFW supports TGA )
+è¿™é‡Œæˆ‘ä»¬ç®€å•åœ°å°†alphaç¡¬ç¼–ç ä¸º0.3ï¼Œä½†æ›´å¸¸è§çš„åšæ³•æ˜¯ç”¨ä¸€ä¸ªuniformå˜é‡è¡¨ç¤ºalphaå€¼ï¼Œæˆ–è€…ä»RGBAçº¹ç†ä¸­è¯»å–ï¼ˆTGAæ ¼å¼æ”¯æŒalphaé€šé“ï¼Œè€ŒGLFWæ”¯æŒTGAï¼‰ã€‚Here, we simply hardcode the alpha channel at 0.3, but you probably want to use a uniform, or read it from a RGBA texture ( TGA supports the alpha channel, and GLFW supports TGA )
 
-ÈçÏÂÊÇ½á¹û¡£¼ÈÈ»ÏëÒª¡°¿´Í¸¡±Ä£ĞÍ£¬ÇëÈ·±£¹Ø±ÕÒşÃæÏû³ı£¨glDisable(GL_CULL_FACE)¡£¿ÉÒÔ¿´µ½Ä£ĞÍÃ»ÓĞÁË¡°±³¡±Ãæ¡£Here's the result. Make sure to turn backface culling of (glDisable(GL_CULL_FACE) ) because since we can look through the mesh, we could see that it has no "back" face.
+å¦‚ä¸‹æ˜¯ç»“æœã€‚æ—¢ç„¶æƒ³è¦â€œçœ‹é€â€æ¨¡å‹ï¼Œè¯·ç¡®ä¿å…³é—­éšé¢æ¶ˆé™¤ï¼ˆglDisable(GL_CULL_FACE)ã€‚å¯ä»¥çœ‹åˆ°æ¨¡å‹æ²¡æœ‰äº†â€œèƒŒâ€é¢ã€‚Here's the result. Make sure to turn backface culling of (glDisable(GL_CULL_FACE) ) because since we can look through the mesh, we could see that it has no "back" face.
 
 <a href="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/transparencyok.png"><img class="alignnone size-large wp-image-289" title="transparencyok" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/transparencyok-1024x793.png" alt="" width="640" height="495" /></a>
-<h1>Ë³ĞòºÜÖØÒª£¡Order matters !</h1>
-ÉÏÒ»¸ö½ØÍ¼¿´ÉÏÈ¥»¹ĞĞ£¬µ«Õâ½ö½öÊÇÔËÆøºÃ°ÕÁË¡£The previous screenshot looks okay-ish, but that's just because we're lucky.
-<h2>ÎÊÌâËùÔÚThe problem</h2>
-ÕâÀïÎÒ»­ÁËÒ»ºìÒ»ÂÌÁ½¸öalphaÖµÎª50%µÄÕı·½ĞÎ¡£´ÓÖĞ¿ÉÒÔ¿´³öË³ĞòµÄÖØÒªĞÔ£¬×îÖÕµÄÑÕÉ«ÏÔÖøÓ°ÏìÁËÑÛ¾¦¶ÔÉî¶ÈµÄ¸ĞÖª¡£Here, I drew two squares with 50% alpha, one green and one red. You can see that order is important, the final colour gives an important clue to the eyes for proper depth perception.
+<h1>é¡ºåºå¾ˆé‡è¦ï¼Order matters !</h1>
+ä¸Šä¸€ä¸ªæˆªå›¾çœ‹ä¸Šå»è¿˜è¡Œï¼Œä½†è¿™ä»…ä»…æ˜¯è¿æ°”å¥½ç½¢äº†ã€‚The previous screenshot looks okay-ish, but that's just because we're lucky.
+<h2>é—®é¢˜æ‰€åœ¨The problem</h2>
+è¿™é‡Œæˆ‘ç”»äº†ä¸€çº¢ä¸€ç»¿ä¸¤ä¸ªalphaå€¼ä¸º50%çš„æ­£æ–¹å½¢ã€‚ä»ä¸­å¯ä»¥çœ‹å‡ºé¡ºåºçš„é‡è¦æ€§ï¼Œæœ€ç»ˆçš„é¢œè‰²æ˜¾è‘—å½±å“äº†çœ¼ç›å¯¹æ·±åº¦çš„æ„ŸçŸ¥ã€‚Here, I drew two squares with 50% alpha, one green and one red. You can see that order is important, the final colour gives an important clue to the eyes for proper depth perception.
 
 <a href="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/transparencyorder.png"><img class="alignnone size-full wp-image-282" title="transparencyorder" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/transparencyorder.png" alt="" width="500" height="255" /></a>
 
-ÎÒÃÇµÄ³¡¾°ÖĞÒ²²»·¦Í¬ÑùµÄÏÖÏó¡£ÊÔ×ÅÉÔÉÔ¸Ä±äÒ»ÏÂÊÓ½Ç£ºThis phenomena also happens in our scene. Let's change the viewpoint a bit :
+æˆ‘ä»¬çš„åœºæ™¯ä¸­ä¹Ÿä¸ä¹åŒæ ·çš„ç°è±¡ã€‚è¯•ç€ç¨ç¨æ”¹å˜ä¸€ä¸‹è§†è§’ï¼šThis phenomena also happens in our scene. Let's change the viewpoint a bit :
 
 <a href="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/transparencybad.png"><img class="alignnone size-large wp-image-288" title="transparencybad" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/transparencybad-1024x793.png" alt="" width="640" height="495" /></a>
 
-ÊÂÊµÖ¤Ã÷Õâ¸öÎÊÌâÊ®·Ö¼¬ÊÖ¡£ÓÎÏ·ÖĞÍ¸Ã÷²»ÊÇºÜ¶à£¬¶Ô°É£¿It turns our this is a very hard problem. You never see lots of transparency in games, do you ?
-<h2>³£¼û½â¾ö·½°¸Usual solution</h2>
-³£¼û½â¾ö·½°¸¼´¶ÔËùÓĞµÄÍ¸Ã÷Èı½ÇĞÎÅÅĞò¡£ÊÇµÄ£¬ËùÓĞµÄÍ¸Ã÷Èı½ÇĞÎ¡£The usual solution is to sort all transparent triangles. Yes, ALL transparent triangles.
+äº‹å®è¯æ˜è¿™ä¸ªé—®é¢˜ååˆ†æ£˜æ‰‹ã€‚æ¸¸æˆä¸­é€æ˜ä¸æ˜¯å¾ˆå¤šï¼Œå¯¹å§ï¼ŸIt turns our this is a very hard problem. You never see lots of transparency in games, do you ?
+<h2>å¸¸è§è§£å†³æ–¹æ¡ˆUsual solution</h2>
+å¸¸è§è§£å†³æ–¹æ¡ˆå³å¯¹æ‰€æœ‰çš„é€æ˜ä¸‰è§’å½¢æ’åºã€‚æ˜¯çš„ï¼Œæ‰€æœ‰çš„é€æ˜ä¸‰è§’å½¢ã€‚The usual solution is to sort all transparent triangles. Yes, ALL transparent triangles.
 <ul>
-	<li>»æÖÆ³¡¾°µÄ²»Í¸Ã÷²¿·Ö£¬ÈÃÉî¶È»º³åÇø×öºÃ×¼±¸¶ªÆúÒş²ØµÄÍ¸Ã÷µÄÈı½ÇĞÎ¡£Draw the opaque part of the world so that the depth buffer already can reject hidden transparent triangles</li>
-	<li>¶ÔÍ¸Ã÷Èı½ÇĞÎ°´Éî¶È´Ó½üµ½Ô¶ÅÅĞò¡£Sort transparent triangles, from the furthest to the closest</li>
-	<li>»æÖÆÍ¸Ã÷Èı½ÇĞÎ¡£Draw the transparent triangles.</li>
+	<li>ç»˜åˆ¶åœºæ™¯çš„ä¸é€æ˜éƒ¨åˆ†ï¼Œè®©æ·±åº¦ç¼“å†²åŒºåšå¥½å‡†å¤‡ä¸¢å¼ƒéšè—çš„é€æ˜çš„ä¸‰è§’å½¢ã€‚Draw the opaque part of the world so that the depth buffer already can reject hidden transparent triangles</li>
+	<li>å¯¹é€æ˜ä¸‰è§’å½¢æŒ‰æ·±åº¦ä»è¿‘åˆ°è¿œæ’åºã€‚Sort transparent triangles, from the furthest to the closest</li>
+	<li>ç»˜åˆ¶é€æ˜ä¸‰è§’å½¢ã€‚Draw the transparent triangles.</li>
 </ul>
-¿ÉÒÔÓÃCÓïÑÔµÄqsortº¯Êı»òÕßC++µÄstd::sortº¯ÊıÀ´ÅÅĞò¡£Ï¸½Ú¾Í²»ÏêÊöÁË£¬ÒòÎª¡­¡­You can sort whatever you want with qsort (in C) or std::sort (in C++). I won't dig in the details, because...
-<h2>¾¯¸æCaveat</h2>
-ÕâÃ´×ö¿ÉÒÔ½â¾öÎÊÌâ£¨ÏÂÒ»½Ú»¹»á¶Ô´Ë×÷½éÉÜ£©£¬µ«ÊÇ£ºDoing so will work ( more on this in the next section ), but :
+å¯ä»¥ç”¨Cè¯­è¨€çš„qsortå‡½æ•°æˆ–è€…C++çš„std::sortå‡½æ•°æ¥æ’åºã€‚ç»†èŠ‚å°±ä¸è¯¦è¿°äº†ï¼Œå› ä¸ºâ€¦â€¦You can sort whatever you want with qsort (in C) or std::sort (in C++). I won't dig in the details, because...
+<h2>è­¦å‘ŠCaveat</h2>
+è¿™ä¹ˆåšå¯ä»¥è§£å†³é—®é¢˜ï¼ˆä¸‹ä¸€èŠ‚è¿˜ä¼šå¯¹æ­¤ä½œä»‹ç»ï¼‰ï¼Œä½†æ˜¯ï¼šDoing so will work ( more on this in the next section ), but :
 <ul>
-	<li>Ìî³äËÙÂÊ»áÊÜµ½ÏŞÖÆ£¬Ò»¸öÆ¬¶Ï»áĞ´10´Î¡¢20´Î£¬Ò²Ğí¸ü¶à´Î¡£Õâ¶ÔÁ¦²»´ÓĞÄµÄÄÚ´æ×ÜÏßÀ´Ëµ¸ººÉÌ«ÖØÁË¡£Í¨³££¬Éî¶È»º³åÇø¿ÉÒÔ×Ô¶¯¶ªÆú¡°Ô¶¡±Æ¬¶Ï£¬µ«ÔÚ´Ë£¬ÎÒÃÇµÃÏÔÊ½µØ¶ÔÆ¬¶Ï½øĞĞÅÅĞò£¬ËùÒÔÉî¶È»º³åÇøÊµ¼ÊÉÏ²¢Î´·¢»Ó×÷ÓÃ¡£You will be fillrate limited. That is, each fragment will be written 10, 20 times, maybe more. This is way to much for the poor memory bus. Usually the depth buffer allows to reject enough "far" fragments, but here, you explicitly sorted them, so the depth buffer is actually useless.</li>
-	<li>Ã¿¸öÏñËØÉÏÕâĞ©²Ù×÷µÃ×ö4±é£¨ÎÒÃÇ²ÉÓÃÁË4xMSAA£¬³¬²ÉÑù·´×ßÑù£©£¬³ı·Ç²ÉÓÃÁËÊ²Ã´¸ßÃ÷µÄÓÅ»¯²ßÂÔ¡£You will be doing this 4 times per pixel ( we use 4xMSAA ), except if you use some clever optimisation</li>
-	<li>Í¸Ã÷Èı½ÇĞÎÅÅĞòºÜºÄÊ±Sorting all the transparent triangles takes time</li>
-	<li>ÈôÒªÖğ¸öÈı½ÇĞÎµØÇĞ»»ÎÆÀí£¬»òÕß¸üÔã¸â£¬ÇĞ»»×ÅÉ«Æ÷£¬ÄÇĞÔÄÜ»á´ó´òÕÛ¿Û¡£±ğÕâÃ´¸É¡£If you have to switch your texture, or worse, your shader, from triangle to triangle, you're going into deep performance trouble. Don't do this.</li>
+	<li>å¡«å……é€Ÿç‡ä¼šå—åˆ°é™åˆ¶ï¼Œä¸€ä¸ªç‰‡æ–­ä¼šå†™10æ¬¡ã€20æ¬¡ï¼Œä¹Ÿè®¸æ›´å¤šæ¬¡ã€‚è¿™å¯¹åŠ›ä¸ä»å¿ƒçš„å†…å­˜æ€»çº¿æ¥è¯´è´Ÿè·å¤ªé‡äº†ã€‚é€šå¸¸ï¼Œæ·±åº¦ç¼“å†²åŒºå¯ä»¥è‡ªåŠ¨ä¸¢å¼ƒâ€œè¿œâ€ç‰‡æ–­ï¼Œä½†åœ¨æ­¤ï¼Œæˆ‘ä»¬å¾—æ˜¾å¼åœ°å¯¹ç‰‡æ–­è¿›è¡Œæ’åºï¼Œæ‰€ä»¥æ·±åº¦ç¼“å†²åŒºå®é™…ä¸Šå¹¶æœªå‘æŒ¥ä½œç”¨ã€‚You will be fillrate limited. That is, each fragment will be written 10, 20 times, maybe more. This is way to much for the poor memory bus. Usually the depth buffer allows to reject enough "far" fragments, but here, you explicitly sorted them, so the depth buffer is actually useless.</li>
+	<li>æ¯ä¸ªåƒç´ ä¸Šè¿™äº›æ“ä½œå¾—åš4éï¼ˆæˆ‘ä»¬é‡‡ç”¨äº†4xMSAAï¼Œè¶…é‡‡æ ·åèµ°æ ·ï¼‰ï¼Œé™¤éé‡‡ç”¨äº†ä»€ä¹ˆé«˜æ˜çš„ä¼˜åŒ–ç­–ç•¥ã€‚You will be doing this 4 times per pixel ( we use 4xMSAA ), except if you use some clever optimisation</li>
+	<li>é€æ˜ä¸‰è§’å½¢æ’åºå¾ˆè€—æ—¶Sorting all the transparent triangles takes time</li>
+	<li>è‹¥è¦é€ä¸ªä¸‰è§’å½¢åœ°åˆ‡æ¢çº¹ç†ï¼Œæˆ–è€…æ›´ç³Ÿç³•ï¼Œåˆ‡æ¢ç€è‰²å™¨ï¼Œé‚£æ€§èƒ½ä¼šå¤§æ‰“æŠ˜æ‰£ã€‚åˆ«è¿™ä¹ˆå¹²ã€‚If you have to switch your texture, or worse, your shader, from triangle to triangle, you're going into deep performance trouble. Don't do this.</li>
 </ul>
-Ò»¸öÍ¨³£½ÏºÃµÄ½â¾ö·½°¸ÊÇ£ºA good enough solution is often to :
+ä¸€ä¸ªé€šå¸¸è¾ƒå¥½çš„è§£å†³æ–¹æ¡ˆæ˜¯ï¼šA good enough solution is often to :
 <ul>
-	<li>ÏŞÖÆÍ¸Ã÷¶à±ßĞÎµÄÊıÁ¿Limit to a maximum the number of transparent polygons</li>
-	<li>¶ÔËùÓĞÍ¸Ã÷¶à±ßĞÎÊ¹ÓÃÍ¬Ò»¸ö×ÅÉ«Æ÷ºÍÎÆÀíUse the same shader and the same texture for all of them</li>
-	<li>ÈôÒªÇóÕâĞ©Í¸Ã÷¶à±ßĞÎÍâ¹Û¸÷Òì£¬ÇëÊ¹ÓÃÎÆÀí£¡If they are supposed to look very different, use your texture !</li>
-	<li>ÈôÄÜ²»ÅÅĞòĞ§¹û¿´ÆğÀ´»¹ĞĞ£¬ÄÇ×îºÃ±ğÅÅĞò¡£If you can avoid sorting, and it still doesn't look <em>too </em>bad, consider yourself lucky.</li>
+	<li>é™åˆ¶é€æ˜å¤šè¾¹å½¢çš„æ•°é‡Limit to a maximum the number of transparent polygons</li>
+	<li>å¯¹æ‰€æœ‰é€æ˜å¤šè¾¹å½¢ä½¿ç”¨åŒä¸€ä¸ªç€è‰²å™¨å’Œçº¹ç†Use the same shader and the same texture for all of them</li>
+	<li>è‹¥è¦æ±‚è¿™äº›é€æ˜å¤šè¾¹å½¢å¤–è§‚å„å¼‚ï¼Œè¯·ä½¿ç”¨çº¹ç†ï¼If they are supposed to look very different, use your texture !</li>
+	<li>è‹¥èƒ½ä¸æ’åºæ•ˆæœçœ‹èµ·æ¥è¿˜è¡Œï¼Œé‚£æœ€å¥½åˆ«æ’åºã€‚If you can avoid sorting, and it still doesn't look <em>too </em>bad, consider yourself lucky.</li>
 </ul>
-<h2>ÓëË³ĞòÎŞ¹ØµÄÍ¸Ã÷Order-Independent Transparency</h2>
-Èç¹ûÄãµÄÒıÇæÈ·Êµ·Ç³£ĞèÒª¶¥¼âµÄÍ¸Ã÷Ğ§¹û£¬»¹ÓĞÒ»Ğ©¼¼ÊõÖµµÃÑĞ¾¿Ò»·¬£ºA number of other techniques are worth investigating if you engine really, really needs state-of-the-art transparency :
+<h2>ä¸é¡ºåºæ— å…³çš„é€æ˜Order-Independent Transparency</h2>
+å¦‚æœä½ çš„å¼•æ“ç¡®å®éå¸¸éœ€è¦é¡¶å°–çš„é€æ˜æ•ˆæœï¼Œè¿˜æœ‰ä¸€äº›æŠ€æœ¯å€¼å¾—ç ”ç©¶ä¸€ç•ªï¼šA number of other techniques are worth investigating if you engine really, really needs state-of-the-art transparency :
 <ul>
-	<li><a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.18.9286&rep=rep1&type=pdf">2001ÄêÉî¶È°şÀë£¨Depth Peeling£©ÂÛÎÄÔ­ÎÄThe original 2001 Depth Peeling paper</a>£º¾«Ï¸µ½Ã¿¸öÏñËØ£¬µ«ËÙ¶È²»¿ì: pixel-perfect results, not very fast.</li>
-	<li><a href="http://developer.download.nvidia.com/SDK/10/opengl/src/dual_depth_peeling/doc/DualDepthPeeling.pdf">Ë«Éî¶È°şÀë£¨Dual Depth Peeling£©Dual Depth Peeling</a>£ºĞ¡·ù¸Ä½ø : a slight improvement</li>
-	<li>Í°ÅÅĞòÏà¹ØµÄ¼¸ÆªÂÛÎÄ¡£°ÑÆ¬¶Ï´æµ½Êı×é£¬ÔÚ×ÅÉ«Æ÷ÖĞ½øĞĞÉî¶ÈÅÅĞò¡£Several papers on bucket sort. Uses an array of fragments; sort them by depth in a shader.</li>
-	<li><a href="http://fr.slideshare.net/hgruen/oit-and-indirect-illumination-using-dx11-linked-lists">ATIµÄMechaÑİÊ¾ATI's Mecha Demo</a>£ºÓÖºÃÓÖ¿ì£¬µ«ÊµÏÖÆğÀ´ÓĞÄÑ¶È£¬ĞèÒª×îĞÂµÄÓ²¼ş¡£ÓÃÁ´±í´æ´¢Æ¬¶Ï¡£ : good and fast, but tricky to implement, needs recent hardware. Uses a linked list of fragments.</li>
-	<li><a href="http://blog.icare3d.org/2010/07/opengl-40-abuffer-v20-linked-lists-of.html">Cyril CrassinÕë¶ÔATI¼¼ÊõËù×öµÄÁíÒ»¸ö°æ±¾£ºÊµÏÖÄÑ¶È¸ü´ó¡£Cyril Crassin's variation on the ATI's? technique</a> : even harder implementation</li>
+	<li><a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.18.9286&rep=rep1&type=pdf">2001å¹´æ·±åº¦å‰¥ç¦»ï¼ˆDepth Peelingï¼‰è®ºæ–‡åŸæ–‡The original 2001 Depth Peeling paper</a>ï¼šç²¾ç»†åˆ°æ¯ä¸ªåƒç´ ï¼Œä½†é€Ÿåº¦ä¸å¿«: pixel-perfect results, not very fast.</li>
+	<li><a href="http://developer.download.nvidia.com/SDK/10/opengl/src/dual_depth_peeling/doc/DualDepthPeeling.pdf">åŒæ·±åº¦å‰¥ç¦»ï¼ˆDual Depth Peelingï¼‰Dual Depth Peeling</a>ï¼šå°å¹…æ”¹è¿› : a slight improvement</li>
+	<li>æ¡¶æ’åºç›¸å…³çš„å‡ ç¯‡è®ºæ–‡ã€‚æŠŠç‰‡æ–­å­˜åˆ°æ•°ç»„ï¼Œåœ¨ç€è‰²å™¨ä¸­è¿›è¡Œæ·±åº¦æ’åºã€‚Several papers on bucket sort. Uses an array of fragments; sort them by depth in a shader.</li>
+	<li><a href="http://fr.slideshare.net/hgruen/oit-and-indirect-illumination-using-dx11-linked-lists">ATIçš„Mechaæ¼”ç¤ºATI's Mecha Demo</a>ï¼šåˆå¥½åˆå¿«ï¼Œä½†å®ç°èµ·æ¥æœ‰éš¾åº¦ï¼Œéœ€è¦æœ€æ–°çš„ç¡¬ä»¶ã€‚ç”¨é“¾è¡¨å­˜å‚¨ç‰‡æ–­ã€‚ : good and fast, but tricky to implement, needs recent hardware. Uses a linked list of fragments.</li>
+	<li><a href="http://blog.icare3d.org/2010/07/opengl-40-abuffer-v20-linked-lists-of.html">Cyril Crassiné’ˆå¯¹ATIæŠ€æœ¯æ‰€åšçš„å¦ä¸€ä¸ªç‰ˆæœ¬ï¼šå®ç°éš¾åº¦æ›´å¤§ã€‚Cyril Crassin's variation on the ATI's? technique</a> : even harder implementation</li>
 </ul>
-×¢Òâ£¬¼´±ãÊÇÏñ¡¶Ğ¡Ğ¡´óĞÇÇò¡·£¨Little Big Planet£©ÕâÑù£¬ÔËĞĞÔÚ¾ßÓĞ³¬Ç¿Í¼ĞÎĞÔÄÜµÄÓÎÏ·»úÉÏµÄĞÂÓÎÏ·Ò²Ö»ÓÃÁËÒ»²ãÍ¸Ã÷¡£Note that even a recent game like Little Big Planet, which ran on a powerful console, used only 1 layer of transparency.
-<h1>»ìºÏº¯ÊıThe blend function</h1>
-ÒªÈÃÖ®Ç°µÄ´úÂëÔËĞĞ£¬µÃÉèÖÃºÃ»ìºÏº¯Êı¡£In order for the previous code to work, you need to setup your blend function.
+æ³¨æ„ï¼Œå³ä¾¿æ˜¯åƒã€Šå°å°å¤§æ˜Ÿçƒã€‹ï¼ˆLittle Big Planetï¼‰è¿™æ ·ï¼Œè¿è¡Œåœ¨å…·æœ‰è¶…å¼ºå›¾å½¢æ€§èƒ½çš„æ¸¸æˆæœºä¸Šçš„æ–°æ¸¸æˆä¹Ÿåªç”¨äº†ä¸€å±‚é€æ˜ã€‚Note that even a recent game like Little Big Planet, which ran on a powerful console, used only 1 layer of transparency.
+<h1>æ··åˆå‡½æ•°The blend function</h1>
+è¦è®©ä¹‹å‰çš„ä»£ç è¿è¡Œï¼Œå¾—è®¾ç½®å¥½æ··åˆå‡½æ•°ã€‚In order for the previous code to work, you need to setup your blend function.
 <pre class="brush:cpp">// Enable blending
 glEnable(GL_BLEND);
 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);</pre>
-ÕâÒâÎ¶×Å£ºWhich means :
+è¿™æ„å‘³ç€ï¼šWhich means :
 <pre class="brush:plain">New color in framebuffer = 
            current alpha in framebuffer * current color in framebuffer + 
            (1 - current alpha in framebuffer) * shader's output color</pre>
-ÉÏÃæºìÉ«·½¿é¾ÓÉÏµÄÀı×Ó£ºExample from the image above, with red on top :
+ä¸Šé¢çº¢è‰²æ–¹å—å±…ä¸Šçš„ä¾‹å­ï¼šExample from the image above, with red on top :
 <pre class="brush:plain">new color = 0.5*(0,1,0) + (1-0.5)*(1,0.5,0.5); // (the red was already blended with the white background)
 new color = (1, 0.75, 0.25) = the same orange
 </pre>

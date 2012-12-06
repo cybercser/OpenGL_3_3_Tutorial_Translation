@@ -1,4 +1,4 @@
-<h1>Introduction</h1>
+﻿<h1>Introduction</h1>
 This a video-only tutorial. It doesn't introduce any new OpenGL-specific technique/syntax, but shows you how to use the techniques you already know to build high-quality shadows.
 
 This tutorials explains how to build a simple world in Blender, and bake the lightmaps so that you can use them in your application.

@@ -1,4 +1,4 @@
-In this tutorial, we'll learn to draw 2D text on top of our 3D content. In our case, this will be a simple timer :
+ï»¿In this tutorial, we'll learn to draw 2D text on top of our 3D content. In our case, this will be a simple timer :
 
 <a href="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/clock.png"><img class="alignnone size-large wp-image-292" title="clock" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/clock-1024x793.png" alt="" width="640" height="495" /></a>
 <h1>The API</h1>
@@ -80,6 +80,6 @@ The fragment shader does very little too :
 <pre class="brush:fs">void main(){
 ?? ?color = texture( myTextureSampler, UV );
 }</pre>
-By the way, don't use this code for production, since it only handles the Latin alphabet. Or don't sell anything to India, China, Japan ( or even Germany, since there is no ? on this image ). This texture will mostly work in France (notice the ¨¦, ¨¤, ?, etc) because it's been generated with my locale. And beware while adapting code from other tutorials of when using libraries, most of them use OpenGL 2, which isn't compatible. Unfortunately I don't know any good-enough library to which handles UTF-8.
+By the way, don't use this code for production, since it only handles the Latin alphabet. Or don't sell anything to India, China, Japan ( or even Germany, since there is no ? on this image ). This texture will mostly work in France (notice the Ã©, Ã , ?, etc) because it's been generated with my locale. And beware while adapting code from other tutorials of when using libraries, most of them use OpenGL 2, which isn't compatible. Unfortunately I don't know any good-enough library to which handles UTF-8.
 
 By the way, you should read <a href="http://www.joelonsoftware.com/articles/Unicode.html">The Absolute Minimum Every Software Developer Absolutely, Positively Must Know About Unicode and Character Sets (No Excuses!)</a> by Joel Spolsky.
