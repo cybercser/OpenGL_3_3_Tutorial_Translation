@@ -1,18 +1,16 @@
 翻译术语对照
 
-英文, 中文, 其他翻译
-camera, 相机, 摄像机
-camera space, 观察坐标系, 眼坐标系
-triplet, 三元组, 三元数
-frustum, 四棱锥, 四棱截锥 平截头体 截头锥体
-field of view, 视场角, 视野角度
-orthographic projection, 正交投影, 正投影
-quaternions, 四元组, 四元数
-Z-Buffer Algorithm, 深度缓存算法, Z-缓冲（区/器）算法 Z缓存（区/器）算法
-fragment, 片断, 片元 片段
-buffer, 缓冲区 缓冲, 缓冲器 缓存
-mipmap/MIP map, 多级纹理, 多级渐进纹理  多级渐进式纹理
-filter, 滤波, 过滤
-robust, 健壮, 稳健 鲁棒 撸棒
-alpha channel, 透明通道, 阿尔法通道 alpha通道
-texel, 纹素, 
+英文, 中文, 其他翻译, 备注
+camera, 相机, 摄像机, 
+camera space, 观察坐标系, 眼坐标系, 
+triplet, 三元组, 三元数, 
+frustum, 四棱锥, 四棱截锥 平截头体 截头锥体, 
+field of view, 视场角, 视野角度, 
+orthographic projection, 正交投影, 正投影, 
+quaternions, 四元组, 四元数, 
+Z-Buffer Algorithm, 深度缓存算法, Z-缓冲（区/器）算法 Z缓存（区/器）算法, 
+fragment, 片断, 片元 片段, 
+buffer, 缓冲区 缓冲, 缓冲器 缓存, 
+backface, 隐藏面, 隐面, 
+index, 下标 索引, , 数组的index译为下标；Obj文件的index译为索引。
+indexing, 检索, , 
