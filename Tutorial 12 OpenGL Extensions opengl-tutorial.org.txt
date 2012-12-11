@@ -1,0 +1,89 @@
+<h1>扩展Extensions</h1>
+每一代更新后，GPU的性能都提高了，可以渲染更多的三角形和像素点。然而，原始性能不是我们唯一关心的。因为像NVIDIA, AMD和Intel也可以通过增加更多的功能来提高他们的图形卡。来看一些例子。With each new generation, the performance of GPU increases, allowing to render more triangles and more pixels. However, raw performance isn't the only concern. NVIDIA, AMD and Intel also improve their graphic cards by providing more functionality. Let's have a look at some examples.
+<h2>ARB_fragment_program</h2>
+回溯到2002年，GPUs还没有顶点着色器或片断着色器：所有的一切都是硬编码在芯片中。这被称为Fixed-Function Pipeline (FFP)。同样地，那时候最新版本OpenGL 1.3的API中也没有方法创建、操作和使用所谓的“着色器”，因为它甚至都不存在。但是接着NVIDIA决定用实际的代码描述渲染过程，取代数以百计的标记和状态变量。这就是ARB_fragment_program的由来：没有GLSL，但是取而代之地可以这样写程序：
+Back in 2002, GPUs had no vertex shaders or fragment shaders : everything was hardcoded inside the chip. This was called the Fixed-Function Pipeline (FFP). As such, the most recent version of the API, which was OpenGL 1.3, proposed no way to create, manipulate and use so-called "shaders", since it didn't even exist. But then NVIDIA decided that it could be handy to describe the rendering process with actual code, instead of hundreds of flags and state variables. This is how ARB_fragment_program was created : there was no GLSL, but instead you could write stuff like this :
+<pre>!!ARBfp1.0 MOV result.color, fragment.color; END</pre>
+但是要显示地告诉OpenGL使用这些代码，你需要一些还不在OpenGL里的特殊函数。在进行解释前，再举个例子。But obviously to tell OpenGL to use such code, you needed special functions, which were not yet in OpenGL. Before moving on to the explanations, one more example.
+<h2>ARB_debug_output</h2>
+好的，你可以说上面那个ARB_fragment_program太老了，不需要使用这个扩展了。但还有一些新的扩展非常方便使用。其中一个便是ARB_debug_output，它揭示了一个不存在于OpenGL 3.3中的功能，但是你能够/应该用任何方式使用它。它定义了像GL_DEBUG_OUTPUT_SYNCHRONOUS_ARB或GL_DEBUG_SEVERITY_MEDIUM_ARB一类的字符串，和DebugMessageCallbackARB一类的函数。这个扩展最伟大之处在于当你写了一些不正确的代码，例如：
+Ok, you say, but this ARB_fragment_program is too old, surely I don't need this extension stuff anymore ? Well there are newer extensions which are very handy. One of them is ARB_debug_output, which expose a functionality that doesn't exist in OpenGL 3.3 but that you can/should use anyway. It defines tokens like GL_DEBUG_OUTPUT_SYNCHRONOUS_ARB or GL_DEBUG_SEVERITY_MEDIUM_ARB, and functions like DebugMessageCallbackARB. The great thing about this extension is that whenever you write some incorrect code, for instance :
+<pre class="brush: cpp">glEnable(GL_TEXTURE); // Incorrect ! You probably meant GL_TEXTURE_2D !</pre>
+你能获得错误信息提醒和错误的精确位置。经验之说：you can have an error message and the exact location of the problem. Lessons learned :
+<ul>
+	<li>扩展仍旧十分有用，甚至在现在的OpenGL 3.3版本中。Extensions are still very useful, even in modern, 3.3 OpenGL</li>
+	<li>请使用ARB_debug_output ！看看下面的链接内容。Use ARB_debug_output ! See below for links.</li>
+</ul>
+<a href="http://www.opengl-tutorial.org/wp-content/uploads/2012/02/breakpoint.png"><img class="alignnone size-large wp-image-622" title="breakpoint" src="http://www.opengl-tutorial.org/wp-content/uploads/2012/02/breakpoint-1024x678.png" alt="" width="640" height="423" /></a>
+<h2>获得一个扩展 - 避易就难的方式 Getting an extension - the hard way</h2>
+手动查找一个扩展的方法是使用这些代码片断 (从<a href="http://www.opengl.org/wiki/GlGetString">OpenGL.org wiki</a>中获得)：
+The "manual" way for checking is an extension is present is to use this code snippet (from the <a href="http://www.opengl.org/wiki/GlGetString">OpenGL.org wiki</a>) :
+<pre class="brush: cpp">int NumberOfExtensions;
+glGetIntegerv(GL_NUM_EXTENSIONS, &amp;NumberOfExtensions);
+for(i=0; i&lt;NumberOfExtensions; i++) {
+  const GLubyte *ccc=glGetStringi(GL_EXTENSIONS, i);
+  if ( strcmp(ccc, (const GLubyte *)&quot;GL_ARB_debug_output&quot;) == 0 ){
+    // The extension is supported by our hardware and driver
+    // Try to get the &quot;glDebugMessageCallbackARB&quot; function :
+    glDebugMessageCallbackARB  = (PFNGLDEBUGMESSAGECALLBACKARBPROC) wglGetProcAddress(&quot;glDebugMessageCallbackARB&quot;);
+  }
+}</pre>
+<h2>获得所有的扩展 - 简单的方式Getting all extensions - the easy way</h2>
+总之这是非常复杂的。但是像GLEW, GLee, gl3w等等函数库使它变简单了。例如，有了GLEW，你只需要在创建窗口后调用glewInit()，然后变量便创建了：  All in all this is very complicated. Libraries like GLEW, GLee, gl3w, etc, make it much easier. For instance, with GLEW, you just have to call glewInit() after you created your window, and handy variables are created :
+<pre class="brush: cpp">if (GLEW_ARB_debug_output){ // Ta-Dah ! }</pre>
+( 小心：debug_output是特殊的，因为你需要在上下文创建的时候启用它。在GLFW中，这些工作用glfwOpenWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, 1)完成。）
+（a word of caution : debug_output is special because you have to enable it at context creation. In GLFW, this is done with glfwOpenWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, 1); )
+<h2>ARB vs EXT vs ...</h2>
+每一个扩展的名称都有适用范围：The name of each extention contains information on its availability :
+
+GL_:所有平台；
+GLX_:只有Linux和Mac下可使用（X11）；
+WGL_:只有Windows下可使用。
+
+EXT:一个通用的扩展。
+ARB:已经被OpenGL架构评审委员会的所有成员接受（EXT扩展没多久后就经常被提升为ARB）的扩展。
+NV/AMD/INTEL:就不需加以说明了 =)
+
+GL_ : all platforms;
+GLX_ : Linux & Mac only (X11);
+WGL_ : Windows only
+
+EXT : A generic extention.
+ARB : the extention has been accepted by all the members of the OpenGL Architecture Review Board (EXT extentions are often promoted to ARB after a while).
+NV/AMD/INTEL : Quite self-explanatory =)
+<h1>设计与扩展Designing with Extentions</h1>
+<h2>问题The problem</h2>
+比方说你的OpenGL 3.3应用程序需要渲染一些大的线条。你能够写一个复杂的顶点着色器来完成，或者只是简单地依赖<a href="http://www.opengl.org/registry/specs/NV/path_rendering.txt">GL_NV_path_rendering</a>，这个能够处理所有复杂的事情。
+Let's say that your OpenGL 3.3 application needs to render some large lines. You could write a complicated vertex shader to do that, or simply rely on <a href="http://www.opengl.org/registry/specs/NV/path_rendering.txt">GL_NV_path_rendering</a>, which will handle all the complicated stuff for you.
+
+因此你也可以这样写代码：
+You will thus have code that look like this :
+<pre class="brush: cpp">if ( GLEW_NV_path_rendering ){
+    glPathStringNV( ... ); // Draw the shape. Easy !
+}else{
+    // Else what ? You still have to draw the lines
+    // on older NVIDIA hardware, on AMD and on INTEL !
+    // So you have to implement it yourself anyway !
+}</pre>
+<h2>选择限制Choosing the limit</h2>
+当获得的渲染质量或性能比维护这两个不同方面的代价还大时，就需要选择使用一个扩展了。One usually choose to use an extention when the gain in rendering quality or performance outweights the pain of maintaining two different paths.
+
+举例来说，当你打发时间时，Braid（2D游戏中实时道路）有各种各样图像变形效果，而这种效果旧的硬件上没法渲染。For instance, Braid (the 2D game where you travel in time) has all kinds of image-warping effects when you mess with the time, which simply aren't rendered on older hardware.
+
+OpenGL 3.3及以后版本，你就有99%的工具是你极可能需要用到的。一些扩展非常有用，比如GL_AMD_pinned_memory,但是这通常不像几年前使用GL_ARB_framebuffer_object(用于纹理渲染)一样可以使你的游戏看起来变好10倍。With OpenGL 3.3 and above, you already have 99% of the tools you're likely to need. Some extensions can be very useful, like GL_AMD_pinned_memory, but this is often not like a few years ago when having GL_ARB_framebuffer_object ( used for Render To Texture ) could make your game look 10 times better.
+
+如果你不得不使用旧的硬件，那么OpenGL 3+就不能使用，这时你需要用OpenGL 2+来代替。并且你将不能使用各种花样的扩展了，而需自行处理那些问题。If you have to handle older hardware, though, OpenGL 3+ won't be available, and you'll have to use OpenGL 2+ instead. You won't be able to assume that you have all the fancy extensions anymore, and you'll need to cope with that.
+
+更多的细节可以参考例子<a href="http://code.google.com/p/opengl-tutorial-org/source/browse/tutorial14_render_to_texture/tutorial14.cpp?name=2.1%20branch#152">OpenGL 2.1版本的第14课 - 纹理渲染，第152行</a>，需手工地检查GL_ARB_framebuffer_object的存在。常见问题可见<a href="http://www.opengl-tutorial.org/miscellaneous/faq/">FAQ</a>。
+For further details, see for instance the <a href="http://code.google.com/p/opengl-tutorial-org/source/browse/tutorial14_render_to_texture/tutorial14.cpp?name=2.1%20branch#152">OpenGL 2.1 version of Tutorial  14 - Render To Texture, line 152</a>, where I have to check the presence of GL_ARB_framebuffer_object by hand. See also the <a href="http://www.opengl-tutorial.org/miscellaneous/faq/">FAQ</a>.
+<h1>结论Conclusion</h1>
+OpenGL扩展提供了一个很好的方式来扩展OpenGL的功能，这依赖于你的GPU。 OpenGL Extentions provide a nice way to extend OpenGL's capabilities, depending on your user's GPU.
+
+虽然很多时候扩展属高级用法，因为大部分的功能已经在核心代码中，但了解扩展如何运作和怎么用它们提高软件性能（以更高的维护为代价）还是很重要的。While extentions are nowaday mostly for advanced use since most functionality is already in the core, it's still important to know how they work and how you can use them to improve your software - at the expense of higher maintainance.
+<h1>深度阅读Further reading</h1>
+<ul>
+	<li><a href="http://sites.google.com/site/opengltutorialsbyaks/introduction-to-opengl-4-1---tutorial-05 ">debug_output tutorial by Aks</a> 因为有GLEW的帮助你可以跳过Step 1。you can skip Step 1 thanks to GLEW.</li>
+	<li><a href="http://www.opengl.org/registry/">The OpenGL extension registry</a> 所有扩展的规格说明书。圣经。All extensions specifications. The bible.</li>
+	<li><a href="http://glew.sourceforge.net/">GLEW</a> OpenGL标准扩展库The OpenGL Extension Wrangler Library</li>
+	<li><a href="https://github.com/skaslev/gl3w">gl3w</a> 简单OpenGL 3/4核心概要文件加载 Simple OpenGL 3/4 core profile loading</li>
+</ul>
