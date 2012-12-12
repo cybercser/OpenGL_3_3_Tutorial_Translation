@@ -1,12 +1,13 @@
 <h1>扩展Extensions</h1>
-每一代更新后，GPU的性能都提高了，可以渲染更多的三角形和像素点。然而，原始性能不是我们唯一关心的。因为像NVIDIA, AMD和Intel也可以通过增加更多的功能来提高他们的图形卡。来看一些例子。With each new generation, the performance of GPU increases, allowing to render more triangles and more pixels. However, raw performance isn't the only concern. NVIDIA, AMD and Intel also improve their graphic cards by providing more functionality. Let's have a look at some examples.
+每一代更新后，GPU的性能都提高了，可以渲染更多的三角形和像素点。然而，原始性能不是我们唯一关心的。因为像NVIDIA, AMD和Intel也可以通过增加更多的功能来提高他们的显卡。来看一些例子。
+With each new generation, the performance of GPU increases, allowing to render more triangles and more pixels. However, raw performance isn't the only concern. NVIDIA, AMD and Intel also improve their graphic cards by providing more functionality. Let's have a look at some examples.
 <h2>ARB_fragment_program</h2>
-回溯到2002年，GPUs还没有顶点着色器或片断着色器：所有的一切都是硬编码在芯片中。这被称为Fixed-Function Pipeline (FFP)。同样地，那时候最新版本OpenGL 1.3的API中也没有方法创建、操作和使用所谓的“着色器”，因为它甚至都不存在。但是接着NVIDIA决定用实际的代码描述渲染过程，取代数以百计的标记和状态变量。这就是ARB_fragment_program的由来：没有GLSL，但是取而代之地可以这样写程序：
+回溯到2002年，GPUs还没有顶点着色器或片断着色器概念：所有的一切都是硬编码在芯片中。这被称为固定-功能渠道Fixed-Function Pipeline (FFP)。同样地，那时候最新版本OpenGL 1.3的API中也没有方法创建、操作和使用所谓的“着色器”，因为它甚至都不存在。接着NVIDIA决定用实际代码描述渲染过程，来取代数以百计的标记和状态变量。这就是ARB_fragment_program的由来：没有GLSL，取而代之地可以这样写程序：
 Back in 2002, GPUs had no vertex shaders or fragment shaders : everything was hardcoded inside the chip. This was called the Fixed-Function Pipeline (FFP). As such, the most recent version of the API, which was OpenGL 1.3, proposed no way to create, manipulate and use so-called "shaders", since it didn't even exist. But then NVIDIA decided that it could be handy to describe the rendering process with actual code, instead of hundreds of flags and state variables. This is how ARB_fragment_program was created : there was no GLSL, but instead you could write stuff like this :
 <pre>!!ARBfp1.0 MOV result.color, fragment.color; END</pre>
 但是要显示地告诉OpenGL使用这些代码，你需要一些还不在OpenGL里的特殊函数。在进行解释前，再举个例子。But obviously to tell OpenGL to use such code, you needed special functions, which were not yet in OpenGL. Before moving on to the explanations, one more example.
 <h2>ARB_debug_output</h2>
-好的，你可以说上面那个ARB_fragment_program太老了，不需要使用这个扩展了。但还有一些新的扩展非常方便使用。其中一个便是ARB_debug_output，它揭示了一个不存在于OpenGL 3.3中的功能，但是你能够/应该用任何方式使用它。它定义了像GL_DEBUG_OUTPUT_SYNCHRONOUS_ARB或GL_DEBUG_SEVERITY_MEDIUM_ARB一类的字符串，和DebugMessageCallbackARB一类的函数。这个扩展最伟大之处在于当你写了一些不正确的代码，例如：
+好的，你可以说上面那个ARB_fragment_program太老了，不需要使用这个扩展了。但还有一些新的扩展非常方便使用。其中一个便是ARB_debug_output，它揭示了一个不存在于OpenGL 3.3中的功能，但你能够/应该用想办法使用它。它定义了像GL_DEBUG_OUTPUT_SYNCHRONOUS_ARB或GL_DEBUG_SEVERITY_MEDIUM_ARB一类的字符串，和DebugMessageCallbackARB一类的函数。这个扩展最伟大之处在于当你写了一些不正确的代码，例如：
 Ok, you say, but this ARB_fragment_program is too old, surely I don't need this extension stuff anymore ? Well there are newer extensions which are very handy. One of them is ARB_debug_output, which expose a functionality that doesn't exist in OpenGL 3.3 but that you can/should use anyway. It defines tokens like GL_DEBUG_OUTPUT_SYNCHRONOUS_ARB or GL_DEBUG_SEVERITY_MEDIUM_ARB, and functions like DebugMessageCallbackARB. The great thing about this extension is that whenever you write some incorrect code, for instance :
 <pre class="brush: cpp">glEnable(GL_TEXTURE); // Incorrect ! You probably meant GL_TEXTURE_2D !</pre>
 你能获得错误信息提醒和错误的精确位置。经验之说：you can have an error message and the exact location of the problem. Lessons learned :
@@ -29,7 +30,7 @@ for(i=0; i&lt;NumberOfExtensions; i++) {
   }
 }</pre>
 <h2>获得所有的扩展 - 简单的方式Getting all extensions - the easy way</h2>
-总之这是非常复杂的。但是像GLEW, GLee, gl3w等等函数库使它变简单了。例如，有了GLEW，你只需要在创建窗口后调用glewInit()，然后变量便创建了：  All in all this is very complicated. Libraries like GLEW, GLee, gl3w, etc, make it much easier. For instance, with GLEW, you just have to call glewInit() after you created your window, and handy variables are created :
+总之这非常复杂的。但是像GLEW, GLee, gl3w等等函数库使获得变简单了。例如，有了GLEW，你只需要在创建窗口后调用glewInit()，然后变量便创建了：  All in all this is very complicated. Libraries like GLEW, GLee, gl3w, etc, make it much easier. For instance, with GLEW, you just have to call glewInit() after you created your window, and handy variables are created :
 <pre class="brush: cpp">if (GLEW_ARB_debug_output){ // Ta-Dah ! }</pre>
 ( 小心：debug_output是特殊的，因为你需要在上下文创建的时候启用它。在GLFW中，这些工作用glfwOpenWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, 1)完成。）
 （a word of caution : debug_output is special because you have to enable it at context creation. In GLFW, this is done with glfwOpenWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, 1); )
@@ -53,7 +54,7 @@ ARB : the extention has been accepted by all the members of the OpenGL Architect
 NV/AMD/INTEL : Quite self-explanatory =)
 <h1>设计与扩展Designing with Extentions</h1>
 <h2>问题The problem</h2>
-比方说你的OpenGL 3.3应用程序需要渲染一些大的线条。你能够写一个复杂的顶点着色器来完成，或者只是简单地依赖<a href="http://www.opengl.org/registry/specs/NV/path_rendering.txt">GL_NV_path_rendering</a>，这个能够处理所有复杂的事情。
+比方说你的OpenGL 3.3应用程序需要渲染一些大型线条。你能够写一个复杂的顶点着色器来完成，或者只是简单地依赖<a href="http://www.opengl.org/registry/specs/NV/path_rendering.txt">GL_NV_path_rendering</a>，这个能够处理所有复杂的事情。
 Let's say that your OpenGL 3.3 application needs to render some large lines. You could write a complicated vertex shader to do that, or simply rely on <a href="http://www.opengl.org/registry/specs/NV/path_rendering.txt">GL_NV_path_rendering</a>, which will handle all the complicated stuff for you.
 
 因此你也可以这样写代码：
@@ -72,7 +73,7 @@ You will thus have code that look like this :
 
 OpenGL 3.3及以后版本，你就有99%的工具是你极可能需要用到的。一些扩展非常有用，比如GL_AMD_pinned_memory,但是这通常不像几年前使用GL_ARB_framebuffer_object(用于纹理渲染)一样可以使你的游戏看起来变好10倍。With OpenGL 3.3 and above, you already have 99% of the tools you're likely to need. Some extensions can be very useful, like GL_AMD_pinned_memory, but this is often not like a few years ago when having GL_ARB_framebuffer_object ( used for Render To Texture ) could make your game look 10 times better.
 
-如果你不得不使用旧的硬件，那么OpenGL 3+就不能使用，这时你需要用OpenGL 2+来代替。并且你将不能使用各种花样的扩展了，而需自行处理那些问题。If you have to handle older hardware, though, OpenGL 3+ won't be available, and you'll have to use OpenGL 2+ instead. You won't be able to assume that you have all the fancy extensions anymore, and you'll need to cope with that.
+如果你不得不使用配置较低的硬件，那么OpenGL 3+就不能使用，这时你需要用OpenGL 2+来代替。并且你将不能使用各种花样的扩展了，而需自行处理那些问题。If you have to handle older hardware, though, OpenGL 3+ won't be available, and you'll have to use OpenGL 2+ instead. You won't be able to assume that you have all the fancy extensions anymore, and you'll need to cope with that.
 
 更多的细节可以参考例子<a href="http://code.google.com/p/opengl-tutorial-org/source/browse/tutorial14_render_to_texture/tutorial14.cpp?name=2.1%20branch#152">OpenGL 2.1版本的第14课 - 纹理渲染，第152行</a>，需手工地检查GL_ARB_framebuffer_object的存在。常见问题可见<a href="http://www.opengl-tutorial.org/miscellaneous/faq/">FAQ</a>。
 For further details, see for instance the <a href="http://code.google.com/p/opengl-tutorial-org/source/browse/tutorial14_render_to_texture/tutorial14.cpp?name=2.1%20branch#152">OpenGL 2.1 version of Tutorial  14 - Render To Texture, line 152</a>, where I have to check the presence of GL_ARB_framebuffer_object by hand. See also the <a href="http://www.opengl-tutorial.org/miscellaneous/faq/">FAQ</a>.
