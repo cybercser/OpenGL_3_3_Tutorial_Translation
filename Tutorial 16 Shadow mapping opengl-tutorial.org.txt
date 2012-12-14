@@ -42,9 +42,9 @@
  return false;</pre>
 MVP矩阵用于从光源的视角绘制场景，其计算过程如下：The MVP matrix used to render the scene from the light's point of view is computed as follows :
 <ul>
-	<li>投影矩阵是正交矩阵，可将整个场景The Projection matrix is an orthographic matrix which will encompass everything in the axis-aligned box (-10,10),(-10,10),(-10,20) on the X,Y and Z axes respectively. These values are made so that our entire <em>visible </em>scene is always visible ; more on this in the Going Further section.</li>
-	<li>The View matrix rotates the world so that in camera space, the light direction is -Z (would you like to re-read <a href="http://www.opengl-tutorial.org/beginners-tutorials/tutorial-3-matrices/" target="_blank">Tutorial 3</a> ?)</li>
-	<li>The Model matrix is whatever you want.</li>
+	<li>投影矩阵是正交矩阵，可将整个场景包含到一个轴向包围盒（axis-aligned box）里，该包围盒在X、Y、Z轴上的坐标范围分别为(-10,10)、(-10,10)、(-10,20)。之所以这样取值是为了让整个场景始终可见，这一点在“再进一步”小节还会讲到。The Projection matrix is an orthographic matrix which will encompass everything in the axis-aligned box (-10,10),(-10,10),(-10,20) on the X,Y and Z axes respectively. These values are made so that our entire <em>visible </em>scene is always visible ; more on this in the Going Further section.</li>
+	<li>视图矩阵对场景做了旋转，这样在观察坐标系中，光源的方向就是-Z方向（需要温习第三课吗？）。The View matrix rotates the world so that in camera space, the light direction is -Z (would you like to re-read <a href="http://www.opengl-tutorial.org/beginners-tutorials/tutorial-3-matrices/" target="_blank">Tutorial 3</a> ?)</li>
+	<li>模型矩阵可设为任意值。The Model matrix is whatever you want.</li>
 </ul>
 <pre class="brush: cpp">glm::vec3 lightInvDir = glm::vec3(0.5f,2,2);
 
@@ -57,8 +57,8 @@ MVP矩阵用于从光源的视角绘制场景，其计算过程如下：The MVP 
  // Send our transformation to the currently bound shader,
  // in the "MVP" uniform
  glUniformMatrix4fv(depthMatrixID, 1, GL_FALSE, &depthMVP[0][0])</pre>
-<h3>The shaders</h3>
-The shaders used during this pass are very simple. The vertex shader is a pass-through shader which simply compute the vertex' position in homogeneous coordinates :
+<h3>着色器The shaders</h3>
+这一次渲染中所用的着色器很简单。顶点着色器仅仅简单地计算一下顶点的齐次坐标：The shaders used during this pass are very simple. The vertex shader is a pass-through shader which simply compute the vertex' position in homogeneous coordinates :
 <pre class="brush:vs">#version 330 core
 
 // Input vertex data, different for all executions of this shader.
@@ -70,7 +70,7 @@ uniform mat4 depthMVP;
 void main(){
  gl_Position =  depthMVP * vec4(vertexPosition_modelspace,1);
 }</pre>
-The fragment shader is just as simple : it simply writes the depth of the fragment at location 0 (i.e. in our depth texture).
+片断着色器同样简单：只需将片断的深度值写到location 0（亦即深度纹理）。The fragment shader is just as simple : it simply writes the depth of the fragment at location 0 (i.e. in our depth texture).
 <pre class="brush:fs">#version 330 core
 
 // Ouput data
@@ -80,18 +80,18 @@ void main(){
     // Not really needed, OpenGL does it anyway
     fragmentdepth = gl_FragCoord.z;
 }</pre>
-Rendering a shadow map is usually more than twice as fast as the normal render, because only low precision depth is written, instead of both the depth and the color; Memory bandwidth is often the biggest performance issue on GPUs.
-<h3>Result</h3>
-The resulting texture looks like this :
+由于只需写入低精度的深度值，无需同时写深度值和颜色值，渲染阴影图比渲染一般的场景要快一倍多。显存带宽往往是影响GPU性能的关键因素。Rendering a shadow map is usually more than twice as fast as the normal render, because only low precision depth is written, instead of both the depth and the color; Memory bandwidth is often the biggest performance issue on GPUs.
+<h3>结果Result</h3>
+渲染出的纹理如下所示：The resulting texture looks like this :
 
 <a href="http://www.opengl-tutorial.org/wp-content/uploads/2011/08/DepthTexture.png"><img class="alignnone size-full wp-image-383" title="DepthTexture" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/08/DepthTexture.png" alt="" width="512" height="511" /></a>
 
-A dark colour means a small z ; hence, the upper-right corner of the wall is near the camera. At the opposite, white means z=1 (in homogeneous coordinates), so this is very far.
-<h2>Using the shadow map</h2>
-<h3>Basic shader</h3>
-Now we go back to our usual shader. For each fragment that we compute, we must test whether it is "behind" the shadow map or not.
+颜色越深表示z值越小；故墙面的右上角离相机更近。相反地，白色表示z=1（齐次坐标系中的值），离相机十分遥远。A dark colour means a small z ; hence, the upper-right corner of the wall is near the camera. At the opposite, white means z=1 (in homogeneous coordinates), so this is very far.
+<h2>使用阴影图Using the shadow map</h2>
+<h3>基本着色器Basic shader</h3>
+现在回到一般的着色器。对于每一个计算出的片断，都要测试其是否位于阴影图之“后”。Now we go back to our usual shader. For each fragment that we compute, we must test whether it is "behind" the shadow map or not.
 
-To do this, we need to compute the current fragment's position <em>in the same space that the one we used when creating the lightmap</em>. So we need to transform it once with the usual MVP matrix, and another time with the depthMVP matrix.
+为了做这个测试，需要计算当前片断的坐标。【翻译有难度，另，这一句原文疑有误，lightmap疑为shadow map】To do this, we need to compute the current fragment's position <em>in the same space that the one we used when creating the lightmap</em>. So we need to transform it once with the usual MVP matrix, and another time with the depthMVP matrix.
 
 There is a little trick, though. Multiplying the vertex' position by depthMVP will give homogeneous coordinates, which are in [-1,1] ; but texture sampling must be done in [0,1].
 
