@@ -1,0 +1,141 @@
+纹理渲染是产生多样效果的少数方法。基本思想是像通常那样渲染一个场景，只是这次是在一个可以重用的纹理中。Render-To-Texture is a handful method to create a variety of effects. The basic idea is that you render a scene just like you usually do, but this time in a texture that you can reuse later.
+
+应用包括游戏(in-game)相机，后期处理，和你能想象到的所有显卡（GFX）。Applications include in-game cameras, post-processing, and as many GFX as you can imagine.
+<h1>纹理渲染Render To Texture</h1>
+我们有三个任务：创建要渲染的纹理对象；将纹理渲染到对象上；使用生成的纹理。We have three tasks : creating the texture in which we're going to render ; actually rendering something in it ; and using the generated texture.
+<h2>创建渲染对象Creating the Render Target</h2>
+我们要渲染的对象叫做Framebuffer。它像一个容器，用来装纹理和一个可选的深度缓存区(depth buffer)。在OpenGL中我们可以像创建其他对象一样创建它。What we're going to render to is called a Framebuffer. It's a container for textures and an optional depth buffer. It's created just like any other object in OpenGL :
+<pre class="brush: cpp">// The framebuffer, which regroups 0, 1, or more textures, and 0 or 1 depth buffer.
+GLuint FramebufferName = 0;
+glGenFramebuffers(1, &amp;FramebufferName);
+glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);</pre>
+现在需要创建纹理，纹理中包含着色器的RGB输出。这段代码非常的经典：Now we need to create the texture which will contain the RGB output of our shader. This code is very classic :
+<pre class="brush: cpp">// The texture we&#039;re going to render to
+GLuint renderedTexture;
+glGenTextures(1, &amp;renderedTexture);
+
+// &quot;Bind&quot; the newly created texture : all future texture functions will modify this texture
+glBindTexture(GL_TEXTURE_2D, renderedTexture);
+
+// Give an empty image to OpenGL ( the last &quot;0&quot; )
+glTexImage2D(GL_TEXTURE_2D, 0,GL_RGB, 1024, 768, 0,GL_RGB, GL_UNSIGNED_BYTE, 0);
+
+// Poor filtering. Needed !
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);</pre>
+同时需要一个深度缓冲区(depth buffer)。这是可选的，取决于纹理中实际需要画的东西；由于我们渲染的是Suzanne，所以需要深度测试。We also need a depth buffer. This is optional, depending on what you actually need to draw in your texture; but since we're going to render Suzanne, we need depth-testing.
+<pre class="brush: cpp">// The depth buffer
+GLuint depthrenderbuffer;
+glGenRenderbuffers(1, &amp;depthrenderbuffer);
+glBindRenderbuffer(GL_RENDERBUFFER, depthrenderbuffer);
+glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, 1024, 768);
+glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthrenderbuffer);</pre>
+最后，配置frameBuffer。Finally, we configure our framebuffer
+<pre class="brush: cpp">// Set &quot;renderedTexture&quot; as our colour attachement #0
+glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, renderedTexture, 0);
+
+// Set the list of draw buffers.
+GLenum DrawBuffers[2] = {GL_COLOR_ATTACHMENT0};
+glDrawBuffers(1, DrawBuffers); // &quot;1&quot; is the size of DrawBuffers</pre>
+这个过程中可能出现一些错误，取决于GPU的能力。下面告诉你改如何检查：Something may have gone wrong during the process, depending on the capabilities of the GPU. This is how you check it :
+<pre class="brush: cpp">// Always check that our framebuffer is ok
+if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+return false;</pre>
+<h2>对纹理进行渲染Rendering to the texture</h2>
+对纹理进行渲染就显而易见了。简单地绑定frameBuffer，然后像往常一样画场景。简单！Rendering to the texture is straightforward. Simply bind your framebuffer, and draw your scene as usual. Easy !
+<pre class="brush: cpp">// Render to our framebuffer
+glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
+glViewport(0,0,1024,768); // Render on the whole framebuffer, complete from the lower left corner to the upper right</pre>
+片断着色器程序只需要一个小的调整：The fragment shader just needs a minor adaptation :
+<pre class="brush: cpp">layout(location = 0) out vec3 color;</pre>
+这意味着每当修改变量“color”时，实际修改了0号渲染对象(Render Target 0)，这个发生的原因是调用了glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, renderedTexture, 0);
+This means that when writing in the variable "color", we will actually write in the Render Target 0, which happens to be our texure because of our call to glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, renderedTexture, 0);
+
+注意：最后一个参数表示纹理的mipmap(译者注：mipmap是实现纹理缩小的特殊方法，表示一系列预先过滤的分辨率递减的纹理图像)水平。0和GL_COLOR_ATTACHMENT0没有任何关系。Note : the last parameter is the mipmap level of the texture. Nothing to do with the 0 of GL_COLOR_ATTACHEMENT0.
+<h2>使用已渲染的纹理Using the rendered texture</h2>
+我们将画一个简单的充满屏幕的四边形(quad)。需要常用的那些缓冲区(buffers),着色器(shaders), 标识(IDs),...
+We're going to draw a simple quad that fills the screen. We need the usual buffers, shaders, IDs, ...
+<pre class="brush: cpp">// The fullscreen quad&#039;s FBO
+GLuint quad_VertexArrayID;
+glGenVertexArrays(1, &amp;quad_VertexArrayID);
+glBindVertexArray(quad_VertexArrayID);
+
+static const GLfloat g_quad_vertex_buffer_data[] = {
+    -1.0f, -1.0f, 0.0f,
+    1.0f, -1.0f, 0.0f,
+    -1.0f,  1.0f, 0.0f,
+    -1.0f,  1.0f, 0.0f,
+    1.0f, -1.0f, 0.0f,
+    1.0f,  1.0f, 0.0f,
+};
+
+GLuint quad_vertexbuffer;
+glGenBuffers(1, &amp;quad_vertexbuffer);
+glBindBuffer(GL_ARRAY_BUFFER, quad_vertexbuffer);
+glBufferData(GL_ARRAY_BUFFER, sizeof(g_quad_vertex_buffer_data), g_quad_vertex_buffer_data, GL_STATIC_DRAW);
+
+// Create and compile our GLSL program from the shaders
+GLuint quad_programID = LoadShaders( &quot;Passthrough.vertexshader&quot;, &quot;SimpleTexture.fragmentshader&quot; );
+GLuint texID = glGetUniformLocation(quad_programID, &quot;renderedTexture&quot;);
+GLuint timeID = glGetUniformLocation(quad_programID, &quot;time&quot;);</pre>
+现在想渲染到屏幕上的话，通过设置glBindFramebuffer的第二个参数为0来完成。Now you want to render to the screen. This is done by using 0 as the second parameter of glBindFramebuffer.
+<pre class="brush: cpp">// Render to the screen
+glBindFramebuffer(GL_FRAMEBUFFER, 0);
+glViewport(0,0,1024,768); // Render on the whole framebuffer, complete from the lower left corner to the upper right</pre>
+我们用下面这个着色器来画全屏的四边形（quad）：We can draw our full-screen quad with such a shader:
+<pre class="brush:fs">#version 330 core
+
+in vec2 UV;
+
+out vec3 color;
+
+uniform sampler2D renderedTexture;
+uniform float time;
+
+void main(){
+    color = texture( renderedTexture, UV + 0.005*vec2( sin(time+1024.0*UV.x),cos(time+768.0*UV.y)) ).xyz;
+}</pre>
+ 
+
+这段代码只是简单地取样纹理，加上一个随时间变化的微小偏移。This code simply sample the texture, but adds a tiny offset which depends on time.
+<h1>结果Results</h1>
+ 
+
+<a href="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/wavvy.png"><img class="alignnone size-large wp-image-326" title="wavvy" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/wavvy-1024x793.png" alt="" width="640" height="495" /></a>
+<h1>进一步探索Going further</h1>
+<h2>使用深度Using the depth</h2>
+在一些情况下使用纹理渲染可能需要深度。在这个例子中，像下面这样简单地渲染一个纹理：In some cases you might need the depth when using the rendered texture. In this case, simply render to a texture created as follows :
+<pre class="brush: cpp">glTexImage2D(GL_TEXTURE_2D, 0,GL_DEPTH_COMPONENT24, 1024, 768, 0,GL_DEPTH_COMPONENT, GL_FLOAT, 0);</pre>
+(“24”是精确的位数。你可以根据需要从16,24,32中选，。通常设置24恰好)("24" is the precision, in bits. You can choose between 16, 24 and 32, depending on your needs. Usually 24 is fine)
+
+上面那些工作应该就足够你使用纹理渲染，但是提供的源码中也实现了下面这些。This should be enough to get you started, but the provided source code implements this too.
+
+注意到运行可能有几分慢，因为驱动不能使用一些像<a href="http://developer.amd.com/media/gpu_assets/Depth_in-depth.pdf">Hi-Z</a>的优化。
+Note that this should be somewhat slower, because the driver won't be able to use some optimisations such as <a href="http://developer.amd.com/media/gpu_assets/Depth_in-depth.pdf">Hi-Z</a>.
+
+在这个截图中，深度水平人为地被美化。而通常，在一个深度纹理上更难识别物体。 Near = Z 近似于 0 = black, far = Z 近似于 1 = white。In this screenshot, the depth levels are artificially "prettified". Usually, its much more difficult to see anything on a depth texture. Near = Z near 0 = black, far = Z near 1 = white.
+
+<a href="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/wavvydepth.png"><img class="alignnone size-large wp-image-337" title="wavvydepth" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/wavvydepth-1024x793.png" alt="" width="640" height="495" /></a>
+<h2>多重采样Multisampling</h2>
+能够用多重采样纹理来替代基础纹理：只需要在C++代码中将glTexImage2D替换为<a href="http://www.opengl.org/sdk/docs/man3/xhtml/glTexImage2DMultisample.xml">glTexImage2DMultisample</a>，在片断着色器程序中将sampler2D/texture替换为sampler2DMS/texelFetch。  
+You can write to multisampled textures instead of "basic" textures : you just have to replace glTexImage2D by <a href="http://www.opengl.org/sdk/docs/man3/xhtml/glTexImage2DMultisample.xml">glTexImage2DMultisample</a> in the C++ code, and sampler2D/texture by sampler2DMS/texelFetch in the fragment shader.
+
+尽管如此，仍有警告：texelFetch需要另一个参数，表示获取的取样数量。换句话说，就是没有自动的“过滤”（在多重采样中，正确的术语是“分辨率（resolution）”）功能。There is a big caveat, though : texelFetch needs another argument, which is the number of the sample to fetch. In other words, there is no automatic "filtering" (the correct term, when talking about multisampling, is "resolution").
+
+所以需要你自己解决多重采样的纹理，另外，非多重采样纹理，是多亏另一个着色器。So you may have to resolve the MS texture yourself, in another, non-MS texture, thanks to yet another shader.
+
+没有什么困难的，只是体积庞大。Nothing difficult, but it's just bulky.
+<h2>多重渲染对象Multiple Render Targets</h2>
+可能需要同时写好几个纹理。You may write to several textures at the same time.
+
+简单地创建若干纹理（需要正确的大小并且保持一致！），调用glFramebufferTexture，为每一个纹理设置一个不同的color attachement，用更新的参数（如(3,{GL_COLOR_ATTACHMENT0,GL_COLOR_ATTACHMENT1,GL_DEPTH_ATTACHMENT}})一样）调用glDrawBuffers，然后在片断着色器中添加另一个输出变量：
+Simply create several textures (all with the correct and same size !), call glFramebufferTexture with a different color attachement for each, call glDrawBuffers with updated parameters ( something like (3,{GL_COLOR_ATTACHMENT0,GL_COLOR_ATTACHMENT1,GL_DEPTH_ATTACHMENT}})), and add another output variable in your fragment shader :
+<pre class="brush:fs">layout(location = 1) out vec3 normal_tangentspace; // or whatever</pre>
+提示：如果需要有效地在纹理中输出向量，浮点纹理是存在的，可以用16或32位精度代替8位...看看<a href="http://www.opengl.org/sdk/docs/man/xhtml/glTexImage2D.xml">glTexImage2D</a>的参考手册(search for GL_FLOAT)。
+Hint : If you effectively need to output a vector in a texture, floating-point textures exist, with 16 or 32 bit precision instead of 8... See <a href="http://www.opengl.org/sdk/docs/man/xhtml/glTexImage2D.xml">glTexImage2D</a>'s reference (search for GL_FLOAT).
+<h1>练习Exercices</h1>
+<ul>
+	<li>试图使用glViewport(0,0,512,768)；或用glViewport(0,0,1024,768)代替；（对framebuffer和屏幕用两种情况试试）Try using glViewport(0,0,512,768); instead of glViewport(0,0,1024,768); (try with both the framebuffer and the screen)</li>
+	<li>在最后一个片断着色器中用其他UV坐标尝试一下Experiment with other UV coordinates in the last fragment shader</li>
+	<li>用一个实数转换矩阵变换四边形（quad）。首先编码它。然后尝试使用controls.hpp里面的函数，发现什么了麽？Transform the quad with a real transformation matrix. First hardcode it, and then try to use the functions of controls.hpp ; what do you notice ?</li>
+</ul>
