@@ -81,7 +81,7 @@ deltaPos2 = deltaUV2.x * T + deltaUV2.y * B</pre>
 <h2>生成索引Indexing</h2>
 和往常一样为VBO生成索引，但有些许不同之处。Indexing our VBO is very similar to what we used to do, but there is a subtle difference.
 
-若找到一个相同的顶点（相同的坐标、法线、纹理坐标），也就不需要再存一次切线和双切线；相反地，要求其平均值。把老代码改动一下吧：If we find a similar vertex (same position, same normal, same texture coordinates), we don't want to use its tangent and binormal too ; on the contrary, we want to average them. So let's modify our old code a bit :
+若找到一个相同的顶点（相同的坐标、法线、纹理坐标），也就不需要再存一次切线和双切线；反之则要求其平均值。因此，只需把老代码改动一下：If we find a similar vertex (same position, same normal, same texture coordinates), we don't want to use its tangent and binormal too ; on the contrary, we want to average them. So let's modify our old code a bit :
 <pre class="brush: cpp">        // Try to find a similar vertex in out_XXXX
         unsigned int index;
         bool found = getSimilarVertexIndex(in_vertices[i], in_uvs[i], in_normals[i],     out_vertices, out_uvs, out_normals, index);
@@ -96,7 +96,7 @@ deltaPos2 = deltaUV2.x * T + deltaUV2.y * B</pre>
             // Do as usual
             [...]
         }</pre>
-注意，这里没做规范化操作。这样做很取巧，因为小三角形的切线和双切线向量也很小，相比于大三角形（对最终形状影响较大）来说，对最终得出的向量的影响也就小。Note that we don't normalize anything here. This is actually handy, because this way, small triangles, which have smaller tangent and bitangent vectors, will have a weaker effect on the final vectors than big triangles (which contribute more to the final shape).
+注意，这里没做规范化操作。这样做很取巧，因为小三角形的切线和双切线向量也很小，相比于大三角形（对最终形状影响较大）来说，对最终得出的向量的影响力也就小。Note that we don't normalize anything here. This is actually handy, because this way, small triangles, which have smaller tangent and bitangent vectors, will have a weaker effect on the final vectors than big triangles (which contribute more to the final shape).
 <h1>着色器The shader</h1>
 <h2>添加的缓冲区和uniform变量Additional buffers & uniforms</h2>
 新加上两个缓冲区：分别存放切线和双切线：We need two new buffers : one for the tangents, and one for the bitangents :
@@ -245,16 +245,16 @@ deltaPos2 = deltaUV2.x * T + deltaUV2.y * B</pre>
         vertexBitangent_cameraspace,
         vertexNormal_cameraspace
     )); // You can use dot products instead of building this matrix and transposing it. See References for details.</pre>
-此矩阵是从观察坐标系到切线坐标系的变换（若某矩阵名为XXX，则矩阵XXX_modelspace执行的是从模型坐标系到切线坐标系的变换）。可以利用它计算切线坐标系中的光线方向和视线方向。This matrix goes from camera space to tangent space (The same matrix, but with XXX_modelspace instead, would go from model space to tangent space). We can use it to compute the light direction and the eye direction, in tangent space :
+此矩阵是从观察坐标系到切线坐标系的变换（若某矩阵名为XXX，则相应的矩阵XXX_modelspace执行的是从模型坐标系到切线坐标系的变换）。可以利用它计算切线坐标系中的光线方向和视线方向。This matrix goes from camera space to tangent space (The same matrix, but with XXX_modelspace instead, would go from model space to tangent space). We can use it to compute the light direction and the eye direction, in tangent space :
 <pre>    LightDirection_tangentspace = TBN * LightDirection_cameraspace;
     EyeDirection_tangentspace =  TBN * EyeDirection_cameraspace;</pre>
 <h2>片断着色器Fragment shader</h2>
-切线坐标系中的法线很容易获取：其实就是纹理：Our normal, in tangent space, is really straightforward to get : it's our texture :
+切线坐标系中的法线很容易获取：就存在纹理中：Our normal, in tangent space, is really straightforward to get : it's our texture :
 <pre class="brush:fs">    // Local normal, in tangent space
     vec3 TextureNormal_tangentspace = normalize(texture2D( NormalTextureSampler, UV ).rgb*2.0 - 1.0);</pre>
 ?
 
-一切准备就绪。So we've got everything we need now. Diffuse lighting uses <em>clamp( dot( n,l ), 0,1 )</em>, with n and l expressed in tangent space (it doesn't matter in which space you make your dot and cross products; the important thing is that n and l are both expressed in the same space). Specular lighting uses <em>clamp( dot( E,R ), 0,1 )</em>, again with E and R expressed in tangent space. Yay !
+一切准备就绪。漫反射光的值由切线坐标系中的n和l计算得来（在哪个坐标系中计算并不重要，重要的是n和l必须位于同一坐标系中），再用<em>clamp( dot( n,l ), 0,1 )</em>截断。镜面光用<em>clamp( dot( E,R ), 0,1 )</em>截断，E和R也必须位于同一坐标系中。搞定！So we've got everything we need now. Diffuse lighting uses <em>clamp( dot( n,l ), 0,1 )</em>, with n and l expressed in tangent space (it doesn't matter in which space you make your dot and cross products; the important thing is that n and l are both expressed in the same space). Specular lighting uses <em>clamp( dot( E,R ), 0,1 )</em>, again with E and R expressed in tangent space. Yay !
 <h1>结果Results</h1>
 这是目前得到的结果，可以看到：Here is our result so far. You can notice that :
 <ul>
@@ -264,57 +264,57 @@ deltaPos2 = deltaUV2.x * T + deltaUV2.y * B</pre>
 <a href="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/normalmapping.png"><img class="alignnone size-large wp-image-315" title="normalmapping" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/normalmapping-1024x793.png" alt="" width="640" height="495" /></a>
 <h1>延伸阅读Going further</h1>
 <h2>正交化Orthogonalization</h2>
-In our vertex shader we took the transpose instead of the inverse because it's faster. But it only works if the space that the matrix represents is orthogonal, which is not yet the case. Luckily, this is very easy to fix : we just have to make the tangent perpendicular to the normal at he end of computeTangentBasis() :
+顶点着色器中，为了计算得更快，我们没有用对矩阵求逆，而是进行了转置。但这只有当表示坐标系的矩阵是正交矩阵时才成立，而眼前这个矩阵还不是正交的。幸运的是这个问题很容易解决：只需在computeTangentBasis()末尾让切线与法线垂直。In our vertex shader we took the transpose instead of the inverse because it's faster. But it only works if the space that the matrix represents is orthogonal, which is not yet the case. Luckily, this is very easy to fix : we just have to make the tangent perpendicular to the normal at he end of computeTangentBasis() :
 <pre class="brush:vs">t = glm::normalize(t - n * glm::dot(n, t));</pre>
-This formula may be hard to grasp, so a little schema might help :
+这个公式有点难理解，来看看图：This formula may be hard to grasp, so a little schema might help :
 
 <a href="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/gramshmidt.png"><img class="alignnone size-full wp-image-319 whiteborder" title="gramshmidt" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/gramshmidt.png" alt="" width="300" height="157" /></a>
 
-n and t are almost perpendicular, so we "push" t in the direction of -n by a factor of dot(n,t)
+n和t差不多是相互垂直的，只要把t沿-n方向稍微“压”一下，这个幅度是dot(n,t)。n and t are almost perpendicular, so we "push" t in the direction of -n by a factor of dot(n,t)
 
-<a href="http://www.cse.illinois.edu/iem/least_squares/gram_schmidt/">Here</a>'s a little applet that explains it too (Use only 2 vectors).
-<h2>Handedness</h2>
-You usually don't have to worry about that, but in some cases, when you use symmetric models, UVs are oriented in the wrong way, and your T has the wrong orientation.
+<a href="http://www.cse.illinois.edu/iem/least_squares/gram_schmidt/">这里Here</a>有一个applet也讲得很清楚（仅含两个向量）'s a little applet that explains it too (Use only 2 vectors).
+<h2>左手系还是右手系？Handedness</h2>
+一般不必担心这个问题。但在某些情况下，比如使用对称模型时，UV坐标的方向和切线T的方向容易搞错。You usually don't have to worry about that, but in some cases, when you use symmetric models, UVs are oriented in the wrong way, and your T has the wrong orientation.
 
-To check whether it must be inverted or not, the check is simple : TBN must form a right-handed coordinate system, i.e. cross(n,t) must have the same orientation than b.
+检查是否需要翻转这些方向很容易：TBN必须形成一个右手坐标系，亦即，cross(n,t)所得向量应该和b同向。。To check whether it must be inverted or not, the check is simple : TBN must form a right-handed coordinate system, i.e. cross(n,t) must have the same orientation than b.
 
-In mathematics, "Vector A has the same orientation as Vector B" translates as dot(A,B)>0, so we need to check if dot( cross(n,t) , b ) > 0.
+“向量A和向量B同向”这句话用数学术语讲就是“dot(A,B)>0”，因此只需检查dot( cross(n,t) , b )是否大于0。In mathematics, "Vector A has the same orientation as Vector B" translates as dot(A,B)>0, so we need to check if dot( cross(n,t) , b ) > 0.
 
-If it's false, just invert t :
+若dot( cross(n,t) , b ) < 0，就要翻转t：If it's false, just invert t :
 <pre class="brush: c">if (glm::dot(glm::cross(n, t), b) < 0.0f){
 ???? t = t * -1.0f;
  }</pre>
-This is also done for each vertex at the end of computeTangentBasis().
-<h2>镜面高光纹理Specular texture</h2>
-Just for fun, I added a specular texture to the code. It looks like this :
+在computeTangentBasis()末对每个顶点都做这个操作。This is also done for each vertex at the end of computeTangentBasis().
+<h2>高光纹理Specular texture</h2>
+出于乐趣，我在代码里加上了高光纹理。看起来像这样：Just for fun, I added a specular texture to the code. It looks like this :
 
 <a href="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/specular.jpg"><img class="alignnone size-full wp-image-317" title="specular" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/specular.jpg" alt="" width="351" height="335" /></a>
 
-and is used instead of the simple "vec3(0.3,0.3,0.3)" grey that we used as specular color.
+镜面高光不再是简单的“vec3(0.3,0.3,0.3)”灰色。and is used instead of the simple "vec3(0.3,0.3,0.3)" grey that we used as specular color.
 
 <a href="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/normalmappingwithspeculartexture.png"><img class="alignnone size-large wp-image-316" title="normalmappingwithspeculartexture" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/normalmappingwithspeculartexture-1024x793.png" alt="" width="640" height="495" /></a>
 
-Notice that now, cement is always black : the texture says that it has no specular component.
+注意，现在水泥部分始终是黑色的：因为高光纹理中其高光分量为0。Notice that now, cement is always black : the texture says that it has no specular component.
 <h2>用立即模式进行调试Debugging with the immediate mode</h2>
-The real aim of this website is that you DON'T use immediate mode, which is deprecated, slow, and problematic in many aspects.
+本站创立的初衷就是让大家不再使用过时、缓慢、问题频出的立即模式。The real aim of this website is that you DON'T use immediate mode, which is deprecated, slow, and problematic in many aspects.
 
-However, it also happens to be really handy for debugging :
+不过，用立即模式进行调试却显得十分方便：However, it also happens to be really handy for debugging :
 
 <a href="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/immediatemodedebugging.png"><img class="alignnone size-large wp-image-314" title="immediatemodedebugging" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/immediatemodedebugging-1024x793.png" alt="" width="640" height="495" /></a>
 
-Here we visualize our tangent space with lines drawn in immediate mode.
+这里，我们在立即模式下画了一些线条表示切线坐标系。Here we visualize our tangent space with lines drawn in immediate mode.
 
-For this, you need to abandon the 3.3 core profile :
+要进入立即模式，得脱离3.3 core profile：For this, you need to abandon the 3.3 core profile :
 <pre class="brush: cpp">glfwOpenWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);</pre>
-then give our matrices to OpenGL's old-school pipeline (you can write another shader too, but it's simpler this way, and you're hacking anyway) :
+然后把矩阵传给旧式的OpenGL管线（你也可以另写一个着色器，不过这样做更简单，反正都是在hacking）：then give our matrices to OpenGL's old-school pipeline (you can write another shader too, but it's simpler this way, and you're hacking anyway) :
 <pre class="brush: cpp">glMatrixMode(GL_PROJECTION);
 glLoadMatrixf((const GLfloat*)&ProjectionMatrix[0]);
 glMatrixMode(GL_MODELVIEW);
 glm::mat4 MV = ViewMatrix * ModelMatrix;
 glLoadMatrixf((const GLfloat*)&MV[0]);</pre>
-Disable shaders :
+将着色器禁用：Disable shaders :
 <pre class="brush: cpp">glUseProgram(0);</pre>
-And draw your lines (in this case, normals, normalized and multiplied by 0.1, and applied at the correct vertex) :
+然后画线条（本例中法线都已正规化且乘了0.1，放到了对应的顶点上）：And draw your lines (in this case, normals, normalized and multiplied by 0.1, and applied at the correct vertex) :
 <pre class="brush: cpp">glColor3f(0,0,1);
 glBegin(GL_LINES);
 for (int i=0; i<indices.size(); i++){
@@ -325,41 +325,41 @@ for (int i=0; i<indices.size(); i++){
 ??? glVertex3fv(&p.x);
 }
 glEnd();</pre>
-Remember : don't use immediate mode in real world ! Only for debugging ! And don't forget to re-enable the core profile afterwards, it will make sure that you don't do such things.
+记住：实际项目中别用立即模式！只在调试时用！别忘了之后恢复到core profile，它可以保证不会启用立即模式！Remember : don't use immediate mode in real world ! Only for debugging ! And don't forget to re-enable the core profile afterwards, it will make sure that you don't do such things.
 <h2>调试颜色Debugging with colors</h2>
-When debugging, it can be useful to visualize the value of a vector. The easiest way to do this is to write it on the framebuffer instead of the actual colour. For instance, let's visualize LightDirection_tangentspace :
+调试时，将向量的值可视化有很大用处。最简单的方法是把向量都写到帧缓冲区。举个例子，我们把LightDirection_tangentspace可视化一下试试：When debugging, it can be useful to visualize the value of a vector. The easiest way to do this is to write it on the framebuffer instead of the actual colour. For instance, let's visualize LightDirection_tangentspace :
 <pre class="brush:fs">color.xyz = LightDirection_tangentspace;</pre>
 <a href="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/colordebugging.png"><img class="alignnone size-large wp-image-313" title="colordebugging" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/colordebugging-1024x793.png" alt="" width="640" height="495" /></a>
 
-This means :
+这说明：This means :
 <ul>
-	<li>On the right part of the cylinder, the light (represented by the small white line) is UP (in tangent space). In other words, the light is in the direction of the normal of the triangles.</li>
-	<li>On the middle part of the cylinder, the light is in the direction of the tangent (towards +X)</li>
+	<li>在圆柱体的右侧，光线（如白色线条所示）是朝上（在切线坐标系中）的。也就是说，光线和三角形的法线同向。On the right part of the cylinder, the light (represented by the small white line) is UP (in tangent space). In other words, the light is in the direction of the normal of the triangles.</li>
+	<li>O在圆柱体的中间部分，光线和切线方向（指向+X）同向。n the middle part of the cylinder, the light is in the direction of the tangent (towards +X)</li>
 </ul>
 友情提示：A few tips :
 <ul>
-	<li>Depending on what you're trying to visualize, you may want to normalize it.</li>
-	<li>If you can't make sense of what you're seeing, visualize all components separately by forcing for instance green and blue to 0.</li>
-	<li>Avoid messing with alpha, it's too complicated :)</li>
-	<li>If you want to visualize negative value, you can use the same trick that our normal textures use : visualize (v+1.0)/2.0 instead, so that black means -1 and full color means +1. It's hard to understand what you see, though.</li>
+	<li>需要可视化的变量是否要规范化？这得具体情况具体分析。Depending on what you're trying to visualize, you may want to normalize it.</li>
+	<li>如果结果不好看懂，就逐分量地可视化。比如，只观察红色，而将绿色和蓝色分量强制设为0。If you can't make sense of what you're seeing, visualize all components separately by forcing for instance green and blue to 0.</li>
+	<li>别折腾alpha值，太复杂了:)Avoid messing with alpha, it's too complicated :)</li>
+	<li>若想将一个负值可视化，可以采用和处理法线纹理一样的技巧：转而把(v+1.0)/2.0可视化，于是黑色就代表-1，而白色代表+1。只不过这样做有点绕弯子。If you want to visualize negative value, you can use the same trick that our normal textures use : visualize (v+1.0)/2.0 instead, so that black means -1 and full color means +1. It's hard to understand what you see, though.</li>
 </ul>
 ?
 <h2>调试变量名Debugging with variable names</h2>
-As already stated before, it's crucial to exactly know in which space your vectors are. Don't take the dot product of a vector in camera space and a vector in model space.
+前面已经讲过了，搞清楚向量所处的坐标系至关重要。千万别把一个观察坐标系里的向量和一个模型坐标系里的向量做点乘。As already stated before, it's crucial to exactly know in which space your vectors are. Don't take the dot product of a vector in camera space and a vector in model space.
 
-Appending the space of each vector in their names ("..._modelspace") helps fixing math bugs tremendously.
+在向量名称后缀“_modelspace”可以有效地避免这类计算错误。Appending the space of each vector in their names ("..._modelspace") helps fixing math bugs tremendously.
 <h1>练习Exercises</h1>
 <ul>
-	<li>Normalize the vectors in indexVBO_TBN before the addition and see what it does.</li>
-	<li>Visualize other vectors (for instance, EyeDirection_tangentspace) in color mode, and try to make sense of what you see</li>
+	<li>在indexVBO_TBN函数中把向量规范化，看看会出现什么现象。Normalize the vectors in indexVBO_TBN before the addition and see what it does.</li>
+	<li>用颜色可视化其他向量（如instance、EyeDirection_tangentspace），试着解释你看到的结果。Visualize other vectors (for instance, EyeDirection_tangentspace) in color mode, and try to make sense of what you see</li>
 </ul>
 <h1>工具和链接Tools & Links</h1>
 <ul>
-	<li><a href="http://www.crazybump.com/">Crazybump</a> , a great tool to make normal maps. Not free.</li>
-	<li><a href="http://developer.nvidia.com/nvidia-texture-tools-adobe-photoshop">Nvidia's photoshop plugin</a>. Free, but photoshop isn't...</li>
+	<li><a href="http://www.crazybump.com/">Crazybump</a> 制作法线纹理的好工具，收费。, a great tool to make normal maps. Not free.</li>
+	<li><a href="http://developer.nvidia.com/nvidia-texture-tools-adobe-photoshop">Nvidia's photoshop plugin</a>免费，不过Photoshop不免费……. Free, but photoshop isn't...</li>
 	<li><a href="http://www.zarria.net/nrmphoto/nrmphoto.html">Make your own normal maps out of several photos</a></li>
 	<li><a href="http://www.katsbits.com/tutorials/textures/making-normal-maps-from-photographs.php">Make your own normal maps out of one photo</a></li>
-	<li>Some more info on <a href="http://www.katjaas.nl/transpose/transpose.html">matrix transpose</a></li>
+	<li>关于矩阵转置的详细资料Some more info on <a href="http://www.katjaas.nl/transpose/transpose.html">matrix transpose</a></li>
 </ul>
 <h1>参考文献References</h1>
 <ul>
