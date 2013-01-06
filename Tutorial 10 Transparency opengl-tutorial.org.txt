@@ -1,16 +1,19 @@
 ﻿第十课：透明
 
 <h1>alpha通道The alpha channel</h1>
-alpha通道的概念很简单。只需要把结果由RGB改为RGBA。The concept of the alpha channel is pretty simple. Instead of a writing an RGB result, you write an RGBA :
+alpha通道的概念很简单。之前是写RGB结果，现在改为写RGBA：
+The concept of the alpha channel is pretty simple. Instead of a writing an RGB result, you write an RGBA :
 <pre class="brush:fs">// Ouput data : it's now a vec4
 out vec4 color;</pre>
-前三个分量仍然可以通过swizzle操作符.xyz来访问，最后一个分量通过.a来访问：the first 3 components are still accessed with the .xyz swiggle operator, while the last one is accessed with .a :
+前三个分量仍可以通过混合操作符（swizzle operator）.xyz访问，最后一个分量通过.a访问：
+the first 3 components are still accessed with the .xyz swiggle operator, while the last one is accessed with .a :
 <pre class="brush:fs">color.a = 0.3;</pre>
-这也许不太直观：alpha代表不透明度，因此alpha = 1代表完全不透明，alpha = 0代表完全透明。Unintuitively, alpha = opaqueness, so alpha = 1 means fully opaque while alpha = 0 means fully transparent.
+不太直观，但：alpha = 不透明度；因此alpha = 1代表完全不透明，alpha = 0为完全透明。
+Unintuitively, alpha = opaqueness, so alpha = 1 means fully opaque while alpha = 0 means fully transparent.
 
-这里我们简单地将alpha硬编码为0.3，但更常见的做法是用一个uniform变量表示alpha值，或者从RGBA纹理中读取（TGA格式支持alpha通道，而GLFW支持TGA）。Here, we simply hardcode the alpha channel at 0.3, but you probably want to use a uniform, or read it from a RGBA texture ( TGA supports the alpha channel, and GLFW supports TGA )
+这里我们简单地将alpha硬编码为0.3；但更常见的做法是用一个uniform变量表示它，或从RGBA纹理中读取（TGA格式支持alpha通道，而GLFW支持TGA）。Here, we simply hardcode the alpha channel at 0.3, but you probably want to use a uniform, or read it from a RGBA texture ( TGA supports the alpha channel, and GLFW supports TGA )
 
-如下是结果。既然想要“看透”模型，请确保关闭隐面消除（glDisable(GL_CULL_FACE)。可以看到模型没有了“背”面。Here's the result. Make sure to turn backface culling of (glDisable(GL_CULL_FACE) ) because since we can look through the mesh, we could see that it has no "back" face.
+结果如下。既然我们能“看透”模型表面，请确保关闭隐面消除（glDisable(GL_CULL_FACE)。否则就发现模型没有了“背”面。Here's the result. Make sure to turn backface culling of (glDisable(GL_CULL_FACE) ) because since we can look through the mesh, we could see that it has no "back" face.
 
 <a href="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/transparencyok.png"><img class="alignnone size-large wp-image-289" title="transparencyok" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/transparencyok-1024x793.png" alt="" width="640" height="495" /></a>
 <h1>顺序很重要！Order matters !</h1>
@@ -24,40 +27,40 @@ out vec4 color;</pre>
 
 <a href="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/transparencybad.png"><img class="alignnone size-large wp-image-288" title="transparencybad" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/transparencybad-1024x793.png" alt="" width="640" height="495" /></a>
 
-事实证明这个问题十分棘手。游戏中透明不是很多，对吧？It turns our this is a very hard problem. You never see lots of transparency in games, do you ?
+事实证明这个问题十分棘手。游戏中透明的东西不多，对吧？It turns our this is a very hard problem. You never see lots of transparency in games, do you ?
 <h2>常见解决方案Usual solution</h2>
 常见解决方案即对所有的透明三角形排序。是的，所有的透明三角形。The usual solution is to sort all transparent triangles. Yes, ALL transparent triangles.
 <ul>
-	<li>绘制场景的不透明部分，让深度缓冲区做好准备丢弃隐藏的透明的三角形。Draw the opaque part of the world so that the depth buffer already can reject hidden transparent triangles</li>
+	<li>绘制场景的不透明部分，让深度缓冲区能丢弃被遮挡的透明三角形。Draw the opaque part of the world so that the depth buffer already can reject hidden transparent triangles</li>
 	<li>对透明三角形按深度从近到远排序。Sort transparent triangles, from the furthest to the closest</li>
 	<li>绘制透明三角形。Draw the transparent triangles.</li>
 </ul>
-可以用C语言的qsort函数或者C++的std::sort函数来排序。细节就不详述了，因为……You can sort whatever you want with qsort (in C) or std::sort (in C++). I won't dig in the details, because...
+可以用C语言的qsort函数或者C++的std::sort函数来排序。细节就不多说了，因为……You can sort whatever you want with qsort (in C) or std::sort (in C++). I won't dig in the details, because...
 <h2>警告Caveat</h2>
-这么做可以解决问题（下一节还会对此作介绍），但是：Doing so will work ( more on this in the next section ), but :
+这么做可以解决问题（下一节还会介绍它），但：Doing so will work ( more on this in the next section ), but :
 <ul>
-	<li>填充速率会受到限制，一个片断会写10次、20次，也许更多次。这对力不从心的内存总线来说负荷太重了。通常，深度缓冲区可以自动丢弃“远”片断，但在此，我们得显式地对片断进行排序，所以深度缓冲区实际上并未发挥作用。You will be fillrate limited. That is, each fragment will be written 10, 20 times, maybe more. This is way to much for the poor memory bus. Usually the depth buffer allows to reject enough "far" fragments, but here, you explicitly sorted them, so the depth buffer is actually useless.</li>
-	<li>每个像素上这些操作得做4遍（我们采用了4xMSAA，超采样反走样），除非采用了什么高明的优化策略。You will be doing this 4 times per pixel ( we use 4xMSAA ), except if you use some clever optimisation</li>
+	<li>填充速率会被限制，即，每个片断会写10、20次，也许更多。这对力不从心的内存总线来说太沉重了。通常，深度缓冲区可以自动丢弃“远”片断；但这时，我们显式地对片断进行排序，故深度缓冲区实际上没发挥作用。You will be fillrate limited. That is, each fragment will be written 10, 20 times, maybe more. This is way to much for the poor memory bus. Usually the depth buffer allows to reject enough "far" fragments, but here, you explicitly sorted them, so the depth buffer is actually useless.</li>
+	<li>这些操作，每个像素上都会做4遍（我们用了4倍多重采样抗锯齿（MSAA）），除非用了什么高明的优化。You will be doing this 4 times per pixel ( we use 4xMSAA ), except if you use some clever optimisation</li>
 	<li>透明三角形排序很耗时Sorting all the transparent triangles takes time</li>
-	<li>若要逐个三角形地切换纹理，或者更糟糕，切换着色器，那性能会大打折扣。别这么干。If you have to switch your texture, or worse, your shader, from triangle to triangle, you're going into deep performance trouble. Don't do this.</li>
+	<li>若要逐个三角形地切换纹理，或者更糟糕地，要切换着色器——性能会大打折扣。别这么干。If you have to switch your texture, or worse, your shader, from triangle to triangle, you're going into deep performance trouble. Don't do this.</li>
 </ul>
-一个通常较好的解决方案是：A good enough solution is often to :
+一个足够好的解决方案是：A good enough solution is often to :
 <ul>
 	<li>限制透明多边形的数量Limit to a maximum the number of transparent polygons</li>
 	<li>对所有透明多边形使用同一个着色器和纹理Use the same shader and the same texture for all of them</li>
-	<li>若要求这些透明多边形外观各异，请使用纹理！If they are supposed to look very different, use your texture !</li>
-	<li>若能不排序效果看起来还行，那最好别排序。If you can avoid sorting, and it still doesn't look <em>too </em>bad, consider yourself lucky.</li>
+	<li>若这些透明多边形必须看起来很不同，请用纹理区分！If they are supposed to look very different, use your texture !</li>
+	<li>若不排序，效果也还行，那最好别排序。If you can avoid If you can avoid sorting, and it still doesn't look <em>too </em>bad, consider yourself lucky.</li>
 </ul>
 <h2>与顺序无关的透明Order-Independent Transparency</h2>
-如果你的引擎确实非常需要顶尖的透明效果，还有一些技术值得研究一番：A number of other techniques are worth investigating if you engine really, really needs state-of-the-art transparency :
+如果你的引擎确实需要顶尖的透明效果，这有一些技术值得研究一番：A number of other techniques are worth investigating if you engine really, really needs state-of-the-art transparency :
 <ul>
-	<li><a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.18.9286&rep=rep1&type=pdf">2001年深度剥离（Depth Peeling）论文原文The original 2001 Depth Peeling paper</a>：精细到每个像素，但速度不快: pixel-perfect results, not very fast.</li>
+	<li><a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.18.9286&rep=rep1&type=pdf">2001年深度剥离（Depth Peeling）论文原文The original 2001 Depth Peeling paper</a>：精细到像素，但速度不快: pixel-perfect results, not very fast.</li>
 	<li><a href="http://developer.download.nvidia.com/SDK/10/opengl/src/dual_depth_peeling/doc/DualDepthPeeling.pdf">双深度剥离（Dual Depth Peeling）Dual Depth Peeling</a>：小幅改进 : a slight improvement</li>
 	<li>桶排序相关的几篇论文。把片断存到数组，在着色器中进行深度排序。Several papers on bucket sort. Uses an array of fragments; sort them by depth in a shader.</li>
 	<li><a href="http://fr.slideshare.net/hgruen/oit-and-indirect-illumination-using-dx11-linked-lists">ATI的Mecha演示ATI's Mecha Demo</a>：又好又快，但实现起来有难度，需要最新的硬件。用链表存储片断。 : good and fast, but tricky to implement, needs recent hardware. Uses a linked list of fragments.</li>
 	<li><a href="http://blog.icare3d.org/2010/07/opengl-40-abuffer-v20-linked-lists-of.html">Cyril Crassin针对ATI技术所做的另一个版本：实现难度更大。Cyril Crassin's variation on the ATI's? technique</a> : even harder implementation</li>
 </ul>
-注意，即便是像《小小大星球》（Little Big Planet）这样，运行在具有超强图形性能的游戏机上的新游戏也只用了一层透明。Note that even a recent game like Little Big Planet, which ran on a powerful console, used only 1 layer of transparency.
+注意，即便是《小小大星球》（Little Big Planet）这种跑在高端电脑上的新游戏，也只用了一层透明。Note that even a recent game like Little Big Planet, which ran on a powerful console, used only 1 layer of transparency.
 <h1>混合函数The blend function</h1>
 要让之前的代码运行，得设置好混合函数。In order for the previous code to work, you need to setup your blend function.
 <pre class="brush:cpp">// Enable blending
@@ -71,6 +74,3 @@ glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);</pre>
 <pre class="brush:plain">new color = 0.5*(0,1,0) + (1-0.5)*(1,0.5,0.5); // (the red was already blended with the white background)
 new color = (1, 0.75, 0.25) = the same orange
 </pre>
-?
-
-?
