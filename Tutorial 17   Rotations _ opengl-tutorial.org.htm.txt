@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en-US"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"><script src="Tutorial%2017%20%20%20Rotations%20_%20opengl-tutorial.org_fichiers/menu134.js" type="text/javascript"></script><script async="" src="Tutorial%2017%20%20%20Rotations%20_%20opengl-tutorial.org_fichiers/cbgapi.loaded_0"></script><script src="Tutorial%2017%20%20%20Rotations%20_%20opengl-tutorial.org_fichiers/fr.js" type="text/javascript"></script><script gapi_processed="true" src="Tutorial%2017%20%20%20Rotations%20_%20opengl-tutorial.org_fichiers/plusone.js" async="true" type="text/javascript"></script><link media="all" href="Tutorial%2017%20%20%20Rotations%20_%20opengl-tutorial.org_fichiers/widget100.css" type="text/css" rel="stylesheet">
+<meta charset="UTF-8">
+<title>Tutorial 17 : Rotations | opengl-tutorial.org</title>
+
+<link rel="stylesheet" href="Tutorial%2017%20%20%20Rotations%20_%20opengl-tutorial.org_fichiers/language-selector.css" type="text/css" media="all">
+<link rel="profile" href="http://gmpg.org/xfn/11">
+<link rel="stylesheet" type="text/css" media="all" href="Tutorial%2017%20%20%20Rotations%20_%20opengl-tutorial.org_fichiers/style.css">
+<link rel="pingback" href="http://www.opengl-tutorial.org/xmlrpc.php">
+<link rel="alternate" type="application/rss+xml" title="opengl-tutorial.org » Feed" href="http://www.opengl-tutorial.org/feed/">
+<link rel="alternate" type="application/rss+xml" title="opengl-tutorial.org » Comments Feed" href="http://www.opengl-tutorial.org/comments/feed/">
+<link rel="stylesheet" id="thickbox.css-css" href="Tutorial%2017%20%20%20Rotations%20_%20opengl-tutorial.org_fichiers/thickbox.css" type="text/css" media="all">
+<link rel="stylesheet" id="admin-bar-css" href="Tutorial%2017%20%20%20Rotations%20_%20opengl-tutorial.org_fichiers/admin-bar.css" type="text/css" media="all">
+<link rel="stylesheet" id="jquery-toc-css" href="Tutorial%2017%20%20%20Rotations%20_%20opengl-tutorial.org_fichiers/jquery-toc.css" type="text/css" media="all">
+<script src="Tutorial%2017%20%20%20Rotations%20_%20opengl-tutorial.org_fichiers/ga.js" async="" type="text/javascript"></script><script type="text/javascript" src="Tutorial%2017%20%20%20Rotations%20_%20opengl-tutorial.org_fichiers/jquery.js"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var jQueryTOC = {"source_selector":".single .entry","header_tag":"h2","output_id":"jquery_toc","output_title":"On this page:"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="Tutorial%2017%20%20%20Rotations%20_%20opengl-tutorial.org_fichiers/jquery-toc.js"></script>
+<script type="text/javascript" src="Tutorial%2017%20%20%20Rotations%20_%20opengl-tutorial.org_fichiers/comment-reply.js"></script>
+<script type="text/javascript" src="Tutorial%2017%20%20%20Rotations%20_%20opengl-tutorial.org_fichiers/external-tracking.js"></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://www.opengl-tutorial.org/xmlrpc.php?rsd">
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://www.opengl-tutorial.org/wp-includes/wlwmanifest.xml"> 
+<meta name="generator" content="WordPress 3.4.2">
+<link rel="canonical" href="http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-17-quaternions/">
+			<!-- Last Modified Footer -->
+				<style type="text/css" media="screen">p.lmf_generated_text { color: #A0A0A0; }</style>			<!-- /Last Modified Footer -->
+			<script type="text/javascript">var icl_lang = 'en';var icl_home = 'http://www.opengl-tutorial.org/';</script>
+<script type="text/javascript" src="Tutorial%2017%20%20%20Rotations%20_%20opengl-tutorial.org_fichiers/sitepress.js"></script>
+<meta name="generator" content="WPML ver:2.0.4.1 stt:1,61,4,3,2;0;0;0">
+<script type="text/javascript" src="Tutorial%2017%20%20%20Rotations%20_%20opengl-tutorial.org_fichiers/shCore.js"></script>
+<script type="text/javascript" src="Tutorial%2017%20%20%20Rotations%20_%20opengl-tutorial.org_fichiers/shAutoloader.js"></script>
+<link type="text/css" rel="stylesheet" href="Tutorial%2017%20%20%20Rotations%20_%20opengl-tutorial.org_fichiers/shCore.css">
+<link type="text/css" rel="stylesheet" href="Tutorial%2017%20%20%20Rotations%20_%20opengl-tutorial.org_fichiers/shThemeDefault.css">
+<style type="text/css" media="print">#wpadminbar { display:none; }</style>
+<style type="text/css" media="screen">
+	html { margin-top: 28px !important; }
+	* html body { margin-top: 28px !important; }
+</style>
+<style type="text/css">.broken_link, a.broken_link {
+	text-decoration: line-through;
+}</style><style type="text/css" id="custom-background-css">
+body.custom-background { background-color: #1F1F1F; }
+</style>
+<!-- Google Analytics Tracking by Google Analyticator 6.3.4: http://www.videousermanuals.com/google-analyticator/ -->
+<script type="text/javascript">
+	var analyticsFileTypes = ['zip'];
+	var analyticsEventTracking = 'enabled';
+</script>
+<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-22633480-2']);
+        _gaq.push(['_addDevId', 'i9k95']); // Google Analyticator App ID with Google 
+	_gaq.push(['_trackPageview']);
+	_gaq.push(['_trackPageLoadTime']);
+
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+</script>
+<div id="_atssh" style="visibility: hidden; height: 1px; width: 1px; position: absolute; z-index: 100000;"><iframe src="Tutorial%2017%20%20%20Rotations%20_%20opengl-tutorial.org_fichiers/sh105.htm" style="height: 1px; width: 1px; position: absolute; z-index: 100000; border: 0px none; left: 0px; top: 0px;" title="AddThis utility frame" id="_atssh218"></iframe></div><script src="Tutorial%2017%20%20%20Rotations%20_%20opengl-tutorial.org_fichiers/core053.js" type="text/javascript"></script></head>
+
+<body class="page page-id-569 page-child parent-pageid-140 page-template-default logged-in admin-bar custom-background customize-support">
+<div id="wrapper" class="hfeed">
+	<div id="header">
+		<div id="masthead">
+			<div id="branding" role="banner">
+								<div id="site-title">
+					<span>
+						<!--a href="http://www.opengl-tutorial.org/" title="opengl-tutorial.org" rel="home">opengl-tutorial.org</a-->
+					</span>
+				</div>
+				<div id="site-description">Tutorials for OpenGL 3.3 and later</div>
+
+										<img src="Tutorial%2017%20%20%20Rotations%20_%20opengl-tutorial.org_fichiers/blue_bubbles.png" alt="" height="100" width="940">
+										<div class="clear"></div>
+			</div><!-- #branding -->
+<div class="clear"></div>
+			<div id="access" role="navigation">
+			  				<div class="skip-link screen-reader-text"><a href="#content" title="Skip to content">Skip to content</a></div>
+								<div class="menu"><ul><li><a href="http://www.opengl-tutorial.org/" title="Home">Home</a></li><li class="page_item page-item-138"><a href="http://www.opengl-tutorial.org/beginners-tutorials/">Basic OpenGL</a><ul class="children"><li class="page_item page-item-7"><a href="http://www.opengl-tutorial.org/beginners-tutorials/tutorial-1-opening-a-window/">Tutorial 1 : Opening a window</a></li><li class="page_item page-item-14"><a href="http://www.opengl-tutorial.org/beginners-tutorials/tutorial-2-the-first-triangle/">Tutorial 2 : The first triangle</a></li><li class="page_item page-item-19"><a href="http://www.opengl-tutorial.org/beginners-tutorials/tutorial-3-matrices/">Tutorial 3 : Matrices</a></li><li class="page_item page-item-82"><a href="http://www.opengl-tutorial.org/beginners-tutorials/tutorial-4-a-colored-cube/">Tutorial 4 : A Colored Cube</a></li><li class="page_item page-item-83"><a href="http://www.opengl-tutorial.org/beginners-tutorials/tutorial-5-a-textured-cube/">Tutorial 5 : A Textured Cube</a></li><li class="page_item page-item-170"><a href="http://www.opengl-tutorial.org/beginners-tutorials/tutorial-6-keyboard-and-mouse/">Tutorial 6 : Keyboard and Mouse</a></li><li class="page_item page-item-185"><a href="http://www.opengl-tutorial.org/beginners-tutorials/tutorial-7-model-loading/">Tutorial 7 : Model loading</a></li><li class="page_item page-item-198"><a href="http://www.opengl-tutorial.org/beginners-tutorials/tutorial-8-basic-shading/">Tutorial 8 : Basic shading</a></li></ul></li><li class="page_item page-item-140 current_page_ancestor current_page_parent"><a href="http://www.opengl-tutorial.org/intermediate-tutorials/">Intermediate Tutorials</a><ul class="children"><li class="page_item page-item-252"><a href="http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-9-vbo-indexing/">Tutorial 9 : VBO Indexing</a></li><li class="page_item page-item-281"><a href="http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-10-transparency/">Tutorial 10 : Transparency</a></li><li class="page_item page-item-291"><a href="http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-11-2d-text/">Tutorial 11 : 2D text</a></li><li class="page_item page-item-323"><a href="http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-12-opengl-extensions/">Tutorial 12 : OpenGL Extensions</a></li><li class="page_item page-item-301"><a href="http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-13-normal-mapping/">Tutorial 13 : Normal Mapping</a></li><li class="page_item page-item-311"><a href="http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-14-render-to-texture/">Tutorial 14 : Render To Texture</a></li><li class="page_item page-item-344"><a href="http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-15-lightmaps/">Tutorial 15 : Lightmaps</a></li><li class="page_item page-item-381"><a href="http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-16-shadow-mapping/">Tutorial 16 : Shadow mapping</a></li></ul></li><li class="page_item page-item-167"><a href="http://www.opengl-tutorial.org/miscellaneous/">Miscellaneous</a><ul class="children"><li class="page_item page-item-526"><a href="http://www.opengl-tutorial.org/miscellaneous/faq/">FAQ</a></li><li class="page_item page-item-209"><a href="http://www.opengl-tutorial.org/miscellaneous/math-cheatsheet/">Math Cheatsheet</a></li><li class="page_item page-item-210"><a href="http://www.opengl-tutorial.org/miscellaneous/useful-tools-links/">Useful Tools &amp; Links</a></li><li class="page_item page-item-436"><a href="http://www.opengl-tutorial.org/miscellaneous/an-fps-counter/">An FPS counter</a></li><li class="page_item page-item-587"><a href="http://www.opengl-tutorial.org/miscellaneous/building-your-own-c-application/">Building your own C application</a></li></ul></li><li class="page_item page-item-200"><a href="http://www.opengl-tutorial.org/download/">Download</a></li></ul></div>
+			</div><!-- #access -->
+		</div><!-- #masthead -->
+	</div><!-- #header -->
+
+	<div id="main">
+
+		<div id="container">
+			<div id="content" role="main">
+
+			
+
+				<div id="post-569" class="post-569 page type-page status-private hentry">
+											<h1 class="entry-title">Private: Tutorial 17 : Rotations</h1>
+					
+					<div class="entry-content"><div id="jquery_toc"><a name="top"></a><p></p><ul><li style="margin-left:0px;"><a href="#Foreword___rotation_VS_orientation" title="Jump to Foreword : rotation VS orientation">Foreword : rotation VS orientation</a></li><li style="margin-left:0px;"><a href="#Euler_Angles" title="Jump to Euler Angles">Euler Angles</a></li><li style="margin-left:0px;"><a href="#Quaternions" title="Jump to Quaternions">Quaternions</a></li><li style="margin-left:30px;"><a href="#Reading_quaternions" title="Jump to Reading quaternions">Reading quaternions</a></li><li style="margin-left:30px;"><a href="#Basic_operations" title="Jump to Basic operations">Basic operations</a></li><li style="margin-left:60px;"><a href="#How_do_I_create_a_quaternion_in_C____" title="Jump to How do I create a quaternion in C++ ?">How do I create a quaternion in C++ ?</a></li><li style="margin-left:60px;"><a href="#How_do_I_create_a_quaternion_in_GLSL__" title="Jump to How do I create a quaternion in GLSL ?">How do I create a quaternion in GLSL ?</a></li><li style="margin-left:60px;"><a href="#How_do_I_convert_a_quaternion_to_a_matrix__" title="Jump to How do I convert a quaternion to a matrix ?">How do I convert a quaternion to a matrix ?</a></li><li style="margin-left:60px;"><a href="#" title="Jump to "></a></li><li style="margin-left:0px;"><a href="#So__which_one_should_I_choose__" title="Jump to So, which one should I choose ?">So, which one should I choose ?</a></li><li style="margin-left:0px;"><a href="#Other_resources" title="Jump to Other resources">Other resources</a></li><li style="margin-left:0px;"><a href="#Cheat_sheet" title="Jump to Cheat-sheet">Cheat-sheet</a></li><li style="margin-left:30px;"><a href="#How_do_I_apply_a_rotation_to_a_point__" title="Jump to How do I apply a rotation to a point ?">How do I apply a rotation to a point ?</a></li><li style="margin-left:30px;"><a href="#How_do_I_interpolate_between_2_quaternions__" title="Jump to How do I interpolate between 2 quaternions ?">How do I interpolate between 2 quaternions ?</a></li><li style="margin-left:30px;"><a href="#How_do_I_cumulate_2_rotations__" title="Jump to How do I cumulate 2 rotations ?">How do I cumulate 2 rotations ?</a></li><li style="margin-left:30px;"><a href="#How_do_I_find_the_rotation_between_2_vectors__" title="Jump to How do I find the rotation between 2 vectors ?">How do I find the rotation between 2 vectors ?</a></li><li style="margin-left:30px;"><a href="#I_need_an_equivalent_of_gluLookAt__How_do_I_orient_an_object_towards_a_point__" title="Jump to I need an equivalent of gluLookAt. How do I orient an object towards a point ?">I need an equivalent of gluLookAt. How do I orient an object towards a point ?</a></li><li style="margin-left:30px;"><a href="#How_do_I_use_LookAt__but_limit_the_rotation_at_a_certain_speed__" title="Jump to How do I use LookAt, but limit the rotation at a certain speed ?">How do I use LookAt, but limit the rotation at a certain speed ?</a></li><li style="margin-left:30px;"><a href="#How_do_I_" title="Jump to How do I…">How do I…</a></li></ul></div>
+						<p>This tutorial goes a bit outside the scope of OpenGL, but 
+nevertheless tackles a very common problem : how to represent rotations ?</p>
+<p>In Tutorial 3 – Matrices, we learnt that matrices are able to rotate a
+ point around a specific axis. While matrices are a neat way to 
+transform vertices, handling matrices is difficult : for instance, 
+getting the rotation axis from the final matrix is quite tricky.</p>
+<p>We will present the two most common ways to represent rotation : 
+Euler angles and Quaternions. Most importantly, we will explain why you 
+should probably use Quaternions.</p>
+<p><a href="http://www.opengl-tutorial.org/wp-content/uploads/2012/08/tuto17.png"><img class="alignnone size-large wp-image-786" title="tuto17" src="Tutorial%2017%20%20%20Rotations%20_%20opengl-tutorial.org_fichiers/tuto17-1024x793.png" alt="" height="495" width="640"></a></p>
+<h1 id="Foreword___rotation_VS_orientation"><a title="Back to top" href="#top">Foreword : rotation VS orientation</a></h1>
+<p>While reading articles on rotations, you might get confused because of the vocabulary. In this tutorial :</p>
+<ul>
+<li>An orientation is a state : “the objet’s orientation is…”</li>
+<li>A rotation is an operation : “Apply this rotation to the object”</li>
+</ul>
+<p>That is, when you&nbsp;<em>apply a rotation</em>, you <em>change the orientation</em>.
+ The difference is that the orientation is “absolute” (= relative to the
+ identity orientation), whereas the rotation is relative to any rotation
+ that was applied before.</p>
+<p>Both can be represented with the same tools, which leads to the confusion. Now, let’s get started…</p>
+<h1 id="Euler_Angles"><a title="Back to top" href="#top">Euler Angles</a></h1>
+<p>Euler angles are the easiest way to think of an orientation. You 
+basically store three rotations around the X, Y and Z axes. It’s a very 
+simple concept to grasp. You can use a vec3 to store it :</p>
+<div><div id="highlighter_92434" class="syntaxhighlighter  cpp"><div class="toolbar"><span><a href="#" class="toolbar_item command_help help">?</a></span></div><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="cpp plain">vec3 EulerAngles( RotationAroundXInRadians, RotationAroundYInRadians, RotationAroundZInRadians);</code></div></div></td></tr></tbody></table></div></div>
+<p>These 3 rotations are then applied successively, usually in this 
+order : first Y, then Z, then X (but not necessarily). Using a different
+ order yields different results.</p>
+<p>One simple use of Euler angles is setting a character’s orientation. 
+Usually game characters do not rotate on X and Z, only on the vertical 
+axis. Therefore, it’s easier to write, understand and maintain “float 
+direction;” than 3 different orientations.</p>
+<p>Another good use of Euler angles is an FPS camera : you have one 
+angle for the heading (Y), and one for up/down (X). See 
+common/controls.cpp for an example.</p>
+<p>However, when things get more complex, Euler angle will be hard to work with. For instance :</p>
+<ul>
+<li>Interpolating smoothly between 2 orientations is hard. Naively interpolating the X,Y and Z angles will be ugly.</li>
+<li>Applying several rotations is complicated and unprecise : you have 
+to compute the final rotation matrix, and guess the Euler angles from 
+this matrix</li>
+<li>A well-known problem, the “Gimbal Lock”, will sometimes block your 
+rotations, and other singularities which will flip your model 
+upside-down.</li>
+<li>Different angles make the same rotation ( -180° and 180°, for instance )</li>
+<li>It’s a mess – as said above, usually the right order is YZX, but if 
+you also use a library with a different order, you’ll be in trouble.</li>
+<li>Some operations are complicated : for instance, rotating of N degrees around a specific axis.</li>
+</ul>
+<p>Quaternions are a tool to represent rotations, which solves these problems.</p>
+<h1 id="Quaternions"><a title="Back to top" href="#top">Quaternions</a></h1>
+<p>A quaternion is a set of 4 numbers, [x y z w], which represents rotations the following way :</p>
+<div><div id="highlighter_173027" class="syntaxhighlighter  cpp"><div class="toolbar"><span><a href="#" class="toolbar_item command_help help">?</a></span></div><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div><div class="line number5 index4 alt2">5</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="cpp comments">// RotationAngle is in radians</code></div><div class="line number2 index1 alt1"><code class="cpp plain">x = RotationAxis.x * </code><code class="cpp functions bold">sin</code><code class="cpp plain">(RotationAngle / 2)</code></div><div class="line number3 index2 alt2"><code class="cpp plain">y = RotationAxis.y * </code><code class="cpp functions bold">sin</code><code class="cpp plain">(RotationAngle / 2)</code></div><div class="line number4 index3 alt1"><code class="cpp plain">z = RotationAxis.z * </code><code class="cpp functions bold">sin</code><code class="cpp plain">(RotationAngle / 2)</code></div><div class="line number5 index4 alt2"><code class="cpp plain">w = </code><code class="cpp functions bold">cos</code><code class="cpp plain">(RotationAngle / 2)</code></div></div></td></tr></tbody></table></div></div>
+<p>RotationAxis is, as its name implies, the axis around which you want to make your rotation.</p>
+<p>RotationAngle is the angle of rotation around this axis.</p>
+<p><a href="http://www.opengl-tutorial.org/wp-content/uploads/2012/08/quaternion.png"><img class="alignnone  wp-image-762 whiteborder" title="quaternion" src="Tutorial%2017%20%20%20Rotations%20_%20opengl-tutorial.org_fichiers/quaternion.png" alt="" height="361" width="305"></a></p>
+<p>So essentially quaternion store a <em>rotation axis</em> and a <em>rotation angle</em>, in a way that make combining rotations easy.</p>
+<h2 id="Reading_quaternions">Reading quaternions</h2>
+<p>This format is definitely less intuitive than Euler angles, but it’s 
+still readable : the xyz components match roughly the rotation axis, and
+ w is (almost) the acos of the rotation angle. For instance, imagine 
+that you see the following values in the debugger : [ 0.7 0 0 0.7 ]. 
+x=0.7, it’s bigger than y and z, so you know it’s mostly a rotation 
+around the X axis; and 2*acos(0.7) = 1.59 radians, so it’s a rotation of
+ 90°.</p>
+<p>Similarly, [0 0 0 1] (w=1) means that angle = 2*acos(1) = 0, so this is a <em>unit quaternion</em>, which makes no rotation at all.</p>
+<h2 id="Basic_operations">Basic operations</h2>
+<p>Knowing the math behind the quaternions is rarely useful : the 
+representation is so unintuitive that you usually only rely on utility 
+functions which do the math for you. If you’re interested, see the math 
+books in the <a title="Useful Tools &amp; Links" href="http://www.opengl-tutorial.org/miscellaneous/useful-tools-links/">Useful Tools &amp; Links</a> page.</p>
+<h3 id="How_do_I_create_a_quaternion_in_C____">How do I create a quaternion in C++ ?</h3>
+<div><div id="highlighter_552260" class="syntaxhighlighter  cpp"><div class="toolbar"><span><a href="#" class="toolbar_item command_help help">?</a></span></div><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div><div class="line number5 index4 alt2">5</div><div class="line number6 index5 alt1">6</div><div class="line number7 index6 alt2">7</div><div class="line number8 index7 alt1">8</div><div class="line number9 index8 alt2">9</div><div class="line number10 index9 alt1">10</div><div class="line number11 index10 alt2">11</div><div class="line number12 index11 alt1">12</div><div class="line number13 index12 alt2">13</div><div class="line number14 index13 alt1">14</div><div class="line number15 index14 alt2">15</div><div class="line number16 index15 alt1">16</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="cpp comments">// Don't forget to #include &lt;glm/gtc/quaternion.hpp&gt; and &lt;glm/gtx/quaternion.hpp&gt;</code></div><div class="line number2 index1 alt1">&nbsp;</div><div class="line number3 index2 alt2"><code class="cpp comments">// Creates an identity quaternion (no rotation)</code></div><div class="line number4 index3 alt1"><code class="cpp plain">quat MyQuaternion;</code></div><div class="line number5 index4 alt2">&nbsp;</div><div class="line number6 index5 alt1"><code class="cpp comments">// Direct specification of the 4 components</code></div><div class="line number7 index6 alt2"><code class="cpp comments">// You almost never use this directly</code></div><div class="line number8 index7 alt1"><code class="cpp plain">MyQuaternion = quat(w,x,y,z); </code></div><div class="line number9 index8 alt2">&nbsp;</div><div class="line number10 index9 alt1"><code class="cpp comments">// Conversion from Euler angles (in radians) to Quaternion</code></div><div class="line number11 index10 alt2"><code class="cpp plain">vec3 EulerAngles(90, 45, 0);</code></div><div class="line number12 index11 alt1"><code class="cpp plain">MyQuaternion = quat(EulerAngles);</code></div><div class="line number13 index12 alt2">&nbsp;</div><div class="line number14 index13 alt1"><code class="cpp comments">// Conversion from axis-angle</code></div><div class="line number15 index14 alt2"><code class="cpp comments">// In GLM the angle must be in degrees here, so convert it.</code></div><div class="line number16 index15 alt1"><code class="cpp plain">MyQuaternion = gtx::quaternion::angleAxis(degrees(RotationAngle), RotationAxis);</code></div></div></td></tr></tbody></table></div></div>
+<h3 id="How_do_I_create_a_quaternion_in_GLSL__">How do I create a quaternion in GLSL ?</h3>
+<p>You don’t. Convert your quaternion to a rotation matrix, and use it 
+in the Model Matrix. Your vertices will be rotated as usual, with the 
+MVP matrix.</p>
+<p>In some cases, you might actually&nbsp;want to use quaternions in 
+GLSL, for instance if you do skeletal animation on the GPU. There is no 
+quaternion type in GLSL, but you can pack one in a vec4, and do the math
+ by hand in the shader.</p>
+<h3 id="How_do_I_convert_a_quaternion_to_a_matrix__">How do I convert a quaternion to a matrix ?</h3>
+<div><div id="highlighter_717627" class="syntaxhighlighter  cpp"><div class="toolbar"><span><a href="#" class="toolbar_item command_help help">?</a></span></div><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="cpp plain">mat4 RotationMatrix = quaternion::toMat4(quaternion);</code></div></div></td></tr></tbody></table></div></div>
+<p>You can now use it to build your Model matrix as usual :</p>
+<div><div id="highlighter_688995" class="syntaxhighlighter  cpp"><div class="toolbar"><span><a href="#" class="toolbar_item command_help help">?</a></span></div><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="cpp plain">mat4 RotationMatrix = quaternion::toMat4(quaternion);</code></div><div class="line number2 index1 alt1"><code class="cpp plain">...</code></div><div class="line number3 index2 alt2"><code class="cpp plain">mat4 ModelMatrix = TranslationMatrix * RotationMatrix * ScaleMatrix;</code></div><div class="line number4 index3 alt1"><code class="cpp comments">// You can now use ModelMatrix to build the MVP matrix</code></div></div></td></tr></tbody></table></div></div>
+<h3 id=""></h3>
+<h1 id="So__which_one_should_I_choose__"><a title="Back to top" href="#top">So, which one should I choose ?</a></h1>
+<p>Choosing between Euler angles and quaternions is tricky. Euler angles
+ are intuitive for artists, so if you write some 3D editor, use them. 
+But quaternions are handy for programmers, and faster too, so you should
+ use them in a 3D engine core.</p>
+<p>The general consensus is exactly that : use quaternions internally, 
+and expose Euler angles whenever you have some kind of user interface.</p>
+<p>You will be able to handle all you will need (or at least, it will be
+ easier), and you can still use Euler angles for entities that require 
+it ( as said above : the camera, humanoids, and that’s pretty much it) 
+with a simple conversion.</p>
+<h1 id="Other_resources"><a title="Back to top" href="#top">Other resources</a></h1>
+<ol>
+<li>The books on&nbsp;<a title="Useful Tools &amp; Links" href="http://www.opengl-tutorial.org/miscellaneous/useful-tools-links/">Useful Tools &amp; Links</a>&nbsp;!</li>
+<li>As old as it can be, Game Programming Gems 1 has several awesome articles on quaternions. You can probably find them online too.</li>
+<li>A <a href="http://www.essentialmath.com/GDC2012/GDC2012_JMV_Rotations.pdf">GDC presentation</a> on rotations</li>
+<li>The Game Programing Wiki’s <a href="http://content.gpwiki.org/index.php/OpenGL:Tutorials:Using_Quaternions_to_represent_rotation">Quaternion tutorial</a></li>
+<li>Ogre3D’s <a href="http://www.ogre3d.org/tikiwiki/Quaternion+and+Rotation+Primer">FAQ on quaternions</a>. Most of the 2nd part is ogre-specific, though.</li>
+<li>Ogre3D’s <a href="https://bitbucket.org/sinbad/ogre/src/3cbd67467fab3fef44d1b32bc42ccf4fb1ccfdd0/OgreMain/include/OgreVector3.h?at=default">Vector3D.h</a> and <a href="https://bitbucket.org/sinbad/ogre/src/3cbd67467fab3fef44d1b32bc42ccf4fb1ccfdd0/OgreMain/src/OgreQuaternion.cpp?at=default">Quaternion.cpp</a></li>
+</ol>
+<h1 id="Cheat_sheet"><a title="Back to top" href="#top">Cheat-sheet</a></h1>
+<p>How do I know it two quaternions are similar ?</p>
+<p>When using vector, the dot products gives the cosine of the angle 
+between these vectors. If this value is 1, then the vectors are in the 
+same direction.</p>
+<p>With quaternions, it’s exactly the same :</p>
+<div><div id="highlighter_121341" class="syntaxhighlighter  cpp"><div class="toolbar"><span><a href="#" class="toolbar_item command_help help">?</a></span></div><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="cpp color1 bold">float</code> <code class="cpp plain">matching =&nbsp;quaternion::dot(q1,&nbsp;q2);</code></div><div class="line number2 index1 alt1"><code class="cpp keyword bold">if</code> <code class="cpp plain">( </code><code class="cpp functions bold">abs</code><code class="cpp plain">(matching-1.0) &lt; 0.001 ){</code></div><div class="line number3 index2 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp comments">// q1 and q2 are similar</code></div><div class="line number4 index3 alt1"><code class="cpp plain">}</code></div></div></td></tr></tbody></table></div></div>
+<p>You can also get the angle between q1 and q2 by taking the acos() of this dot product.</p>
+<h2 id="How_do_I_apply_a_rotation_to_a_point__">How do I apply a rotation to a point ?</h2>
+<p>You can do the following :</p>
+<div><div id="highlighter_55826" class="syntaxhighlighter  cpp"><div class="toolbar"><span><a href="#" class="toolbar_item command_help help">?</a></span></div><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="cpp plain">rotated_point = orientation_quaternion *&nbsp; point;</code></div></div></td></tr></tbody></table></div></div>
+<p>… but if you want to compute your Model Matrix, you should probably convert it to a matrix instead.</p>
+<p>Note that the center of rotation is always the origin. If you want to rotate around another point :</p>
+<div><div id="highlighter_770749" class="syntaxhighlighter  cpp"><div class="toolbar"><span><a href="#" class="toolbar_item command_help help">?</a></span></div><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="cpp plain">rotated_point = origin + (orientation_quaternion * (point-origin));</code></div></div></td></tr></tbody></table></div></div>
+<h2 id="How_do_I_interpolate_between_2_quaternions__">How do I interpolate between 2 quaternions ?</h2>
+<p>This is called a SLERP : Spherical Linear intERPolation. With GLM, you can do this with mix :</p>
+<div><div id="highlighter_524346" class="syntaxhighlighter  cpp"><div class="toolbar"><span><a href="#" class="toolbar_item command_help help">?</a></span></div><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="cpp plain">glm::quat interpolatedquat = quaternion::mix(quat1, quat2, 0.5f); </code><code class="cpp comments">// or whatever factor</code></div></div></td></tr></tbody></table></div></div>
+<h2 id="How_do_I_cumulate_2_rotations__">How do I cumulate 2 rotations ?</h2>
+<p>Simple ! Just multiply the two quaternions together. The order is the same than for matrices, i.e. reverse :</p>
+<div><div id="highlighter_353257" class="syntaxhighlighter  cpp"><div class="toolbar"><span><a href="#" class="toolbar_item command_help help">?</a></span></div><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="cpp plain">quat combined_rotation = second_rotation * first_rotation;</code></div></div></td></tr></tbody></table></div></div>
+<h2 id="How_do_I_find_the_rotation_between_2_vectors__">How do I find the rotation between 2 vectors ?</h2>
+<p>(in other words : the quaternion needed to rotate v1 so that it matches v2)</p>
+<p>The basic idea is straightforward :</p>
+<ul>
+<li>The angle between the vectors is simple to find : the dot product gives its cosine.</li>
+<li>The needed axis is also simple to find : it’s the cross product of the two vectors.</li>
+</ul>
+<p>The following algorithm does exactly this, but also handles a number of special cases :</p>
+<div><div id="highlighter_96270" class="syntaxhighlighter  cpp"><div class="toolbar"><span><a href="#" class="toolbar_item command_help help">?</a></span></div><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div><div class="line number5 index4 alt2">5</div><div class="line number6 index5 alt1">6</div><div class="line number7 index6 alt2">7</div><div class="line number8 index7 alt1">8</div><div class="line number9 index8 alt2">9</div><div class="line number10 index9 alt1">10</div><div class="line number11 index10 alt2">11</div><div class="line number12 index11 alt1">12</div><div class="line number13 index12 alt2">13</div><div class="line number14 index13 alt1">14</div><div class="line number15 index14 alt2">15</div><div class="line number16 index15 alt1">16</div><div class="line number17 index16 alt2">17</div><div class="line number18 index17 alt1">18</div><div class="line number19 index18 alt2">19</div><div class="line number20 index19 alt1">20</div><div class="line number21 index20 alt2">21</div><div class="line number22 index21 alt1">22</div><div class="line number23 index22 alt2">23</div><div class="line number24 index23 alt1">24</div><div class="line number25 index24 alt2">25</div><div class="line number26 index25 alt1">26</div><div class="line number27 index26 alt2">27</div><div class="line number28 index27 alt1">28</div><div class="line number29 index28 alt2">29</div><div class="line number30 index29 alt1">30</div><div class="line number31 index30 alt2">31</div><div class="line number32 index31 alt1">32</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="cpp plain">quat&nbsp;RotationBetweenVectors(vec3&nbsp;start,&nbsp;vec3&nbsp;dest){</code></div><div class="line number2 index1 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">start&nbsp;=&nbsp;normalize(start);</code></div><div class="line number3 index2 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">dest&nbsp;=&nbsp;normalize(dest);</code></div><div class="line number4 index3 alt1">&nbsp;</div><div class="line number5 index4 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp color1 bold">float</code>&nbsp;<code class="cpp plain">cosTheta&nbsp;=&nbsp;dot(start,&nbsp;dest);</code></div><div class="line number6 index5 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">vec3&nbsp;rotationAxis;</code></div><div class="line number7 index6 alt2">&nbsp;</div><div class="line number8 index7 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp keyword bold">if</code>&nbsp;<code class="cpp plain">(cosTheta&nbsp;&lt;&nbsp;-1&nbsp;+&nbsp;0.001f){</code></div><div class="line number9 index8 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp comments">//&nbsp;special&nbsp;case&nbsp;when&nbsp;vectors&nbsp;in&nbsp;opposite&nbsp;directions&nbsp;:</code></div><div class="line number10 index9 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp comments">//&nbsp;there&nbsp;is&nbsp;no&nbsp;"ideal"&nbsp;rotation&nbsp;axis</code></div><div class="line number11 index10 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp comments">//&nbsp;So&nbsp;guess&nbsp;one;&nbsp;any&nbsp;will&nbsp;do&nbsp;as&nbsp;long&nbsp;as&nbsp;it's&nbsp;perpendicular&nbsp;to&nbsp;start</code></div><div class="line number12 index11 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">rotationAxis&nbsp;=&nbsp;cross(vec3(0.0f,&nbsp;0.0f,&nbsp;1.0f),&nbsp;start);</code></div><div class="line number13 index12 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp keyword bold">if</code>&nbsp;<code class="cpp plain">(gtx::norm::length2(rotationAxis)&nbsp;&lt;&nbsp;0.01&nbsp;)&nbsp;</code><code class="cpp comments">//&nbsp;bad&nbsp;luck,&nbsp;they&nbsp;were&nbsp;parallel,&nbsp;try&nbsp;again!</code></div><div class="line number14 index13 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">rotationAxis&nbsp;=&nbsp;cross(vec3(1.0f,&nbsp;0.0f,&nbsp;0.0f),&nbsp;start);</code></div><div class="line number15 index14 alt2">&nbsp;</div><div class="line number16 index15 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">rotationAxis&nbsp;=&nbsp;normalize(rotationAxis);</code></div><div class="line number17 index16 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp keyword bold">return</code>&nbsp;<code class="cpp plain">gtx::quaternion::angleAxis(180.0f,&nbsp;rotationAxis);</code></div><div class="line number18 index17 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">}</code></div><div class="line number19 index18 alt2">&nbsp;</div><div class="line number20 index19 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">rotationAxis&nbsp;=&nbsp;cross(start,&nbsp;dest);</code></div><div class="line number21 index20 alt2">&nbsp;</div><div class="line number22 index21 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp color1 bold">float</code>&nbsp;<code class="cpp plain">s&nbsp;=&nbsp;</code><code class="cpp functions bold">sqrt</code><code class="cpp plain">(&nbsp;(1+cosTheta)*2&nbsp;);</code></div><div class="line number23 index22 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp color1 bold">float</code>&nbsp;<code class="cpp plain">invs&nbsp;=&nbsp;1&nbsp;/&nbsp;s;</code></div><div class="line number24 index23 alt1">&nbsp;</div><div class="line number25 index24 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp keyword bold">return</code>&nbsp;<code class="cpp plain">quat(</code></div><div class="line number26 index25 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">s&nbsp;*&nbsp;0.5f,&nbsp;</code></div><div class="line number27 index26 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">rotationAxis.x&nbsp;*&nbsp;invs,</code></div><div class="line number28 index27 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">rotationAxis.y&nbsp;*&nbsp;invs,</code></div><div class="line number29 index28 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">rotationAxis.z&nbsp;*&nbsp;invs</code></div><div class="line number30 index29 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">);</code></div><div class="line number31 index30 alt2">&nbsp;</div><div class="line number32 index31 alt1"><code class="cpp plain">}</code></div></div></td></tr></tbody></table></div></div>
+<p>(You can find this function in common/quaternion_utils.cpp)</p>
+<h2 id="I_need_an_equivalent_of_gluLookAt__How_do_I_orient_an_object_towards_a_point__">I need an equivalent of gluLookAt. How do I orient an object towards a point ?</h2>
+<p>Use&nbsp;RotationBetweenVectors !</p>
+<div><div id="highlighter_947310" class="syntaxhighlighter  cpp"><div class="toolbar"><span><a href="#" class="toolbar_item command_help help">?</a></span></div><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="cpp comments">//&nbsp;Find&nbsp;the&nbsp;rotation&nbsp;between&nbsp;the&nbsp;front&nbsp;of&nbsp;the&nbsp;object&nbsp;(that&nbsp;we&nbsp;assume&nbsp;towards&nbsp;+Z,
+ </code></div><div class="line number2 index1 alt1"><code class="cpp comments">//&nbsp;but&nbsp;this&nbsp;depends&nbsp;on&nbsp;your&nbsp;model)&nbsp;and&nbsp;the&nbsp;desired&nbsp;direction </code></div><div class="line number3 index2 alt2"><code class="cpp plain">quat&nbsp;rot1&nbsp;=&nbsp;RotationBetweenVectors(vec3(0.0f,&nbsp;0.0f,&nbsp;1.0f),&nbsp;direction);</code></div></div></td></tr></tbody></table></div></div>
+<p>Now, you might also want to force your object to be upright :</p>
+<div><div id="highlighter_364292" class="syntaxhighlighter  cpp"><div class="toolbar"><span><a href="#" class="toolbar_item command_help help">?</a></span></div><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div><div class="line number5 index4 alt2">5</div><div class="line number6 index5 alt1">6</div><div class="line number7 index6 alt2">7</div><div class="line number8 index7 alt1">8</div><div class="line number9 index8 alt2">9</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="cpp comments">// Recompute desiredUp so that it's perpendicular to the direction</code></div><div class="line number2 index1 alt1"><code class="cpp comments">// You can skip that part if you really want to force desiredUp</code></div><div class="line number3 index2 alt2"><code class="cpp plain">vec3 right = cross(direction, desiredUp);</code></div><div class="line number4 index3 alt1"><code class="cpp plain">desiredUp = cross(right, direction);</code></div><div class="line number5 index4 alt2">&nbsp;</div><div class="line number6 index5 alt1"><code class="cpp comments">// Because of the 1rst rotation, the up is probably completely screwed up. </code></div><div class="line number7 index6 alt2"><code class="cpp comments">// Find the rotation between the "up" of the rotated object, and the desired up</code></div><div class="line number8 index7 alt1"><code class="cpp plain">vec3 newUp = rot1 * vec3(0.0f, 1.0f, 0.0f);</code></div><div class="line number9 index8 alt2"><code class="cpp plain">quat rot2 = RotationBetweenVectors(newUp, desiredUp);</code></div></div></td></tr></tbody></table></div></div>
+<p>Now, combine them :</p>
+<div><div id="highlighter_278225" class="syntaxhighlighter  cpp"><div class="toolbar"><span><a href="#" class="toolbar_item command_help help">?</a></span></div><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="cpp plain">quat targetOrientation =&nbsp;rot2&nbsp;*&nbsp;rot1;&nbsp;</code><code class="cpp comments">//&nbsp;remember,&nbsp;in&nbsp;reverse&nbsp;order.</code></div></div></td></tr></tbody></table></div></div>
+<p>Beware, “direction” is, well, a direction, not the target position ! 
+But you can compute the direction simply : targetPos – currentPos.</p>
+<p>Once you have this target orientation, you will probably want to interpolate between startOrientation and targetOrientation.</p>
+<p>(You can find this function in common/quaternion_utils.cpp)</p>
+<h2 id="How_do_I_use_LookAt__but_limit_the_rotation_at_a_certain_speed__">How do I use LookAt, but limit the rotation at a certain speed ?</h2>
+<p>The basic idea is to do a SLERP ( = use glm::mix ), but play with the
+ interpolation value so that the angle is not bigger than the desired 
+value :</p>
+<div><div id="highlighter_299094" class="syntaxhighlighter  cpp"><div class="toolbar"><span><a href="#" class="toolbar_item command_help help">?</a></span></div><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="cpp color1 bold">float</code>&nbsp;<code class="cpp plain">mixFactor&nbsp;=&nbsp;maxAllowedAngle&nbsp;/ angleBetweenQuaternions;</code></div><div class="line number2 index1 alt1"><code class="cpp plain">quat&nbsp;result =&nbsp;glm::gtc::quaternion::mix(q1,&nbsp;q2,&nbsp;mixFactor);</code></div></div></td></tr></tbody></table></div></div>
+<p>Here is a more complete implementation, which deals with many special
+ cases. Note that it doesn’t use mix() directly as an optimization.</p>
+<div><div id="highlighter_888600" class="syntaxhighlighter  cpp"><div class="toolbar"><span><a href="#" class="toolbar_item command_help help">?</a></span></div><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div><div class="line number5 index4 alt2">5</div><div class="line number6 index5 alt1">6</div><div class="line number7 index6 alt2">7</div><div class="line number8 index7 alt1">8</div><div class="line number9 index8 alt2">9</div><div class="line number10 index9 alt1">10</div><div class="line number11 index10 alt2">11</div><div class="line number12 index11 alt1">12</div><div class="line number13 index12 alt2">13</div><div class="line number14 index13 alt1">14</div><div class="line number15 index14 alt2">15</div><div class="line number16 index15 alt1">16</div><div class="line number17 index16 alt2">17</div><div class="line number18 index17 alt1">18</div><div class="line number19 index18 alt2">19</div><div class="line number20 index19 alt1">20</div><div class="line number21 index20 alt2">21</div><div class="line number22 index21 alt1">22</div><div class="line number23 index22 alt2">23</div><div class="line number24 index23 alt1">24</div><div class="line number25 index24 alt2">25</div><div class="line number26 index25 alt1">26</div><div class="line number27 index26 alt2">27</div><div class="line number28 index27 alt1">28</div><div class="line number29 index28 alt2">29</div><div class="line number30 index29 alt1">30</div><div class="line number31 index30 alt2">31</div><div class="line number32 index31 alt1">32</div><div class="line number33 index32 alt2">33</div><div class="line number34 index33 alt1">34</div><div class="line number35 index34 alt2">35</div><div class="line number36 index35 alt1">36</div><div class="line number37 index36 alt2">37</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="cpp plain">quat&nbsp;RotateTowards(quat&nbsp;q1,&nbsp;quat&nbsp;q2,&nbsp;</code><code class="cpp color1 bold">float</code>&nbsp;<code class="cpp plain">maxAngle){</code></div><div class="line number2 index1 alt1">&nbsp;</div><div class="line number3 index2 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp keyword bold">if</code><code class="cpp plain">(&nbsp;maxAngle&nbsp;&lt;&nbsp;0.001f&nbsp;){</code></div><div class="line number4 index3 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp comments">//&nbsp;No&nbsp;rotation&nbsp;allowed.&nbsp;Prevent&nbsp;dividing&nbsp;by&nbsp;0&nbsp;later.</code></div><div class="line number5 index4 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp keyword bold">return</code>&nbsp;<code class="cpp plain">q1;</code></div><div class="line number6 index5 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">}</code></div><div class="line number7 index6 alt2">&nbsp;</div><div class="line number8 index7 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp color1 bold">float</code>&nbsp;<code class="cpp plain">cosTheta&nbsp;=&nbsp;dot(q1,&nbsp;q2);</code></div><div class="line number9 index8 alt2">&nbsp;</div><div class="line number10 index9 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp comments">//&nbsp;q1&nbsp;and&nbsp;q2&nbsp;are&nbsp;already&nbsp;equal.</code></div><div class="line number11 index10 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp comments">//&nbsp;Force&nbsp;q2&nbsp;just&nbsp;to&nbsp;be&nbsp;sure</code></div><div class="line number12 index11 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp keyword bold">if</code><code class="cpp plain">(cosTheta&nbsp;&gt;&nbsp;0.9999f){</code></div><div class="line number13 index12 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp keyword bold">return</code>&nbsp;<code class="cpp plain">q2;</code></div><div class="line number14 index13 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">}</code></div><div class="line number15 index14 alt2">&nbsp;</div><div class="line number16 index15 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp comments">// Avoid taking the long path around the sphere</code></div><div class="line number17 index16 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp keyword bold">if</code> <code class="cpp plain">(cosTheta &lt; 0){</code></div><div class="line number18 index17 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;</code><code class="cpp plain">q1 = q1*-1.0f;</code></div><div class="line number19 index18 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;</code><code class="cpp plain">cosTheta *= -1.0f;</code></div><div class="line number20 index19 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">}</code></div><div class="line number21 index20 alt2">&nbsp;</div><div class="line number22 index21 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp color1 bold">float</code>&nbsp;<code class="cpp plain">angle&nbsp;=&nbsp;</code><code class="cpp functions bold">acos</code><code class="cpp plain">(cosTheta);</code></div><div class="line number23 index22 alt2">&nbsp;</div><div class="line number24 index23 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp comments">//&nbsp;If&nbsp;there&nbsp;is&nbsp;only&nbsp;a&nbsp;2°&nbsp;difference,&nbsp;and&nbsp;we&nbsp;are&nbsp;allowed&nbsp;5°,</code></div><div class="line number25 index24 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp comments">//&nbsp;then&nbsp;we&nbsp;arrived.</code></div><div class="line number26 index25 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp keyword bold">if</code>&nbsp;<code class="cpp plain">(angle&nbsp;&lt;&nbsp;maxAngle){</code></div><div class="line number27 index26 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp keyword bold">return</code>&nbsp;<code class="cpp plain">q2;</code></div><div class="line number28 index27 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">}</code></div><div class="line number29 index28 alt2">&nbsp;</div><div class="line number30 index29 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp color1 bold">float</code>&nbsp;<code class="cpp plain">fT&nbsp;=&nbsp;maxAngle&nbsp;/&nbsp;angle;</code></div><div class="line number31 index30 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">angle&nbsp;=&nbsp;maxAngle;</code></div><div class="line number32 index31 alt1">&nbsp;</div><div class="line number33 index32 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">quat&nbsp;res&nbsp;=&nbsp;(</code><code class="cpp functions bold">sin</code><code class="cpp plain">((1.0f&nbsp;-&nbsp;fT)&nbsp;*&nbsp;angle)&nbsp;*&nbsp;q1&nbsp;+&nbsp;</code><code class="cpp functions bold">sin</code><code class="cpp plain">(fT&nbsp;*&nbsp;angle)&nbsp;*&nbsp;q2)&nbsp;/&nbsp;</code><code class="cpp functions bold">sin</code><code class="cpp plain">(angle);</code></div><div class="line number34 index33 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">res&nbsp;=&nbsp;normalize(res);</code></div><div class="line number35 index34 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp keyword bold">return</code>&nbsp;<code class="cpp plain">res;</code></div><div class="line number36 index35 alt1">&nbsp;</div><div class="line number37 index36 alt2"><code class="cpp plain">}</code></div></div></td></tr></tbody></table></div></div>
+<p>You can use it like that :</p>
+<div><div id="highlighter_850481" class="syntaxhighlighter  cpp"><div class="toolbar"><span><a href="#" class="toolbar_item command_help help">?</a></span></div><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="cpp plain">CurrentOrientation = RotateTowards(CurrentOrientation, TargetOrientation, 3.14f * deltaTime );</code></div></div></td></tr></tbody></table></div></div>
+<p>(You can find this function in common/quaternion_utils.cpp)</p>
+<h2 id="How_do_I_">How do I…</h2>
+<p>If you can’t figure it out, drop us an email, and we’ll add it to the list !</p>
+												<span class="edit-link"><a class="post-edit-link" href="http://www.opengl-tutorial.org/wp-admin/post.php?post=569&amp;action=edit" title="Edit Page">Edit</a></span>					</div><!-- .entry-content -->
+				</div><!-- #post-## -->
+
+				
+			<div id="comments">
+
+
+	<p class="nocomments">Comments are closed.</p>
+
+
+								
+</div><!-- #comments -->
+
+
+			</div><!-- #content -->
+		</div><!-- #container -->
+
+<div id="sideBar">
+		<div id="primary" class="widget-area" role="complementary">
+			<ul class="xoxo">
+
+<li id="text-3" class="widget-container widget_text"><h3 class="widget-title">Staying tuned</h3>			<div class="textwidget"><ul>
+<li class="page_item">
+<a href="mailto:contact@opengl-tutorial.org?body=Hi%20%21%20Did%20you%20read%20the%20FAQ%20?%20http://www.opengl-tutorial.org/miscellaneous/faq/">Drop us a word</a>
+</li>
+<li class="page_item">
+<a href="http://www.opengl-tutorial.org/miscellaneous/faq/">FAQ</a>
+</li>
+<li class="page_item">
+<a href="http://feeds.feedburner.com/Opengl-tutorialorg">
+<img src="Tutorial%2017%20%20%20Rotations%20_%20opengl-tutorial.org_fichiers/feed-icon-14x14.png" alt="RSS Feed" title="RSS Feed">&nbsp; RSS
+</a> 
+</li>
+<li class="page_item">
+<a href="http://forums.opengl-tutorial.org/">
+Forums</a> 
+</li>
+<li class="page_item" <!--="" addthis="" button="" begin="" --="">
+<div class="addthis_toolbox addthis_default_style ">
+<a href="#" title="Google_plusone" class="addthis_button_google_plusone at300b" g:plusone:count="false"><div id="___plusone_0" style="height: 15px; width: 24px; display: inline-block; text-indent: 0px; margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent; border-style: none; float: none; line-height: normal; font-size: 1px; vertical-align: baseline;"><iframe title="+1" allowtransparency="true" src="Tutorial%2017%20%20%20Rotations%20_%20opengl-tutorial.org_fichiers/fastbutton.htm" name="I0_1356174036881" id="I0_1356174036881" vspace="0" tabindex="0" style="position: static; top: 0px; width: 24px; margin: 0px; border-style: none; left: 0px; visibility: visible; height: 15px;" marginwidth="0" marginheight="0" hspace="0" frameborder="0" scrolling="no" width="100%"></iframe></div></a>
+<a href="#" title="Facebook" class="addthis_button_preferred_1 addthis_button_facebook at300b"><span class="at16nc at300bs at15nc at15t_facebook at16t_facebook"><span class="at_a11y">Share on facebook</span></span></a>
+<a href="#" title="Imprimer" class="addthis_button_preferred_2 addthis_button_print at300b"><span class="at16nc at300bs at15nc at15t_print at16t_print"><span class="at_a11y">Share on print</span></span></a>
+<a href="#" title="Courriel" class="addthis_button_preferred_3 addthis_button_email at300b"><span class="at16nc at300bs at15nc at15t_email at16t_email"><span class="at_a11y">Share on email</span></span></a>
+<a href="#" title="Tweet" class="addthis_button_preferred_4 addthis_button_twitter at300b"><span class="at16nc at300bs at15nc at15t_twitter at16t_twitter"><span class="at_a11y">Share on twitter</span></span></a>
+<a href="#" class="addthis_button_compact at300m"><span class="at16nc at300bs at15nc at15t_compact at16t_compact"><span class="at_a11y">More Sharing Services</span></span></a>
+<div class="atclear"></div></div>
+<script type="text/javascript" src="Tutorial%2017%20%20%20Rotations%20_%20opengl-tutorial.org_fichiers/addthis_widget.js"></script>
+<!-- AddThis Button END -->
+</li>
+</ul></div>
+		</li><li id="search-2" class="widget-container widget_search"><h3 class="widget-title">Search</h3><form role="search" method="get" id="searchform" action="http://www.opengl-tutorial.org/">
+	<div><label class="screen-reader-text" for="s">Search for:</label>
+	<input name="s" id="s" type="text">
+	<input id="searchsubmit" value="Search" type="submit">
+	</div>
+	<input value="en" name="lang" type="hidden"></form></li><li id="language-selector" class="widget-container icl_languages_selector"><h3 class="widget-title">Languages</h3><div id="lang_sel">
+    <ul>
+        <li><a href="#" class="lang_sel_sel icl-en">
+                            
+            <img class="iclflag" src="Tutorial%2017%20%20%20Rotations%20_%20opengl-tutorial.org_fichiers/en.png" alt="en">                                
+            &nbsp;English</a>                    </li>
+    </ul>    
+</div>
+</li>			</ul>
+		</div><!-- #primary .widget-area -->
+
+
+		<div id="secondary" class="widget-area" role="complementary">
+			<ul class="xoxo">
+				<li id="pages-4" class="widget-container widget_pages"><h3 class="widget-title">Tutorials</h3>		<ul>
+			<li class="page_item page-item-138"><a href="http://www.opengl-tutorial.org/beginners-tutorials/">Basic OpenGL</a>
+<ul class="children">
+	<li class="page_item page-item-7"><a href="http://www.opengl-tutorial.org/beginners-tutorials/tutorial-1-opening-a-window/">Tutorial 1 : Opening a window</a></li>
+	<li class="page_item page-item-14"><a href="http://www.opengl-tutorial.org/beginners-tutorials/tutorial-2-the-first-triangle/">Tutorial 2 : The first triangle</a></li>
+	<li class="page_item page-item-19"><a href="http://www.opengl-tutorial.org/beginners-tutorials/tutorial-3-matrices/">Tutorial 3 : Matrices</a></li>
+	<li class="page_item page-item-82"><a href="http://www.opengl-tutorial.org/beginners-tutorials/tutorial-4-a-colored-cube/">Tutorial 4 : A Colored Cube</a></li>
+	<li class="page_item page-item-83"><a href="http://www.opengl-tutorial.org/beginners-tutorials/tutorial-5-a-textured-cube/">Tutorial 5 : A Textured Cube</a></li>
+	<li class="page_item page-item-170"><a href="http://www.opengl-tutorial.org/beginners-tutorials/tutorial-6-keyboard-and-mouse/">Tutorial 6 : Keyboard and Mouse</a></li>
+	<li class="page_item page-item-185"><a href="http://www.opengl-tutorial.org/beginners-tutorials/tutorial-7-model-loading/">Tutorial 7 : Model loading</a></li>
+	<li class="page_item page-item-198"><a href="http://www.opengl-tutorial.org/beginners-tutorials/tutorial-8-basic-shading/">Tutorial 8 : Basic shading</a></li>
+</ul>
+</li>
+<li class="page_item page-item-200"><a href="http://www.opengl-tutorial.org/download/">Download</a></li>
+<li class="page_item page-item-140 current_page_ancestor current_page_parent"><a href="http://www.opengl-tutorial.org/intermediate-tutorials/">Intermediate Tutorials</a>
+<ul class="children">
+	<li class="page_item page-item-281"><a href="http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-10-transparency/">Tutorial 10 : Transparency</a></li>
+	<li class="page_item page-item-291"><a href="http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-11-2d-text/">Tutorial 11 : 2D text</a></li>
+	<li class="page_item page-item-323"><a href="http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-12-opengl-extensions/">Tutorial 12 : OpenGL Extensions</a></li>
+	<li class="page_item page-item-301"><a href="http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-13-normal-mapping/">Tutorial 13 : Normal Mapping</a></li>
+	<li class="page_item page-item-311"><a href="http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-14-render-to-texture/">Tutorial 14 : Render To Texture</a></li>
+	<li class="page_item page-item-344"><a href="http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-15-lightmaps/">Tutorial 15 : Lightmaps</a></li>
+	<li class="page_item page-item-381"><a href="http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-16-shadow-mapping/">Tutorial 16 : Shadow mapping</a></li>
+	<li class="page_item page-item-252"><a href="http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-9-vbo-indexing/">Tutorial 9 : VBO Indexing</a></li>
+</ul>
+</li>
+<li class="page_item page-item-167"><a href="http://www.opengl-tutorial.org/miscellaneous/">Miscellaneous</a>
+<ul class="children">
+	<li class="page_item page-item-436"><a href="http://www.opengl-tutorial.org/miscellaneous/an-fps-counter/">An FPS counter</a></li>
+	<li class="page_item page-item-587"><a href="http://www.opengl-tutorial.org/miscellaneous/building-your-own-c-application/">Building your own C application</a></li>
+	<li class="page_item page-item-526"><a href="http://www.opengl-tutorial.org/miscellaneous/faq/">FAQ</a></li>
+	<li class="page_item page-item-209"><a href="http://www.opengl-tutorial.org/miscellaneous/math-cheatsheet/">Math Cheatsheet</a></li>
+	<li class="page_item page-item-210"><a href="http://www.opengl-tutorial.org/miscellaneous/useful-tools-links/">Useful Tools &amp; Links</a></li>
+</ul>
+</li>
+		</ul>
+		</li>			</ul>
+		</div><!-- #secondary .widget-area -->
+</div>
+	</div><!-- #main -->
+</div>
+	<div id="footer" role="contentinfo">
+		<div id="colophon">
+
+
+<div id="siteinfo">
+                        <div id="contact">Remark ? Question ? Bug report ? Feel free to contact us at <a href="mailto:contact@opengl-tutorial.org">contact@opengl-tutorial.org</a>. But don't forget to read the <a href="http://www.opengl-tutorial.org/miscellaneous/faq/">FAQ</a> !</div>
+			<div id="site-generator">
+								<a href="http://codepuzzle.net/?page_id=109" title="Semantic Personal Publishing Platform" rel="generator">Celine Theme Proudly powered by WordPress.</a>
+			</div><!-- #site-generator -->
+</div>
+		</div><!-- #colophon -->
+	</div><!-- #footer -->
+
+<!-- #wrapper -->
+
+<p class="lmf_generated_text">Site last updated December 21, 2012; Page last updated December 21, 2012</p><script type="text/javascript">
+  SyntaxHighlighter.autoloader(
+      'applescript            http://www.opengl-tutorial.org/wp-content/plugins/syntax-highlighter-mt/scripts/shBrushAppleScript.js',
+      'actionscript3 as3      http://www.opengl-tutorial.org/wp-content/plugins/syntax-highlighter-mt/scripts/shBrushAS3.js',
+      'bash shell             http://www.opengl-tutorial.org/wp-content/plugins/syntax-highlighter-mt/scripts/shBrushBash.js',
+      'coldfusion cf          http://www.opengl-tutorial.org/wp-content/plugins/syntax-highlighter-mt/scripts/shBrushColdFusion.js',
+      'cpp c                  http://www.opengl-tutorial.org/wp-content/plugins/syntax-highlighter-mt/scripts/shBrushCpp.js',
+      'c# c-sharp csharp      http://www.opengl-tutorial.org/wp-content/plugins/syntax-highlighter-mt/scripts/shBrushCSharp.js',
+      'css                    http://www.opengl-tutorial.org/wp-content/plugins/syntax-highlighter-mt/scripts/shBrushCss.js',
+      'delphi pascal          http://www.opengl-tutorial.org/wp-content/plugins/syntax-highlighter-mt/scripts/shBrushDelphi.js',
+      'diff patch pas         http://www.opengl-tutorial.org/wp-content/plugins/syntax-highlighter-mt/scripts/shBrushDiff.js',
+      'erl erlang             http://www.opengl-tutorial.org/wp-content/plugins/syntax-highlighter-mt/scripts/shBrushErlang.js',
+      'groovy                 http://www.opengl-tutorial.org/wp-content/plugins/syntax-highlighter-mt/scripts/shBrushGroovy.js',
+      'java                   http://www.opengl-tutorial.org/wp-content/plugins/syntax-highlighter-mt/scripts/shBrushJava.js',
+      'jfx javafx             http://www.opengl-tutorial.org/wp-content/plugins/syntax-highlighter-mt/scripts/shBrushJavaFX.js',
+      'js jscript javascript  http://www.opengl-tutorial.org/wp-content/plugins/syntax-highlighter-mt/scripts/shBrushJScript.js',
+      'objc obj-c             http://www.opengl-tutorial.org/wp-content/plugins/syntax-highlighter-mt/scripts/shBrushObjectiveC.js',
+      'perl pl                http://www.opengl-tutorial.org/wp-content/plugins/syntax-highlighter-mt/scripts/shBrushPerl.js',
+      'php                    http://www.opengl-tutorial.org/wp-content/plugins/syntax-highlighter-mt/scripts/shBrushPhp.js',
+      'text plain             http://www.opengl-tutorial.org/wp-content/plugins/syntax-highlighter-mt/scripts/shBrushPlain.js',
+      'py python              http://www.opengl-tutorial.org/wp-content/plugins/syntax-highlighter-mt/scripts/shBrushPython.js',
+      'ruby rails ror rb      http://www.opengl-tutorial.org/wp-content/plugins/syntax-highlighter-mt/scripts/shBrushRuby.js',
+      'sass scss              http://www.opengl-tutorial.org/wp-content/plugins/syntax-highlighter-mt/scripts/shBrushSass.js',
+      'scala                  http://www.opengl-tutorial.org/wp-content/plugins/syntax-highlighter-mt/scripts/shBrushScala.js',
+      'sql                    http://www.opengl-tutorial.org/wp-content/plugins/syntax-highlighter-mt/scripts/shBrushSql.js',
+      'vb vbnet               http://www.opengl-tutorial.org/wp-content/plugins/syntax-highlighter-mt/scripts/shBrushVb.js',
+      'xml xhtml xslt html    http://www.opengl-tutorial.org/wp-content/plugins/syntax-highlighter-mt/scripts/shBrushXml.js'
+       );
+	SyntaxHighlighter.all();
+</script>
+<script type="text/javascript" src="Tutorial%2017%20%20%20Rotations%20_%20opengl-tutorial.org_fichiers/jquery_002.js"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var thickboxL10n = {"next":"Next >","prev":"< Prev","image":"Image","of":"of","close":"Close","noiframes":"This feature requires inline frames. You have iframes disabled or your browser does not support them.","loadingAnimation":"http:\/\/www.opengl-tutorial.org\/wp-includes\/js\/thickbox\/loadingAnimation.gif","closeImage":"http:\/\/www.opengl-tutorial.org\/wp-includes\/js\/thickbox\/tb-close.png"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="Tutorial%2017%20%20%20Rotations%20_%20opengl-tutorial.org_fichiers/thickbox.js"></script>
+<script type="text/javascript" src="Tutorial%2017%20%20%20Rotations%20_%20opengl-tutorial.org_fichiers/admin-bar.js"></script>
+<p id="wpml_credit_footer"><a href="http://wpml.org/">Multilingual WordPress</a> by <a href="http://www.icanlocalize.com/site/">ICanLocalize</a></p>	<script type="text/javascript">
+		(function() {
+			var request, b = document.body, c = 'className', cs = 'customize-support', rcs = new RegExp('(^|\\s+)(no-)?'+cs+'(\\s+|$)');
+
+			request = true;
+
+			b[c] = b[c].replace( rcs, '' );
+			b[c] += ( window.postMessage && request ? ' ' : ' no-' ) + cs;
+		}());
+	</script>
+			<div id="wpadminbar" class="" role="navigation">
+			<div class="quicklinks">
+				<ul id="wp-admin-bar-root-default" class="ab-top-menu">
+		<li id="wp-admin-bar-wp-logo" class="menupop"><a class="ab-item" tabindex="10" aria-haspopup="true" href="http://www.opengl-tutorial.org/wp-admin/about.php" title="About WordPress"><span class="ab-icon"></span></a><div class="ab-sub-wrapper"><ul id="wp-admin-bar-wp-logo-default" class="ab-submenu">
+		<li id="wp-admin-bar-about" class=""><a class="ab-item" tabindex="10" href="http://www.opengl-tutorial.org/wp-admin/about.php">About WordPress</a>		</li></ul><ul id="wp-admin-bar-wp-logo-external" class="ab-sub-secondary ab-submenu">
+		<li id="wp-admin-bar-wporg" class=""><a class="ab-item" tabindex="10" href="http://wordpress.org/">WordPress.org</a>		</li>
+		<li id="wp-admin-bar-documentation" class=""><a class="ab-item" tabindex="10" href="http://codex.wordpress.org/">Documentation</a>		</li>
+		<li id="wp-admin-bar-support-forums" class=""><a class="ab-item" tabindex="10" href="http://wordpress.org/support/">Support Forums</a>		</li>
+		<li id="wp-admin-bar-feedback" class=""><a class="ab-item" tabindex="10" href="http://wordpress.org/support/forum/requests-and-feedback">Feedback</a>		</li></ul></div>		</li>
+		<li id="wp-admin-bar-site-name" class="menupop"><a class="ab-item" tabindex="10" aria-haspopup="true" href="http://www.opengl-tutorial.org/wp-admin/">opengl-tutorial.org</a><div class="ab-sub-wrapper"><ul id="wp-admin-bar-site-name-default" class="ab-submenu">
+		<li id="wp-admin-bar-dashboard" class=""><a class="ab-item" tabindex="10" href="http://www.opengl-tutorial.org/wp-admin/">Dashboard</a>		</li></ul><ul id="wp-admin-bar-appearance" class=" ab-submenu">
+		<li id="wp-admin-bar-themes" class=""><a class="ab-item" tabindex="10" href="http://www.opengl-tutorial.org/wp-admin/themes.php">Themes</a>		</li>
+		<li id="wp-admin-bar-customize" class=" hide-if-no-customize"><a class="ab-item" tabindex="10" href="http://www.opengl-tutorial.org/wp-admin/customize.php?url=http%3A%2F%2Fwww.opengl-tutorial.org%2Fintermediate-tutorials%2Ftutorial-17-quaternions%2F">Customize</a>		</li>
+		<li id="wp-admin-bar-widgets" class=""><a class="ab-item" tabindex="10" href="http://www.opengl-tutorial.org/wp-admin/widgets.php">Widgets</a>		</li>
+		<li id="wp-admin-bar-menus" class=""><a class="ab-item" tabindex="10" href="http://www.opengl-tutorial.org/wp-admin/nav-menus.php">Menus</a>		</li>
+		<li id="wp-admin-bar-background" class=""><a class="ab-item" tabindex="10" href="http://www.opengl-tutorial.org/wp-admin/themes.php?page=custom-background">Background</a>		</li>
+		<li id="wp-admin-bar-header" class=""><a class="ab-item" tabindex="10" href="http://www.opengl-tutorial.org/wp-admin/themes.php?page=custom-header">Header</a>		</li></ul></div>		</li>
+		<li id="wp-admin-bar-updates" class=""><a class="ab-item" tabindex="10" href="http://www.opengl-tutorial.org/wp-admin/update-core.php" title="4 Plugin Updates, 2 Theme Updates"><span class="ab-icon"></span><span class="ab-label">6</span></a>		</li>
+		<li id="wp-admin-bar-comments" class=""><a class="ab-item" tabindex="10" href="http://www.opengl-tutorial.org/wp-admin/edit-comments.php" title="0 comments awaiting moderation"><span class="ab-icon"></span><span id="ab-awaiting-mod" class="ab-label awaiting-mod pending-count count-0">0</span></a>		</li>
+		<li id="wp-admin-bar-new-content" class="menupop"><a class="ab-item" tabindex="10" aria-haspopup="true" href="http://www.opengl-tutorial.org/wp-admin/post-new.php" title="Add New"><span class="ab-icon"></span><span class="ab-label">New</span></a><div class="ab-sub-wrapper"><ul id="wp-admin-bar-new-content-default" class="ab-submenu">
+		<li id="wp-admin-bar-new-post" class=""><a class="ab-item" tabindex="10" href="http://www.opengl-tutorial.org/wp-admin/post-new.php">Post</a>		</li>
+		<li id="wp-admin-bar-new-media" class=""><a class="ab-item" tabindex="10" href="http://www.opengl-tutorial.org/wp-admin/media-new.php">Media</a>		</li>
+		<li id="wp-admin-bar-new-link" class=""><a class="ab-item" tabindex="10" href="http://www.opengl-tutorial.org/wp-admin/link-add.php">Link</a>		</li>
+		<li id="wp-admin-bar-new-page" class=""><a class="ab-item" tabindex="10" href="http://www.opengl-tutorial.org/wp-admin/post-new.php?post_type=page">Page</a>		</li>
+		<li id="wp-admin-bar-new-user" class=""><a class="ab-item" tabindex="10" href="http://www.opengl-tutorial.org/wp-admin/user-new.php">User</a>		</li></ul></div>		</li>
+		<li id="wp-admin-bar-edit" class=""><a class="ab-item" tabindex="10" href="http://www.opengl-tutorial.org/wp-admin/post.php?post=569&amp;action=edit">Edit Page</a>		</li></ul><ul id="wp-admin-bar-top-secondary" class="ab-top-secondary ab-top-menu">
+		<li id="wp-admin-bar-search" class=" admin-bar-search"><div class="ab-item ab-empty-item" tabindex="-1"><form action="http://www.opengl-tutorial.org/" method="get" id="adminbarsearch"><input class="adminbar-input" name="s" id="adminbar-search" tabindex="10" maxlength="150" type="text"><input class="adminbar-button" value="Search" type="submit"></form></div>		</li>
+		<li id="wp-admin-bar-my-account" class="menupop with-avatar"><a class="ab-item" tabindex="10" aria-haspopup="true" href="http://www.opengl-tutorial.org/wp-admin/profile.php" title="My Account">Howdy, Calvin1602<img alt="" src="Tutorial%2017%20%20%20Rotations%20_%20opengl-tutorial.org_fichiers/271d88c4888422ccac04b597511e9c19.jpg" class="avatar avatar-16 photo" height="16" width="16"></a><div class="ab-sub-wrapper"><ul id="wp-admin-bar-user-actions" class=" ab-submenu">
+		<li id="wp-admin-bar-user-info" class=""><a class="ab-item" tabindex="-1" href="http://www.opengl-tutorial.org/wp-admin/profile.php"><img alt="" src="Tutorial%2017%20%20%20Rotations%20_%20opengl-tutorial.org_fichiers/271d88c4888422ccac04b597511e9c19_002.jpg" class="avatar avatar-64 photo" height="64" width="64"><span class="display-name">Calvin1602</span><span class="username">calvin1602</span></a>		</li>
+		<li id="wp-admin-bar-edit-profile" class=""><a class="ab-item" tabindex="10" href="http://www.opengl-tutorial.org/wp-admin/profile.php">Edit My Profile</a>		</li>
+		<li id="wp-admin-bar-logout" class=""><a class="ab-item" tabindex="10" href="http://www.opengl-tutorial.org/wp-login.php?action=logout&amp;_wpnonce=5da9193316">Log Out</a>		</li></ul></div>		</li></ul>			</div>
+		</div>
+
+		
+
+</body></html>
