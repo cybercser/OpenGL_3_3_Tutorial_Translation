@@ -1,76 +1,76 @@
-���õĹ���������
+﻿有用的工具与链接
 
-�ĵ�
-OpenGL�ο�����
+文档
+OpenGL参考资料
 OpenGL 3.2 Quick Reference
 OpenGL 4.1 Reference Pages
-OpenGL 4.0 Specification ����Ǳ���ͷ
+OpenGL 4.0 Specification 这可是本大部头
 GLSL Specifications
-������չ���б� ������GPU���£��ǿ���ͨ��GLEW����ȡĳЩ��չ
+所有扩展的列表 如果你的GPU够新，那可以通过GLEW来获取某些扩展
 
-�����γ�
-http://arcsynthesis.org/gltut/ һ���ǳ�͸���Ŀγ̣�ѧϰ���߽϶���
-ogldev ������Ҫ�ľ�����Ŷ
-http://openglbook.com/ һЩ���ſγ�
-NeHe ������ܹ��OpenGL1.1�γ���Դ���󲿷������Ѿ���ʱ������Щ������Ȼֵ��һ����
+其他课程
+http://arcsynthesis.org/gltut/ 一个非常透彻的课程，学习曲线较陡峭
+ogldev 我们主要的竞争者哦
+http://openglbook.com/ 一些入门课程
+NeHe 涵盖面很广的OpenGL1.1课程资源。大部分内容已经过时，但有些内容仍然值得一看。
 
-�鼮
+书籍
 More Opengl Programming
 Real-time Rendering 3
 
-����
-A trip trough the graphic pipeline��������GPU����ԭ�������������ǿ���Ƽ���
+其他
+A trip trough the graphic pipeline：驱动和GPU工作原理的深入分析。强力推荐。
 
-���Թ���
-glslDevil ��������У������ǿ����GLSL����������������������������
-GLIntercept ������ҳ��ʽ�г����͵�OpenGLָ���ɫ��Դ�롢ͼ�����ݡ�֡���������ݵȵȡ�
-gdebugger ���ܷ�����
-NVidia Parallel NSight һ������������ʾ�߾��ȵ��������ݡ�������ֻ������Visual Studio + NVidia��
+调试工具
+glslDevil 如果能运行，它还是款不错的GLSL调试器。就连官网都经常当掉。
+GLIntercept 可以网页形式列出发送的OpenGL指令、着色器源码、图像内容、帧缓冲器内容等等。
+gdebugger 性能分析器
+NVidia Parallel NSight 一款神器，可显示高精度的性能数据。力荐。只能用在Visual Studio + NVidia。
 
-��
-����ϵͳ������
-GLFW ���γ��õľ������
-GLUT ����ϵĴ���ϵͳ���Ѿ�ֹͣά�����޿�Դ����֤�����Ƽ���
-FreeGlut ��GLUT��APIһ�£�����Դ��
-SDL �Ҹ��˾��������ܹŹ֣�����Ҳ����ϲ�������ˡ�
-SFML ���壩. Includes a coffee machine, a washing machine, and a cellular.
+库
+窗口系统及其他
+GLFW 本课程用的就是这个
+GLUT 最古老的窗口系统，已经停止维护，无开源许可证。不推荐。
+FreeGlut 和GLUT的API一致，但开源。
+SDL 我个人觉得这个库很古怪，不过也不乏喜欢它的人。
+SFML （囧）. Includes a coffee machine, a washing machine, and a cellular.
 
-��չ����
+扩展加载
 
-ע���ˣ��������չ���ؿ��OpenGL 3+ Core Profile��̫Э����ʵ���ϣ���ֻ��GLEW�����������С�Beware, most extensions loading library don��t work well with OpenGL 3+ Core. Actually, GLEW is the only one I managed to make work, with changes in the source code.
+注意了，大多数扩展加载库和OpenGL 3+ Core Profile不太协调。实际上，我只有GLEW可以正常运行。Beware, most extensions loading library don’t work well with OpenGL 3+ Core. Actually, GLEW is the only one I managed to make work, with changes in the source code.
 
-����ȷ�����ĸ��汾��GLEW�����ñ��γ�����Դ���еİ汾���ˡ�If unsure, simply use the GLEW version included in the source code.
+若不确定用哪个版本的GLEW，就用本课程所附源码中的版本好了。If unsure, simply use the GLEW version included in the source code.
 
-GLEW ���γ��õľ������
-GLEE ��˵����
-gl3w ��������һ��C++�ļ���Python�ű�
+GLEW 本课程用的就是这个
+GLEE 听说还行
+gl3w 可以生成一个C++文件的Python脚本
 
 
-��ѧ��
-GLM���γ��õľ���������ǳ�ȫ�档ֱ�Ӻ�OpenGL��CUDA���ݡ�
-Bullet��Vectormath ��û�ù�����������SIMD���ٵģ��ٶȸ��죬��ʹ������CPU�����������㣩
-Boost.ublas ������������Ƽ�����OpenGL��
+数学库
+GLM本课程用的就是这个，非常全面。直接和OpenGL、CUDA兼容。
+Bullet的Vectormath 从没用过，好像是有SIMD加速的（速度更快，即使很少在CPU上做大量计算）
+Boost.ublas 重型组件。不推荐用于OpenGL。
 
-ͼƬ����
+图片加载
 
-stbimage ֻ���ڹ����а���һ��.c�ļ��Ϳ��Լ���jpeg��bmp��png�ļ�������
-SOIL �Ƽ�������stbimage���ṩ���ں�OpenGLһ��ʹ�õĺ���,�Լ�һ��DDS��������
-DevIL һ�����һ��ͼƬ���ؿ⡣
-FreeImage ����һ�����һ�ġ�����
-Boost.GIL ���أ���֧��jpg��
-libjpg ����jpgһ��������������ã����������в������ӡ�
+stbimage 只需在工程中包含一个.c文件就可以加载jpeg、bmp和png文件！！！
+SOIL 推荐。基于stbimage，提供便于和OpenGL一起使用的函数,以及一个DDS加载器。
+DevIL 一个多合一的图片加载库。
+FreeImage 又是一个多合一的。。。
+Boost.GIL 笨重，不支持jpg。
+libjpg 加载jpg一般用这个。很难用，但网络上有不少例子。
 libpng Same thing here.
 Static objects loading
 
 ASSIMP
-�ؽ����������Articulated objects loading & stuff
+关节链物体加载Articulated objects loading & stuff
 
 Any Quake III or Quake IV loader around
 Cal3D
-����
+物理
 
-Bullet ��Դ���ܶ���Ϸ������Ӱ������� used by many games and even films
-Newton ����������Ҳ�ܲ�����
-ODE �Ͼ��Ҳ��ȶ������á�
+Bullet 开源，很多游戏甚至电影都用这个 used by many games and even films
+Newton 自由软件，也很不错。
+ODE 老旧且不稳定。勿用。
 PhysX
-Havok �����ð���
+Havok （费用昂贵）

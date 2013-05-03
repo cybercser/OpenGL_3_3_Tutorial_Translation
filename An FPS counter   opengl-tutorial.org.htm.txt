@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ï»¿<!DOCTYPE html>
 <html dir="ltr" lang="en-US">
 <head>
 <meta charset="UTF-8" />
@@ -94,7 +94,7 @@ body.custom-background { background-color: #1F1F1F; }
 					
 					<div class="entry-content">
 						<p>In real-time graphics, it is important to keep an eye on performance. A good practice is to choose a target FPS ( usually 60 or 30 ) and make everything possible to stick to it.</p>
-<p>FPS¼ÆÊıÆ÷¹¤×÷Ô­Àí´óÖÂÈçÏÂ:A FPS counter looks like this :</p>
+<p>FPSè®¡æ•°å™¨å·¥ä½œåŸç†å¤§è‡´å¦‚ä¸‹:A FPS counter looks like this :</p>
 <pre> double lastTime = glfwGetTime();
  int nbFrames = 0;
 
@@ -111,11 +111,11 @@ body.custom-background { background-color: #1F1F1F; }
      }
 
      ... rest of the main loop</pre>
-<p>´úÂëÖĞÓĞÒ»´¦ÓĞĞ©ÒìÑù¡£Õâ¸öFPS¼ÆÊıÆ÷ÏÔÊ¾µÄÊÇ»æÖÆÃ¿Ò»Ö¡ËùĞèµÄÊ±¼ä£¨µ¥Î»ºÁÃë£¬È¡Ò»ÃëÄÚµÄÆ½¾ùÖµ£©£¬¶ø²»ÊÇ¹ıÈ¥µÄÒ»ÃëÄÚ»æÖÆµÄÖ¡Êı¡£There is an odd thing in this code. It displays the time, in milliseconds, needed to draw a frame (averaged on 1 second) instead of how many frame were drawn in the last second.</p>
-<p>Êµ¼ÊÉÏÕâÖÖ¼Æ·¨ÒªThis is actually <strong>ºÃµÃ¶àmuch better</strong>. Ç§Íò²»ÒªÌ«ÑöÕÌÓÚFPS¡£Ö¡Ã¿Ãë = 1 / ÃëÃ¿Ö¡£¬Òò´Ë¶şÕß»¥Îªµ¹Êı¡£ÈËÃÇ¶Ôµ¹ÊıµÄ¸Ğ¾õÌ«²»¿¿Æ×ÁË¡£¾Ù¸öÀı×Ó¡£Don&#8217;t rely on FPS. Never. FramesPerSecond = 1/SecondsPerFrame, so this is an inverse relationship, and we humans suck at understanding this kind of relationship. Let&#8217;s take an example.</p>
-<p>ÄãĞ´ÁË¸öºÜÀ÷º¦µÄ»æÖÆº¯Êı£¬Ö¡ÂÊÎª1000FPS£¨1ºÁÃë/Ö¡£©¡£²»¹ıÄãÔÚ×ÅÉ«Æ÷Àï¼ÓÁËÒ»¸öºÜĞ¡µÄ¼ÆËã£¬¿ªÏú½ö0.1ºÁÃë¡£È»ºó£¬1 / 0.0011 = 900¡£Ö¡ÂÊÒ»ÏÂ×ÓµôÁË100FPS¡£ĞÅÌõ£ºÇĞÎğ½«FPS×÷ÎªĞÔÄÜ·ÖÎö±ê×¼¡£You write a great rendering function that runs at 1000 FPS ( 1ms/frame ). But you forgot a little computation in a shader, which adds an extra cost of 0.1ms. And bam, 1/0.0011 = 900. You just lost 100FPS. Morality : <strong>never use FPS for performance analysis.</strong></p>
-<p>Èç¹ûÏëÖÆ×÷Ò»¸ö60fpsµÄÓÎÏ·£¬Ä¿±ê¾ÍÊÇ16.6666ºÁÃë£»Èç¹ûÏëÖÆ×÷Ò»¸ö30fpsµÄÓÎÏ·£¬Ä¿±ê¾ÍÊÇ33.3333ºÁÃë¡£ÖªµÀÕâĞ©¾Í¹»ÁË¡£If you intend to make a 60fps game, your target will be 16.6666ms ; If you intend to make a 30fps game, your target will be 33.3333ms. That&#8217;s all you need to know.</p>
-<p>´Ó¡°µÚ¾Å¿Î£ºVBOË÷Òı¡±¿ªÊ¼£¬Õâ¶ÎFPSµÄ´úÂë¾ÍÄÜÓÃÁË£¬²Î¼ûtutorial09_vbo_indexing/tutorial09.cpp¡£ÆäËû¿ÉÓÃµÄĞÔÄÜ¹¤¾ß¿É²Î¿¼¡°¹¤¾ßºÍµ÷ÊÔÆ÷¡±This code is available in all tutorials starting from <a title="Tutorial 9 : VBO Indexing" href="http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-9-vbo-indexing/">Tutorial 9 : VBO indexing</a>; see tutorial09_vbo_indexing/tutorial09.cpp . Other performance tools are available in <a href="http://www.opengl-tutorial.org/miscellaneous/useful-tools-links/#header-4">Tools &#8211; Debuggers</a>.</p>
+<p>ä»£ç ä¸­æœ‰ä¸€å¤„æœ‰äº›å¼‚æ ·ã€‚è¿™ä¸ªFPSè®¡æ•°å™¨æ˜¾ç¤ºçš„æ˜¯ç»˜åˆ¶æ¯ä¸€å¸§æ‰€éœ€çš„æ—¶é—´ï¼ˆå•ä½æ¯«ç§’ï¼Œå–ä¸€ç§’å†…çš„å¹³å‡å€¼ï¼‰ï¼Œè€Œä¸æ˜¯è¿‡å»çš„ä¸€ç§’å†…ç»˜åˆ¶çš„å¸§æ•°ã€‚There is an odd thing in this code. It displays the time, in milliseconds, needed to draw a frame (averaged on 1 second) instead of how many frame were drawn in the last second.</p>
+<p>å®é™…ä¸Šè¿™ç§è®¡æ³•è¦This is actually <strong>å¥½å¾—å¤šmuch better</strong>. åƒä¸‡ä¸è¦å¤ªä»°ä»—äºFPSã€‚å¸§æ¯ç§’ = 1 / ç§’æ¯å¸§ï¼Œå› æ­¤äºŒè€…äº’ä¸ºå€’æ•°ã€‚äººä»¬å¯¹å€’æ•°çš„æ„Ÿè§‰å¤ªä¸é è°±äº†ã€‚ä¸¾ä¸ªä¾‹å­ã€‚Don&#8217;t rely on FPS. Never. FramesPerSecond = 1/SecondsPerFrame, so this is an inverse relationship, and we humans suck at understanding this kind of relationship. Let&#8217;s take an example.</p>
+<p>ä½ å†™äº†ä¸ªå¾ˆå‰å®³çš„ç»˜åˆ¶å‡½æ•°ï¼Œå¸§ç‡ä¸º1000FPSï¼ˆ1æ¯«ç§’/å¸§ï¼‰ã€‚ä¸è¿‡ä½ åœ¨ç€è‰²å™¨é‡ŒåŠ äº†ä¸€ä¸ªå¾ˆå°çš„è®¡ç®—ï¼Œå¼€é”€ä»…0.1æ¯«ç§’ã€‚ç„¶åï¼Œ1 / 0.0011 = 900ã€‚å¸§ç‡ä¸€ä¸‹å­æ‰äº†100FPSã€‚ä¿¡æ¡ï¼šåˆ‡å‹¿å°†FPSä½œä¸ºæ€§èƒ½åˆ†ææ ‡å‡†ã€‚You write a great rendering function that runs at 1000 FPS ( 1ms/frame ). But you forgot a little computation in a shader, which adds an extra cost of 0.1ms. And bam, 1/0.0011 = 900. You just lost 100FPS. Morality : <strong>never use FPS for performance analysis.</strong></p>
+<p>å¦‚æœæƒ³åˆ¶ä½œä¸€ä¸ª60fpsçš„æ¸¸æˆï¼Œç›®æ ‡å°±æ˜¯16.6666æ¯«ç§’ï¼›å¦‚æœæƒ³åˆ¶ä½œä¸€ä¸ª30fpsçš„æ¸¸æˆï¼Œç›®æ ‡å°±æ˜¯33.3333æ¯«ç§’ã€‚çŸ¥é“è¿™äº›å°±å¤Ÿäº†ã€‚If you intend to make a 60fps game, your target will be 16.6666ms ; If you intend to make a 30fps game, your target will be 33.3333ms. That&#8217;s all you need to know.</p>
+<p>ä»â€œç¬¬ä¹è¯¾ï¼šVBOç´¢å¼•â€å¼€å§‹ï¼Œè¿™æ®µFPSçš„ä»£ç å°±èƒ½ç”¨äº†ï¼Œå‚è§tutorial09_vbo_indexing/tutorial09.cppã€‚å…¶ä»–å¯ç”¨çš„æ€§èƒ½å·¥å…·å¯å‚è€ƒâ€œå·¥å…·å’Œè°ƒè¯•å™¨â€This code is available in all tutorials starting from <a title="Tutorial 9 : VBO Indexing" href="http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-9-vbo-indexing/">Tutorial 9 : VBO indexing</a>; see tutorial09_vbo_indexing/tutorial09.cpp . Other performance tools are available in <a href="http://www.opengl-tutorial.org/miscellaneous/useful-tools-links/#header-4">Tools &#8211; Debuggers</a>.</p>
 																	</div><!-- .entry-content -->
 				</div><!-- #post-## -->
 
