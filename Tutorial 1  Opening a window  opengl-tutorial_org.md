@@ -39,33 +39,33 @@ Build课程中的代码
  2. 建议用Visual Studio 2010 Express来编译。[这里](http://www.microsoft.com/express/Downloads/#2010-Visual-CPP)可以免费下载。若喜欢用MinGW，推荐[Qt Creator](http://qt-project.org/)。IDE可根据个人喜好选择。下列步骤是按Visual Studio讲解的，其他IDE差别不大。
  3. 从[这里](http://www.cmake.org/cmake/resources/software.html)下载安装CMake
  4. [下载课程源码](http://www.opengl-tutorial.org/download/)，解压到例如C:\Users\XYZ\Projects\OpenGLTutorials\
- 5. 启动CMake。让第一栏路径指向刚才解压缩的文件夹；不确定就选包含CMakeLists.txt的文件夹。第二栏填CMake输出路径。例如C:\Users\XYZ\Projects\OpenGLTutorials-build-Visual2010-32bits\，或者C:\Users\XYZ\Projects\OpenGLTutorials\build\Visual2010-32bits\。注意，此处可随便填，不一定要和源码在同一文件夹。![Alt text](./Tutorial_01/CMake.png)
+ 5. 启动CMake。让第一栏路径指向刚才解压缩的文件夹；不确定就选包含CMakeLists.txt的文件夹。第二栏填CMake输出路径。例如C:\Users\XYZ\Projects\OpenGLTutorials-build-Visual2010-32bits\，或者C:\Users\XYZ\Projects\OpenGLTutorials\build\Visual2010-32bits\。注意，此处可随便填，不一定要和源码在同一文件夹。![CMake](./Tutorial_01/CMake.png)
  6. 点击Configure。由于是首次congiure工程，CMake会让您选择编译器。根据步骤1选择。如果您的系统是Windows 64位的，选64位。不清楚就选32位。
  7. 再点Configure直至红色行全部消失。点Generate。Visual Studio工程创建完毕。不再需要CMake了，可以卸载掉。
- 8. 打开 C:\Users\XYZ\Projects\OpenGLTutorials-build-Visual2010-32bits\会看到Tutorials.sln文件，用Visual Studio打开它。
-在Build菜单中，点Build All。每个课程代码和依赖项都将编译。生成的可执行文件会出现在 C:\Users\XYZ\Projects\OpenGLTutorials\。应该不会有错误。
- 9. 打开C:\Users\XYZ\Projects\OpenGLTutorials\playground，运行playground.exe，会弹出一个黑色窗口。
+ 8. 打开 C:\Users\XYZ\Projects\OpenGLTutorials-build-Visual2010-32bits\会看到Tutorials.sln文件，用Visual Studio打开它。![directories](./Tutorial_01/directories.png)
+在*Build*菜单中，点*Build All*。每个课程代码和依赖项都将编译。生成的可执行文件会出现在 C:\Users\XYZ\Projects\OpenGLTutorials\。应该不会有错误。![visual_2010](./Tutorial_01/visual_2010-300x212.png)
+ 9. 打开C:\Users\XYZ\Projects\OpenGLTutorials\playground，运行playground.exe，会弹出一个黑色窗口。![empty_window](./Tutorial_01/empty_window-300x231.png)
 
 
-也可以在Visual Studio中运行任意一课的代码，但得先设置工作目录：右键点击Playground，选择Debugging、Working Directory、Browse，设置路径为C:\Users\XYZ\Projects\OpenGLTutorials\playground\。验证一下。再次右键点击Playground，“Choose as startup project”。按F5就可以调试了。
+也可以在Visual Studio中运行任意一课的代码，但得先设置工作目录：右键点击Playground，选择Debugging、Working Directory、Browse，设置路径为C:\Users\XYZ\Projects\OpenGLTutorials\playground\。验证一下。再次右键点击Playground，“Choose as startup project”。按F5就可以调试了。![WorkingDir](./Tutorial_01/WorkingDir-300x211.png)![StartupProject](./Tutorial_01/StartupProject-185x300.png)
 
 ###在Linux上build
 
 Linux版本众多，这里不可能列出所有的平台。可根据实际情况自行调整，也不妨看一下发行版文档。
 
- 1. 安装最新驱动。强烈推荐闭源的二进制驱动；不开源但是好用。如果发行版不提供自动安装，试试Ubuntu指南。
- 2. 安装必需的编译器、工具和库。完整清单如下： cmake make g++ libx11-dev libgl1-mesa-dev libglu1-mesa-dev libxrandr-dev libxext-dev。命令行是sudo apt-get install 或者 su && yum install。
- 3. 下载课程源码并解压到如 ~/Projects/OpenGLTutorials/
+ 1. 安装最新驱动。强烈推荐闭源的二进制驱动；不开源但是好用。如果发行版不提供自动安装，试试[Ubuntu指南](http://help.ubuntu.com/community/BinaryDriverHowto)。
+ 2. 安装必需的编译器、工具和库。完整清单如下： *cmake make g++ libx11-dev libgl1-mesa-dev libglu1-mesa-dev libxrandr-dev libxext-dev*。命令行是sudo apt-get install 或者 su && yum install。
+ 3. [下载课程源码](http://www.opengl-tutorial.org/download/)并解压到如 ~/Projects/OpenGLTutorials/
  4. 输入如下命令 :
-cd ~/Projects/OpenGLTutorials/
-mkdir build
-cd build
-cmake ..
+- cd ~/Projects/OpenGLTutorials/
+- mkdir build
+- cd build
+- cmake ..
  5. build目录下多了一个刚刚创建的makefile文件
  6. 键入“make all”。每个课程代码和依赖项都会被编译。生成的可执行文件在 ~/Projects/OpenGLTutorials/。应该不会有错误。
  7. 打开~/Projects/OpenGLTutorials/playground，运行./playground会弹出一个黑色窗口。
 
-> **提示**：推荐使用Qt Creator作为IDE。值得一提的是，Qt Creator内置支持CMake，调试很方便。如下是QtCreator使用说明：
+> **提示**：推荐使用[Qt Creator](http://qt-project.org/)作为IDE。值得一提的是，Qt Creator内置支持CMake，调试很方便。如下是QtCreator使用说明：
 
  1. 在QtCreator中打开Tools->Options->Compile-&Execute->CMake
  2. 设置CMake路径。比如 /usr/bin/cmake
@@ -80,16 +80,16 @@ cmake ..
 Mac OS不支持OpenGL 3.3。最近，搭载MacOS 10.7 Lion和兼容型GPU的Mac机可以跑OpenGL 3.2了，但3.3还不行；所以我们用2.1移植版的课程代码。除此外，其他步骤和Windows类似（也支持Makefiles，此处不赘述）：
 
  1. 从Mac App Store安装XCode
- 2. 下载 CMake，安装.dmg。无需安装命令行工具。
- 3. 下载课程源码（2.1版！！）解压到如~/Projects/OpenGLTutorials/
+ 2. [下载 CMake](http://www.cmake.org/cmake/resources/software.html)，安装.dmg。无需安装命令行工具。
+ 3. [下载课程源码](http://www.opengl-tutorial.org/download/)（2.1版！！）解压到如~/Projects/OpenGLTutorials/
  4. 启动CMake （Applications->CMake）。将第一栏路径指向刚才解压缩的文件夹，不确定就选包含CMakeLists.txt的文件夹。第二栏填CMake输出路径。例如~/Projects/OpenGLTutorials_bin_XCode/。注意，这里可以随便填，不一定要和源码在同一文件夹。
  5. 点击Configure。由于是首次configure工程，CMake会让您选择编译器。选择Xcode。
  6. 再点Configure直至红色行全部消失。点Generate。Xcode项目创建完毕。不再需要CMake了，可以卸载掉。
  7. 打开~/Projects/OpenGLTutorials_bin_XCode/会看到Tutorials.xcodeproj文件：打开它。
- 8. 选择一个教程，在Xcode的Scheme面板上运行，点击Run按钮编译和运行：
+ 8. 选择一个教程，在Xcode的Scheme面板上运行，点击Run按钮编译和运行：![Xcode-projectselection](./Tutorial_01/Xcode-projectselection.png)
 
 ###关于Code::Blocks的说明
-由于C::B和CMake中各有一个bug，您得在Project->Build->Options->Make commands中手动设置编译命令，如下图所示：
+由于C::B和CMake中各有一个bug，您得在Project->Build->Options->Make commands中手动设置编译命令，如下图所示：![CodeBlocksFix](./Tutorial_01/CodeBlocksFix.png)
 
 同时您还得手动设置工作目录：Project->Properties->Build targets->tutorial N->execution working dir（即src_dir/tutorial_N/）。
 
@@ -109,7 +109,7 @@ Mac OS不支持OpenGL 3.3。最近，搭载MacOS 10.7 Lion和兼容型GPU的Mac�
 打开一个窗口
 --------
 终于！写OpenGL代码的时刻来了！
-呃，其实还早着呢。有些教程会教您以“底层”的方式做事，好让您清楚每一步的原理。这些内容往往无趣无用。因此，我们用一个第三方库——GLFW来帮我们处理窗口、键盘消息等细节。您也可以使用Windows的Win32 API、Linux的X11 API，或Mac的Cocoa API；或者用别的库，比如SFML、FreeGLUT、SDL等，请参见链接页。
+呃，其实还早着呢。有些教程会教您以“底层”的方式做事，好让您清楚每一步的原理。这些内容往往无趣无用。因此，我们用一个第三方库——GLFW来帮我们处理窗口、键盘消息等细节。您也可以使用Windows的Win32 API、Linux的X11 API，或Mac的Cocoa API；或者用别的库，比如SFML、FreeGLUT、SDL等，请参见[链接页](http://www.opengl-tutorial.org/miscellaneous/useful-tools-links/)。
 
 开工啦。从处理依赖库开始：我们要用一些基本库在控制台显示消息：
 
@@ -187,5 +187,6 @@ build并运行。一个窗口弹出后立即关闭了。可不是嘛，还没设
 
 第一课就到这啦！第二课会教大家绘制三角形。
 
+> &copy; http://www.opengl-tutorial.org/
 
 > Written with [StackEdit](https://stackedit.io/).
