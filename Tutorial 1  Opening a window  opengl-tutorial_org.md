@@ -23,7 +23,7 @@ Build课程中的代码
 --------
 所有课程代码都能在Windows、Linux、和Mac上生成，过程大体相同：
 
- 1. 更新驱动 ！！赶快更新吧。别怪我没提醒您哟。
+ 1. **更新驱动** ！！赶快更新吧。别怪我没提醒您哟。
  2. 下载C++编译器
  3. 安装CMake
  4. 下载全部课程代码
@@ -36,10 +36,10 @@ Build课程中的代码
 ###在Windows上build
 
  1. 更新驱动小菜一碟。直接去NVIDIA或者AMD的官网下载。若不清楚GPU的型号:控制面板->系统和安全->系统->设备管理器->显示适配器。如果是Intel集成显卡，一般由OEM（Dell、HP…）提供驱动。
- 2. 建议用Visual Studio 2010 Express来编译。这里可以免费下载。若喜欢用MinGW，推荐Qt Creator。IDE可根据个人喜好选择。下列步骤是按Visual Studio讲解的，其他IDE差别不大。
- 3. 从这里下载安装CMake
- 4. 下载课程源码，解压到例如C:\Users\XYZ\Projects\OpenGLTutorials\
- 5. 启动CMake。让第一栏路径指向刚才解压缩的文件夹；不确定就选包含CMakeLists.txt的文件夹。第二栏填CMake输出路径。例如C:\Users\XYZ\Projects\OpenGLTutorials-build-Visual2010-32bits\，或者C:\Users\XYZ\Projects\OpenGLTutorials\build\Visual2010-32bits\。注意，此处可随便填，不一定要和源码在同一文件夹。
+ 2. 建议用Visual Studio 2010 Express来编译。[这里](http://www.microsoft.com/express/Downloads/#2010-Visual-CPP)可以免费下载。若喜欢用MinGW，推荐[Qt Creator](http://qt-project.org/)。IDE可根据个人喜好选择。下列步骤是按Visual Studio讲解的，其他IDE差别不大。
+ 3. 从[这里](http://www.cmake.org/cmake/resources/software.html)下载安装CMake
+ 4. [下载课程源码](http://www.opengl-tutorial.org/download/)，解压到例如C:\Users\XYZ\Projects\OpenGLTutorials\
+ 5. 启动CMake。让第一栏路径指向刚才解压缩的文件夹；不确定就选包含CMakeLists.txt的文件夹。第二栏填CMake输出路径。例如C:\Users\XYZ\Projects\OpenGLTutorials-build-Visual2010-32bits\，或者C:\Users\XYZ\Projects\OpenGLTutorials\build\Visual2010-32bits\。注意，此处可随便填，不一定要和源码在同一文件夹。![Alt text](./Tutorial_01/CMake.png)
  6. 点击Configure。由于是首次congiure工程，CMake会让您选择编译器。根据步骤1选择。如果您的系统是Windows 64位的，选64位。不清楚就选32位。
  7. 再点Configure直至红色行全部消失。点Generate。Visual Studio工程创建完毕。不再需要CMake了，可以卸载掉。
  8. 打开 C:\Users\XYZ\Projects\OpenGLTutorials-build-Visual2010-32bits\会看到Tutorials.sln文件，用Visual Studio打开它。
