@@ -35,25 +35,32 @@ Build课程中的代码
 
 ###在Windows上build
 
- 1. 更新驱动小菜一碟。直接去NVIDIA或者AMD的官网下载。若不清楚GPU的型号:控制面板->系统和安全->系统->设备管理器->显示适配器。如果是Intel集成显卡，一般由OEM（Dell、HP…）提供驱动。
+ 1. 更新驱动小菜一碟。直接去NVIDIA或者AMD的官网下载。若不清楚GPU的型号：控制面板->系统和安全->系统->设备管理器->显示适配器。如果是Intel集成显卡，一般由OEM（Dell、HP…）提供驱动。
  2. 建议用Visual Studio 2010 Express来编译。[这里](http://www.microsoft.com/express/Downloads/#2010-Visual-CPP)可以免费下载。若喜欢用MinGW，推荐[Qt Creator](http://qt-project.org/)。IDE可根据个人喜好选择。下列步骤是按Visual Studio讲解的，其他IDE差别不大。
  3. 从[这里](http://www.cmake.org/cmake/resources/software.html)下载安装CMake
  4. [下载课程源码](http://www.opengl-tutorial.org/download/)，解压到例如C:\Users\XYZ\Projects\OpenGLTutorials\
  5. 启动CMake。让第一栏路径指向刚才解压缩的文件夹；不确定就选包含CMakeLists.txt的文件夹。第二栏填CMake输出路径。例如C:\Users\XYZ\Projects\OpenGLTutorials-build-Visual2010-32bits\，或者C:\Users\XYZ\Projects\OpenGLTutorials\build\Visual2010-32bits\。注意，此处可随便填，不一定要和源码在同一文件夹。
- ![CMake](./Tutorial_01/CMake.png)
+ <a href="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/CMake.png"><img class="alignnone size-medium wp-image-8" title="CMake" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/CMake.png" alt="" width="846" height="392"></a>
+
  6. 点击Configure。由于是首次configure工程，CMake会让您选择编译器。根据步骤1选择。如果您的系统是Windows 64位的，选64位。不清楚就选32位。
  7. 再点Configure直至红色行全部消失。点Generate。Visual Studio工程创建完毕。不再需要CMake了，可以卸载掉。
  8. 打开 C:\Users\XYZ\Projects\OpenGLTutorials-build-Visual2010-32bits\会看到Tutorials.sln文件，用Visual Studio打开它。
- ![directories](./Tutorial_01/directories.png)
-在*Build*菜单中，点*Build All*。每个课程代码和依赖项都将编译。生成的可执行文件会出现在 C:\Users\XYZ\Projects\OpenGLTutorials\。应该不会有错误。
-![visual_2010](./Tutorial_01/visual_2010-300x212.png)
- 9. 打开C:\Users\XYZ\Projects\OpenGLTutorials\playground，运行playground.exe，会弹出一个黑色窗口。
- ![empty_window](./Tutorial_01/empty_window-300x231.png)
 
+    <a href="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/directories.png"><img class="alignnone size-medium wp-image-9" title="directories" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/directories.png" alt="" width="560" height="302"></a>
+
+    在*Build*菜单中，点*Build All*。每个课程代码和依赖项都将编译。生成的可执行文件会出现在 C:\Users\XYZ\Projects\OpenGLTutorials\。应该不会有错误。
+    
+    <a href="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/visual_2010.png"><img class="alignnone size-medium wp-image-11" title="visual_2010" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/visual_2010-300x212.png" alt="" width="300" height="212"></a>
+
+ 9. 打开C:\Users\XYZ\Projects\OpenGLTutorials\playground，运行playground.exe，会弹出一个黑色窗口。
+
+    <a href="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/empty_window.png"><img class="alignnone size-medium wp-image-10" title="empty_window" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/empty_window-300x231.png" alt="" width="300" height="231"></a>
+ 
 
 也可以在Visual Studio中运行任意一课的代码，但得先设置工作目录：右键点击Playground，选择Debugging、Working Directory、Browse，设置路径为C:\Users\XYZ\Projects\OpenGLTutorials\playground\。验证一下。再次右键点击Playground，“Choose as startup project”。按F5就可以调试了。
-![WorkingDir](./Tutorial_01/WorkingDir-300x211.png)
-![StartupProject](./Tutorial_01/StartupProject-185x300.png)
+
+<a href="http://www.opengl-tutorial.org/wp-content/uploads/2012/04/StartupProject.png"><img class="size-medium wp-image-544 alignnone" title="StartupProject" src="http://www.opengl-tutorial.org/wp-content/uploads/2012/04/StartupProject-185x300.png" alt="" width="185" height="300"></a>
+<a href="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/WorkingDir.png"><img class="alignright size-medium wp-image-546" title="WorkingDir" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/WorkingDir-300x211.png" alt="" width="300" height="211"></a>
 
 ###在Linux上build
 
@@ -93,11 +100,12 @@ Mac OS不支持OpenGL 3.3。最近，搭载MacOS 10.7 Lion和兼容型GPU的Mac�
  6. 再点Configure直至红色行全部消失。点Generate。Xcode项目创建完毕。不再需要CMake了，可以卸载掉。
  7. 打开~/Projects/OpenGLTutorials_bin_XCode/会看到Tutorials.xcodeproj文件：打开它。
  8. 选择一个教程，在Xcode的Scheme面板上运行，点击Run按钮编译和运行：
- ![Xcode-projectselection](./Tutorial_01/Xcode-projectselection.png)
-
+<a href="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/Xcode-projectselection.png"><img class="alignnone size-full wp-image-643" title="Xcode-projectselection" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/Xcode-projectselection.png" alt="" width="826" height="330"></a>
+ 
 ###关于Code::Blocks的说明
 由于C::B和CMake中各有一个bug，您得在Project->Build->Options->Make commands中手动设置编译命令，如下图所示：
-![CodeBlocksFix](./Tutorial_01/CodeBlocksFix.png)
+
+<a href="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/CodeBlocksFix.png"><img class="alignnone size-full wp-image-712" title="CodeBlocksFix" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/CodeBlocksFix.png" alt="" width="746" height="340"></a>
 
 同时您还得手动设置工作目录：Project->Properties->Build targets->tutorial N->execution working dir（即src_dir/tutorial_N/）。
 
@@ -135,7 +143,7 @@ Mac OS不支持OpenGL 3.3。最近，搭载MacOS 10.7 Lion和兼容型GPU的Mac�
     // Include GLFW
     #include <GL/glfw.h>
 
-下面的GLM是个很有用三维数学库，我们暂时没用到，但很快就会用上。GLM库很好用，但没有什么神奇的，您自己也可以写一个。添加“using namespace”是为了不用写“glm::vec3”，直接写“vec3”。
+下面的GLM是个很有用3D数学库，我们暂时没用到，但很快就会用上。GLM库很好用，但没有什么神奇的，您自己也可以写一个。添加“using namespace”是为了不用写“glm::vec3”，直接写“vec3”。
 
     // Include GLM
     #include <glm/glm.hpp>

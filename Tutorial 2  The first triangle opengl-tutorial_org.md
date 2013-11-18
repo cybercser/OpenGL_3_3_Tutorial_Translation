@@ -52,7 +52,7 @@ Z的指向很费解，为什么要这样呢？简言之：因为基于右手定�
 第一个顶点是(-1, -1, 0)。
 这意味着除非以某种方式变换它，否则它将显示在屏幕的(-1, -1)位置。什么意思呢？屏幕的原点在中间，X在右方，Y在上方。屏幕坐标如下图：
 
-![ScreenCoordinates](./Tutorial_02/screenCoordinates-300x165.png)
+<a href="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/screenCoordinates.png"><img class="alignnone size-medium wp-image-16" title="screenCoordinates" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/screenCoordinates-300x165.png" alt="" width="300" height="165"></a>
 
 这是显卡的固有机制，无法改变。因此(-1, -1)是屏幕的左下角，(1, -1)是右下角，(0, 1)在中上位置。这个三角形应该占据了大部分屏幕。
 
@@ -95,7 +95,7 @@ Z的指向很费解，为什么要这样呢？简言之：因为基于右手定�
 
 结果如图：
 
-![triangle_no_shader](./Tutorial_02/triangle_no_shader-300x232.png)
+<a href="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/triangle_no_shader1.png"><img class="alignnone size-medium wp-image-858" title="triangle_no_shader" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/triangle_no_shader1-300x232.png" alt="" width="300" height="232"></a>
 
 白色太单调了。来看看怎么把它涂成红色吧。这就需要用到『着色器（Shader）』了。
 
@@ -212,7 +212,7 @@ Z的指向很费解，为什么要这样呢？简言之：因为基于右手定�
 在下一课中我们将看到怎样对输入位置做一些更有趣的计算。
 
         gl_Position.xyz = vertexPosition_modelspace;
-        gl_Position.w = 1.0;
+    	gl_Position.w = 1.0;
     }
 gl_Position是仅有的几个内置变量之一：您必须赋一个值给它。其他操作都是可选的，我们将在第四课中看到究竟有哪些“其他操作”。
 
@@ -244,7 +244,7 @@ vec3(1,0,0)代表红色。因为在计算机屏幕上，颜色由红，绿，蓝
     // Draw triangle...
 ...然后，当当当当，这就是您绘制的红色三角形啦！
 
-![red_triangle](./Tutorial_02/red_triangle-300x231.png)
+<a href="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/red_triangle.png"><img class="alignnone size-medium wp-image-15" title="red_triangle" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/red_triangle-300x231.png" alt="" width="300" height="231"></a>
 
 下一课中我们将学习变换（transformation）：设置相机，移动物体等等。
 
