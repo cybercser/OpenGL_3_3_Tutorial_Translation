@@ -39,7 +39,7 @@ Build课程中的代码
  2. 建议用Visual Studio 2010 Express来编译。[这里](http://www.microsoft.com/express/Downloads/#2010-Visual-CPP)可以免费下载。若喜欢用MinGW，推荐[Qt Creator](http://qt-project.org/)。IDE可根据个人喜好选择。下列步骤是按Visual Studio讲解的，其他IDE差别不大。
  3. 从[这里](http://www.cmake.org/cmake/resources/software.html)下载安装CMake
  4. [下载课程源码](http://www.opengl-tutorial.org/download/)，解压到例如C:\Users\XYZ\Projects\OpenGLTutorials\
- 5. 启动CMake。让第一栏路径指向刚才解压缩的文件夹；不确定就选包含CMakeLists.txt的文件夹。第二栏填CMake输出路径。例如C:\Users\XYZ\Projects\OpenGLTutorials-build-Visual2010-32bits\，或者C:\Users\XYZ\Projects\OpenGLTutorials\build\Visual2010-32bits\。注意，此处可随便填，不一定要和源码在同一文件夹。
+ 5. 启动CMake。让第一栏路径指向刚才解压缩的文件夹；不确定就选包含CMakeLists.txt的文件夹。第二栏填CMake输出路径。例如C:\Users\XYZ\Projects\OpenGLTutorials-build-Visual2010-32bits\，或者C:\Users\XYZ\Projects\OpenGLTutorials\build\Visual2010-32bits\。注意，此处可随意填写，不一定要和源码在同一文件夹。
  <a href="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/CMake.png"><img class="alignnone size-medium wp-image-8" title="CMake" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/CMake.png" alt="" width="846" height="392"></a>
 
  6. 点击Configure。由于是首次configure工程，CMake会让您选择编译器。根据步骤1选择。如果您的系统是Windows 64位的，选64位。不清楚就选32位。

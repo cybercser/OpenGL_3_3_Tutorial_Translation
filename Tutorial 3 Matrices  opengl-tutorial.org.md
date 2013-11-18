@@ -3,7 +3,7 @@
 ========
 [TOC]
 
-> 引擎完全没有推动飞船。飞船静止在原处，而引擎推动了环绕着飞船的宇宙。——《飞出个未来》(一部美国科幻动画片)
+> 引擎推动的根本不是飞船。飞船保持原地不动，而引擎推动着宇宙环绕飞船。——《飞出个未来》
 
 **这一课是所有课程中最重要的。请至少看八遍。**
 
@@ -189,7 +189,7 @@ w还是没变。您也许会问：“缩放一个向量”有什么用？嗯，�
 ###视图矩阵
 这里再引用一下《飞出个未来》：
 
-> 引擎完全没有推动飞船。飞船静止在原处，而引擎推动了环绕着飞船的宇宙。
+> 引擎推动的根本不是飞船。飞船保持原地不动，而引擎推动着宇宙环绕飞船。
 
 <a href="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/camera.png"><img class="alignnone size-full wp-image-21" title="camera" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/camera.png" alt="" width="960" height="540"></a>
 
