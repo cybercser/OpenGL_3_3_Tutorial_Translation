@@ -17,7 +17,7 @@
 
 每个顶点除了位置坐标外还有两个浮点数坐标：U和V。这两个坐标用于获取纹理，如下图所示：
 
-<a href="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/UVintro.png"><img class="alignnone size-full wp-image-116" title="UVintro" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/UVintro.png" alt="" width="662" height="337"></a>
+<img class="alignnone size-full wp-image-116" title="UVintro" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/UVintro.png" alt="" width="662" height="337">
 
 注意纹理是怎样在三角形上扭曲的。
 
@@ -26,17 +26,17 @@
 了解BMP文件格式并不重要：很多库可以帮你做这个。但BMP格式极为简单，可以帮助你理解那些库的工作原理。所以，我们从头开始写一个BMP文件加载器，以便你理解其工作原理，不过（在实际工程中）千万别再用这个实验品。
 
 如下是加载函数的声明：
-
+```cpp
     GLuint loadBMP_custom(const char * imagepath);
-
+```
 使用方式如下：
-
+```cpp
     GLuint image = loadBMP_custom("./my_texture.bmp");
-
+```
 接下来看看如何读取BMP文件。
 
 首先需要一些数据。读取文件时将设置这些变量。
-
+```cpp
     // Data read from the header of the BMP file
     unsigned char header[54]; // Each BMP file begins by a 54-bytes header
     unsigned int dataPos;     // Position in the file where the actual data begins
@@ -44,9 +44,9 @@
     unsigned int imageSize;   // = width*height*3
     // Actual RGB data
     unsigned char * data;
-
+```
 现在正式开始打开文件。
-
+```cpp
     // Open the file
     FILE * file = fopen(imagepath,"rb");
     if (!file)                              
@@ -54,41 +54,41 @@
         printf("Image could not be opened\n"); 
         return 0;
     }
-
+```
 文件一开始是54字节长的文件头，用于标识“这是不是一个BMP文件”、图像大小、像素位等等。来读取文件头吧：
-
+```cpp
     if ( fread(header, 1, 54, file)!=54 ){ // If not 54 bytes read : problem
         printf("Not a correct BMP file\n");
         return false;
     }
-
+```
 文件头总是以“BM”开头。实际上，如果用十六进制编辑器打开BMP文件，你会看到如下情形：
 
-<a href="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/hexbmp.png"><img class="alignnone size-full wp-image-662" title="hexbmp" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/hexbmp.png" alt="" width="541" height="128"></a>
+<img class="alignnone size-full wp-image-662" title="hexbmp" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/hexbmp.png" alt="" width="541" height="128">
 
 因此，得检查一下头两个字节是否确为‘B’和‘M’：
-
+```cpp
     if ( header[0]!='B' || header[1]!='M' ){
         printf("Not a correct BMP file\n");
         return 0;
     }
-
+```
 现在可以读取文件中图像大小、数据位置等信息了：
-
+```cpp
     // Read ints from the byte array
     dataPos    = *(int*)&(header[0x0A]);
     imageSize  = *(int*)&(header[0x22]);
     width      = *(int*)&(header[0x12]);
     height     = *(int*)&(header[0x16]);
-
+```
 如果这些信息缺失得手动补齐：
-
+```cpp
     // Some BMP files are misformatted, guess missing information
     if (imageSize==0)    imageSize=width*height*3; // 3 : one byte for each Red, Green and Blue component
     if (dataPos==0)      dataPos=54; // The BMP header is done that way
-
+```
 现在我们知道了图像的大小，可以为之分配一些内存，把图像读进去：
-
+```cpp
     // Create a buffer
     data = new unsigned char [imageSize];
      
@@ -97,11 +97,11 @@
      
     //Everything is in memory now, the file can be closed
     fclose(file);
-
+```
 到了真正的OpenGL部分了。创建纹理和创建顶点缓冲器差不多：创建一个纹理、绑定、填充、配置。
 
 在glTexImage2D函数中，GL_RGB表示颜色由三个分量构成，GL_BGR则说明在内存中颜色值是如何存储的。实际上，BMP存储的并不是RGB，而是BGR，因此得把这个告诉OpenGL。
-
+```cpp
     // Create one OpenGL texture
     GLuint textureID;
     glGenTextures(1, &textureID);
@@ -114,11 +114,11 @@
      
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
+```
 稍后再解释最后两行代码。同时，得在C++代码中使用刚写好的函数加载一个纹理：
-
+```cpp
     GLuint Texture = loadBMP_custom("uvtemplate.bmp");
-
+```
 另外十分重要的一点：**使用2次幂（power-of-two）的纹理！**
 - 优质纹理：128*128、256*256、1024*1024、2*2……
 - 劣质纹理：127*128、3*5
@@ -127,7 +127,7 @@
 在OpenGL中使用纹理
 ---
 先来看看片断着色器。大部分代码一目了然：
-
+```glsl
     #version 330 core
      
     // Interpolated values from the vertex shaders
@@ -144,14 +144,14 @@
         // Output color = color of the texture at the specified UV
         color = texture( myTextureSampler, UV ).rgb;
     }
-
+```
 注意三点：
 - 片断着色器需要UV坐标。看似合情合理。
 - 同时也需要一个“Sampler2D”来获知要加载哪一个纹理（同一个着色器中可以访问多个纹理）
 - 最后一点，用texture()访问纹理，该方法返回一个(R,G,B,A)的vec4变量。马上就会了解到分量A。
 
 顶点着色器也很简单，只需把UV坐标传给片断着色器：
-
+```glsl
     #version 330 core
      
     // Input vertex data, different for all executions of this shader.
@@ -172,9 +172,9 @@
         // UV of the vertex. No special space for this one.
         UV = vertexUV;
     }
-
+```
 还记得第四课中的“layout(location = 1) in vec2 vertexUV”	吗？我们得在这儿把相同的事情再做一遍，但这次的缓冲区中放的不是(R,G,B)三元组，而是(U,V)数对。
-
+```cpp
     // Two UV coordinatesfor each vertex. They were created with Blender. You'll learn shortly how to do this yourself.
     static const GLfloat g_uv_buffer_data[] = {
         0.000059f, 1.0f-0.000004f,
@@ -214,50 +214,50 @@
         1.000004f, 1.0f-0.671847f,
         0.667979f, 1.0f-0.335851f
     };
-
+```
 上述UV坐标对应于下面的模型：
 
-<a href="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/uv_mapping_blender.png"><img class="alignnone size-medium wp-image-115" title="uv_mapping_blender" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/uv_mapping_blender-300x222.png" alt="" width="300" height="222"></a>
+<img class="alignnone size-medium wp-image-115" title="uv_mapping_blender" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/uv_mapping_blender-300x222.png" alt="" width="300" height="222">
 
 其余的就很清楚了。创建一个缓冲器、绑定、填充、配置，与往常一样绘制顶点缓冲器对象。要注意把glVertexAttribPointer的第二个参数（大小）3改成2。
 
 结果如下：
 
-<a href="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/nearfiltering.png"><img class="alignnone size-full wp-image-119" title="nearfiltering" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/nearfiltering.png" alt="" width="533" height="557"></a>
+<img class="alignnone size-full wp-image-119" title="nearfiltering" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/nearfiltering.png" alt="" width="533" height="557">
 
 放大后：
 
-<a href="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/nearfiltering_zoom.png"><img class="alignnone size-full wp-image-120" title="nearfiltering_zoom" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/nearfiltering_zoom.png" alt="" width="348" height="340"></a>
+<img class="alignnone size-full wp-image-120" title="nearfiltering_zoom" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/nearfiltering_zoom.png" alt="" width="348" height="340">
 
 什么是滤波和mipmap？怎样使用？
 ---
 正如在上面截图中看到的，纹理质量不是很好。这是因为在loadBMP_custom函数中，有两行这样写道：
-
+```cpp
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
+```
 这意味着在片断着色器中，texture()将直接提取位于(U,V)坐标的纹素（texel）。
 
-<a href="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/nearest.png"><img class="alignnone size-full wp-image-130" title="nearest" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/nearest.png" alt="" width="440" height="240"></a>
+<img class="alignnone size-full wp-image-130" title="nearest" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/nearest.png" alt="" width="440" height="240">
 
 有几种方法可以改善这一状况。
 
 ###线性滤波（Linear filtering）
 若采用线性滤波。texture()会查看周围的纹素，然后根据UV坐标距离各纹素中心的距离来混合颜色。这就避免了前面看到的锯齿状边缘。
 
-<a href="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/linear1.png"><img class="alignnone size-full wp-image-133" title="linear" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/linear1.png" alt="" width="440" height="240"></a>
+<img class="alignnone size-full wp-image-133" title="linear" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/linear1.png" alt="" width="440" height="240">
 
 线性滤波可以显著改善纹理质量，应用的也很多。但若想获得更高质量的纹理，可以采用各向异性滤波，不过速度上有些慢。
 
 ###各向异性滤波（Anisotropic filtering）
 这种方法逼近了真正片断中的纹素区块。例如下图中稍稍旋转了的纹理，各向异性滤波将沿蓝色矩形框的主方向，作一定数量的采样（即所谓的“各向异性层级”），计算出其内的颜色。
 
-<a href="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/aniso.png"><img class="alignnone size-full wp-image-131" title="aniso" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/aniso.png" alt="" width="440" height="240"></a>
+<img class="alignnone size-full wp-image-131" title="aniso" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/aniso.png" alt="" width="440" height="240">
 
 ###Mipmap
 线性滤波和各向异性滤波都存在一个共同的问题。那就是如果从远处观察纹理，只对4个纹素作混合显得不够。实际上，如果3D模型位于很远的地方，屏幕上只看得见一个片断（像素），那计算平均值得出最终颜色值时，图像所有的纹素都应该考虑在内。很显然，这样做没有考虑性能问题。相反，人们引入了mipmap这一概念：
 
-<a href="http://en.wikipedia.org/wiki/File:MipMap_Example_STS101.jpg"><img class="alignnone" title="An original image and its mipmaps. Image by Tokigun under Creative Commons" src="http://upload.wikimedia.org/wikipedia/commons/5/5c/MipMap_Example_STS101.jpg" alt="" width="384" height="256"></a>
+<img class="alignnone" title="An original image and its mipmaps. Image by Tokigun under Creative Commons" src="http://upload.wikimedia.org/wikipedia/commons/5/5c/MipMap_Example_STS101.jpg" alt="" width="384" height="256">
 
 - 一开始，把图像缩小到原来的1/2，然后依次缩小，直到图像只有1x1大小（应该是图像所有纹素的平均值）。
 - 绘制模型时，根据纹素大小选择合适的mipmap。
@@ -265,18 +265,19 @@
 - 要想效果更好，可以对两个mipmap采样然后混合，得出结果。
 
 好在这个比较简单，OpenGL都帮我们做好了，只需一个简单的调用：
-
+```cpp
     // When MAGnifying the image (no bigger mipmap available), use LINEAR filtering
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     // When MINifying the image, use a LINEAR blend of two mipmaps, each filtered LINEARLY too
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     // Generate mipmaps, by the way.
     glGenerateMipmap(GL_TEXTURE_2D);
-
+```
 
 怎样利用GLFW加载纹理？
 ---
 我们的loadBMP_custom函数很棒，因为这是我们自己写的！不过用专门的库更好。GLFW就可以加载纹理（仅限TGA文件）：
+```cpp
     GLuint loadTGA_glfw(const char * imagepath){
      
         // Create one OpenGL texture
@@ -299,7 +300,7 @@
         // Return the ID of the texture we just created
         return textureID;
     }
-
+```
 压缩纹理
 ---
 学到这儿，你可能会想如果文件格式不是TGA，而是JPEG，又该怎样加载呢？
@@ -310,7 +311,7 @@
 - 用它加载一个二次幂纹理
 - 将其压缩成DXT1、DXT3或DXT5格式（这些格式之间的差别请参考[Wikipedia](http://en.wikipedia.org/wiki/S3_Texture_Compression)）：
 
-<a href="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/TheCompressonator.png"><img class="alignnone size-full wp-image-358" title="TheCompressonator" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/TheCompressonator.png" alt="" width="806" height="688"></a>
+<img class="alignnone size-full wp-image-358" title="TheCompressonator" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/TheCompressonator.png" alt="" width="806" height="688">
 
 - 生成mipmap，这样就不用在运行时生成mipmap了。
 - 导出为.DDS文件。
@@ -319,7 +320,7 @@
 	
 ###使用压缩纹理
 来看看怎样加载压缩纹理。这和加载BMP的代码很相似，只不过文件头的结构不一样：
-
+```cpp
     GLuint loadDDS(const char * imagepath){
      
         unsigned char header[124];
@@ -347,10 +348,10 @@
         unsigned int linearSize     = *(unsigned int*)&(header[16]);
         unsigned int mipMapCount = *(unsigned int*)&(header[24]);
         unsigned int fourCC      = *(unsigned int*)&(header[80]);
-
+```
 
 文件头之后是真正的数据：紧接着是mipmap层级。可以一次性批量地读取：
-
+```cpp
         unsigned char * buffer;
         unsigned int bufsize;
         /* how big is it going to be including all mipmaps? */
@@ -359,9 +360,9 @@
         fread(buffer, 1, bufsize, fp);
         /* close the file pointer */
         fclose(fp);
-
+```
 这里要处理三种格式：DXT1、DXT3和DXT5。我们得把“fourCC”标识转换成OpenGL能识别的值。
-
+```cpp
         unsigned int components  = (fourCC == FOURCC_DXT1) ? 3 : 4;
         unsigned int format;
         switch(fourCC)
@@ -379,18 +380,18 @@
             free(buffer);
             return 0;
         }
-
+```
 像往常一样创建纹理：
-
+```cpp
         // Create one OpenGL texture
         GLuint textureID;
         glGenTextures(1, &textureID);
      
         // "Bind" the newly created texture : all future texture functions will modify this texture
         glBindTexture(GL_TEXTURE_2D, textureID);
-
+```
 现在只需逐个填充mipmap：
-    
+```cpp    
         unsigned int blockSize = (format == GL_COMPRESSED_RGBA_S3TC_DXT1_EXT) ? 8 : 16;
         unsigned int offset = 0;
      
@@ -408,7 +409,7 @@
         free(buffer); 
      
         return textureID;
-
+```
 ###反转UV坐标
 DXT压缩源自DirectX。和OpenGL相比，DirectX中的V纹理坐标是反过来的。所以使用压缩纹理时，得用(coord.v, 1.0-coord.v)来获取正确的纹素。这步操作何时执行都可以：可以在导出脚本中执行，可以在加载器中执行，也可以在着色器中执行……
 
@@ -421,7 +422,7 @@ DXT压缩源自DirectX。和OpenGL相比，DirectX中的V纹理坐标是反过�
 ---
 - 源代码中实现了DDS加载器，但没有做纹理坐标的改动（译者注：指文中讲述的反转 UV坐标）。在适当的位置添加该功能，以使正方体正确显示。
 - 试试各种DDS格式。所得结果有何不同？压缩率呢？
-- 试试在The Compressonator不生成mipmap。结果如何？请给出3种方案解决这一问题。
+- 试试在`The Compressonator`不生成mipmap。结果如何？请给出3种方案解决这一问题。
 
 
 参考文献

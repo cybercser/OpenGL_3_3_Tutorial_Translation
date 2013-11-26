@@ -10,16 +10,16 @@
 
 加载OBJ模型
 ---
-加载函数在common/objloader.hpp中声明，在common/objloader.cpp中实现。函数原型如下：
-
+加载函数在`common/objloader.hpp`中声明，在`common/objloader.cpp`中实现。函数原型如下：
+```cpp
     bool loadOBJ(
         const char * path,
         std::vector < glm::vec3 > & out_vertices,
         std::vector < glm::vec2 > & out_uvs,
         std::vector < glm::vec3 > & out_normals
     )
-
-我们让loadOBJ读取文件路径，把数据写入out_vertices/out_uvs/out_normals。如果出错则返回false。std::vector是C++中的数组，可存放glm::vec3类型的数据，数组大小可任意修改，不过std::vector和数学中的向量（vector）是两码事。其实它只是个数组。最后提一点，符号&意思是这个函数将会直接修改这些数组。
+```
+我们让`loadOBJ`读取文件路径，把数据写入`out_vertices/out_uvs/out_normals`。如果出错则返回false。`std::vector`是C++中的数组，可存放`glm::vec3`类型的数据，数组大小可任意修改，不过`std::vector`和数学中的向量（vector）是两码事。其实它只是个数组。最后提一点，符号&意思是这个函数将会直接修改这些数组。
 
 ###OBJ文件示例
 OBJ文件大概是这个模样：
@@ -75,13 +75,13 @@ OBJ文件大概是这个模样：
 因此：
 
 - #是注释标记，就像C++中的//
-- usemtl和mtlib描述了模型的外观。本课用不到。
+- `usemtl`和`mtlib`描述了模型的外观。本课用不到。
 - v代表顶点
 - vt代表顶点的纹理坐标
 - vn代表顶点的法向
 - f代表面
 
-v vt vn都很好理解。f比较麻烦。例如f 8/11/7 7/12/7 6/10/7：
+v vt vn都很好理解。f比较麻烦。例如`f 8/11/7 7/12/7 6/10/7`：
 
 - 8/11/7描述了三角形的第一个顶点
 - 7/12/7描述了三角形的第二个顶点
@@ -97,26 +97,26 @@ v vt vn都很好理解。f比较麻烦。例如f 8/11/7 7/12/7 6/10/7：
 ###用Blender创建OBJ文件
 我们写的蹩脚加载器功能实在有限，因此在导出模型时得格外小心。下图展示了在Blender中导出模型的情形：
 
-<a href="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/Blender.png"><img class="alignnone size-full wp-image-697" title="Blender" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/Blender.png" alt="" width="321" height="529"></a>
+<img class="alignnone size-full wp-image-697" title="Blender" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/Blender.png" alt="" width="321" height="529">
 
 ###读取OBJ文件
 OK，真正开始编码了。我们需要一些临时变量存储.obj文件的内容：
-
+```cpp
     std::vector< unsigned int > vertexIndices, uvIndices, normalIndices;
     std::vector< glm::vec3 > temp_vertices;
     std::vector< glm::vec2 > temp_uvs;
     std::vector< glm::vec3 > temp_normals;
-
+```
 学第五课纹理立方体时您你已学会打开文件了：
-
+```cpp
     FILE * file = fopen(path, "r");
     if( file == NULL ){
         printf("Impossible to open the file !\n");
         return false;
     }
-
+```
 读文件直到文件末尾：
-
+```cpp
         while( 1 ){
      
         char lineHeader[128];
@@ -126,36 +126,36 @@ OK，真正开始编码了。我们需要一些临时变量存储.obj文件的�
             break; // EOF = End Of File. Quit the loop.
      
         // else : parse lineHeader
-
-（注意，我们假设第一行的文字长度不超过128，这样做太愚蠢了。但既然这只是个实验品，就凑合一下吧）
+```
+（注意，我们假设第一行的文字长度不超过128，这样做太笨了。但既然这只是个实验品，就凑合一下吧）
 
 首先处理顶点：
-
+```cpp
     if ( strcmp( lineHeader, "v" ) == 0 ){
         glm::vec3 vertex;
         fscanf(file, "%f %f %f\n", &vertex.x, &vertex.y, &vertex.z );
         temp_vertices.push_back(vertex);
+```
 
-
-也就是说，若第一个字是“v”，则后面一定是3个float值，于是以这3个值创建一个glm::vec3变量，将其添加到数组。
-
+也就是说，若第一个字是“v”，则后面一定是3个float值，于是以这3个值创建一个`glm::vec3`变量，将其添加到数组。
+```cpp
     } else if ( strcmp( lineHeader, "vt" ) == 0 ){
         glm::vec2 uv;
         fscanf(file, "%f %f\n", &uv.x, &uv.y );
         temp_uvs.push_back(uv);
-
-也就是说，如果不是“v”而是“vt”，那后面一定是2个float值，于是以这2个值创建一个glm::vec2变量，添加到数组。
+```
+也就是说，如果不是“v”而是“vt”，那后面一定是2个float值，于是以这2个值创建一个`glm::vec2`变量，添加到数组。
 
 以同样的方式处理法向：
-
+```cpp
     } else if ( strcmp( lineHeader, "vn" ) == 0 ){
         glm::vec3 normal;
         fscanf(file, "%f %f %f\n", &normal.x, &normal.y, &normal.z );
         temp_normals.push_back(normal);
-
+```
 
 接下来是“f”，略难一些：
-
+```cpp
     } else if ( strcmp( lineHeader, "f" ) == 0 ){
         std::string vertex1, vertex2, vertex3;
         unsigned int vertexIndex[3], uvIndex[3], normalIndex[3];
@@ -173,52 +173,52 @@ OK，真正开始编码了。我们需要一些临时变量存储.obj文件的�
         normalIndices.push_back(normalIndex[0]);
         normalIndices.push_back(normalIndex[1]);
         normalIndices.push_back(normalIndex[2]);
-
+```
 代码与前面的类似，只不过读取的数据多一些。
 
 ###处理数据
 我们只需改变一下数据的形式。读取的是字符串，现在有了一组数组。这还不够，我们得把数据组织成OpenGL要求的形式。也就是去掉索引，只保留顶点坐标数据。这步操作称为索引。
 
 遍历每个三角形（每个“f”行）的每个顶点（每个 v/vt/vn）：
-
+```cpp
     // For each vertex of each triangle
     for( unsigned int i=0; i<vertexIndices.size(); i++ ){
-
-顶点坐标的索引存放到vertexIndices[i]：
-
+```
+顶点坐标的索引存放到`vertexIndices[i]`：
+```cpp
     unsigned int vertexIndex = vertexIndices[i];
-
+```
 因此坐标是temp_vertices[ vertexIndex-1 ]（-1是因为C++的下标从0开始，而OBJ的索引从1开始，还记得吗？）：
-
+```cpp
     glm::vec3 vertex = temp_vertices[ vertexIndex-1 ];
-
+```
 这样就有了一个顶点坐标：
-
+```cpp
     out_vertices.push_back(vertex);
-
+```
 UV和法向同理，任务完成！
 
 使用加载的数据
 ---
 到这一步，几乎什么变化都没发生。这次我们不再声明一个static const GLfloat g_vertex_buffer_data[] = {…}，而是创建一个顶点数组（UV和法向同理）。用正确的参数调用loadOBJ：
-
+```cpp
     // Read our .obj file
     std::vector< glm::vec3 > vertices;
     std::vector< glm::vec2 > uvs;
     std::vector< glm::vec3 > normals; // Won't be used at the moment.
     bool res = loadOBJ("cube.obj", vertices, uvs, normals);
-
+```
 把数组传给OpenGL：
-
+```cpp
     glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices[0], GL_STATIC_DRAW);
-
+```
 结束了！
 
 结果
 ---
 不好意思，纹理不好看。我不太擅长美工<img src="http://www.opengl-tutorial.org/wp-includes/images/smilies/icon_sad.gif" alt=":(" class="wp-smiley">。欢迎您提供一些好看的纹理。
 
-<a href="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/ModelLoading.png"><img class="alignnone size-medium wp-image-670" title="ModelLoading" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/ModelLoading-300x232.png" alt="" width="300" height="232"></a>
+<img class="alignnone size-medium wp-image-670" title="ModelLoading" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/ModelLoading-300x232.png" alt="" width="300" height="232">
 
 
 其他模型格式及加载器
