@@ -1,25 +1,25 @@
-µÚÊ®ËÄ¿Î£ºäÖÈ¾µ½ÎÆÀí
+ï»¿ç¬¬åå››è¯¾ï¼šæ¸²æŸ“åˆ°çº¹ç†
 ===
 [TOC]
 
-¡°äÖÈ¾µ½ÎÆÀí¡±ÊÇÒ»ÏµÁÐÌØÐ§·½·¨Ö®Ò»¡£»ù±¾Ë¼ÏëÊÇ£ºÏñÍ¨³£ÄÇÑùäÖÈ¾Ò»¸ö³¡¾°¡ª¡ªÖ»ÊÇÕâ´ÎÊÇäÖÈ¾µ½¿ÉÒÔÖØÓÃµÄÎÆÀíÖÐ¡£
+â€œæ¸²æŸ“åˆ°çº¹ç†â€æ˜¯ä¸€ç³»åˆ—ç‰¹æ•ˆæ–¹æ³•ä¹‹ä¸€ã€‚åŸºæœ¬æ€æƒ³æ˜¯ï¼šåƒé€šå¸¸é‚£æ ·æ¸²æŸ“ä¸€ä¸ªåœºæ™¯â€”â€”åªæ˜¯è¿™æ¬¡æ˜¯æ¸²æŸ“åˆ°å¯ä»¥é‡ç”¨çš„çº¹ç†ä¸­ã€‚
 
-Ó¦ÓÃ°üÀ¨£ºÓÎÏ·£¨in-game£©Ïà»ú¡¢ºóÆÚ´¦Àí£¨post-processing£©ÒÔ¼°ÄãÄÜÏëÏóµ½Ò»ÇÐ.
+åº”ç”¨åŒ…æ‹¬ï¼šæ¸¸æˆï¼ˆin-gameï¼‰ç›¸æœºã€åŽæœŸå¤„ç†ï¼ˆpost-processingï¼‰ä»¥åŠä½ èƒ½æƒ³è±¡åˆ°ä¸€åˆ‡.
 
-äÖÈ¾µ½ÎÆÀí
+æ¸²æŸ“åˆ°çº¹ç†
 ---
-ÎÒÃÇÓÐÈý¸öÈÎÎñ£º´´½¨ÒªäÖÈ¾µÄÎÆÀí¶ÔÏó£»½«ÎÆÀíäÖÈ¾µ½¶ÔÏóÉÏ£»Ê¹ÓÃÉú³ÉµÄÎÆÀí¡£
+æˆ‘ä»¬æœ‰ä¸‰ä¸ªä»»åŠ¡ï¼šåˆ›å»ºè¦æ¸²æŸ“çš„çº¹ç†å¯¹è±¡ï¼›å°†çº¹ç†æ¸²æŸ“åˆ°å¯¹è±¡ä¸Šï¼›ä½¿ç”¨ç”Ÿæˆçš„çº¹ç†ã€‚
 
-###´´½¨äÖÈ¾Ä¿±ê£¨Render Target£©###
+###åˆ›å»ºæ¸²æŸ“ç›®æ ‡ï¼ˆRender Targetï¼‰###
 
-ÎÒÃÇÒªäÖÈ¾µÄ¶ÔÏó½Ð×öÖ¡»º´æ¡£ËüÏñÒ»¸öÈÝÆ÷£¬ÓÃÀ´´æÎÆÀíºÍÒ»¸ö¿ÉÑ¡µÄÉî¶È»º³åÇø(depth buffer)¡£ÔÚOpenGLÖÐÎÒÃÇ¿ÉÒÔÏñ´´½¨ÆäËû¶ÔÏóÒ»Ñù´´½¨Ëü:
+æˆ‘ä»¬è¦æ¸²æŸ“çš„å¯¹è±¡å«åšå¸§ç¼“å­˜ã€‚å®ƒåƒä¸€ä¸ªå®¹å™¨ï¼Œç”¨æ¥å­˜çº¹ç†å’Œä¸€ä¸ªå¯é€‰çš„æ·±åº¦ç¼“å†²åŒº(depth buffer)ã€‚åœ¨OpenGLä¸­æˆ‘ä»¬å¯ä»¥åƒåˆ›å»ºå…¶ä»–å¯¹è±¡ä¸€æ ·åˆ›å»ºå®ƒ:
 ```cpp
 // The framebuffer, which regroups 0, 1, or more textures, and 0 or 1 depth buffer.
 GLuint FramebufferName = 0;
 glGenFramebuffers(1, &amp;FramebufferName);
 glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
 ```
-ÏÖÔÚÐèÒª´´½¨ÎÆÀí£¬ÎÆÀíÖÐ°üº¬×ÅÉ«Æ÷µÄRGBÊä³ö¡£Õâ¶Î´úÂë·Ç³£µÄ¾­µä£º
+çŽ°åœ¨éœ€è¦åˆ›å»ºçº¹ç†ï¼Œçº¹ç†ä¸­åŒ…å«ç€è‰²å™¨çš„RGBè¾“å‡ºã€‚è¿™æ®µä»£ç éžå¸¸çš„ç»å…¸ï¼š
 ```cpp
 // The texture we're going to render to
 GLuint renderedTexture;
@@ -35,7 +35,7 @@ glTexImage2D(GL_TEXTURE_2D, 0,GL_RGB, 1024, 768, 0,GL_RGB, GL_UNSIGNED_BYTE, 0);
 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 ```
-Í¬Ê±»¹ÐèÒªÒ»¸öÉî¶È»º³åÇø£¨depth buffer£©¡£ÕâÊÇ¿ÉÑ¡µÄ£¬È¡¾öÓÚÎÆÀíÖÐÊµ¼ÊÐèÒª»­µÄ¶«Î÷£»ÓÉÓÚÎÒÃÇäÖÈ¾µÄÊÇÐ¡ºïSuzanne£¬ËùÒÔÐèÒªÉî¶È²âÊÔ¡£
+åŒæ—¶è¿˜éœ€è¦ä¸€ä¸ªæ·±åº¦ç¼“å†²åŒºï¼ˆdepth bufferï¼‰ã€‚è¿™æ˜¯å¯é€‰çš„ï¼Œå–å†³äºŽçº¹ç†ä¸­å®žé™…éœ€è¦ç”»çš„ä¸œè¥¿ï¼›ç”±äºŽæˆ‘ä»¬æ¸²æŸ“çš„æ˜¯å°çŒ´Suzanneï¼Œæ‰€ä»¥éœ€è¦æ·±åº¦æµ‹è¯•ã€‚
 ```cpp
 // The depth buffer
 GLuint depthrenderbuffer;
@@ -44,7 +44,7 @@ glBindRenderbuffer(GL_RENDERBUFFER, depthrenderbuffer);
 glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, 1024, 768);
 glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthrenderbuffer);
 ```
-×îºó£¬ÅäÖÃframeBuffer¡£
+æœ€åŽï¼Œé…ç½®frameBufferã€‚
 ```cpp
 // Set "renderedTexture" as our colour attachement #0
 glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, renderedTexture, 0);
@@ -53,30 +53,30 @@ glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, renderedTexture, 0);
 GLenum DrawBuffers[2] = {GL_COLOR_ATTACHMENT0};
 glDrawBuffers(1, DrawBuffers); // "1" is the size of DrawBuffers
 ```
-Õâ¸ö¹ý³ÌÖÐ¿ÉÄÜ³öÏÖÒ»Ð©´íÎó£¬È¡¾öÓÚGPUµÄÐÔÄÜ£»ÏÂÃæÊÇ¼ì²éµÄ·½·¨£º
+è¿™ä¸ªè¿‡ç¨‹ä¸­å¯èƒ½å‡ºçŽ°ä¸€äº›é”™è¯¯ï¼Œå–å†³äºŽGPUçš„æ€§èƒ½ï¼›ä¸‹é¢æ˜¯æ£€æŸ¥çš„æ–¹æ³•ï¼š
 ```cpp
 // Always check that our framebuffer is ok
 if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
     return false;
 ```
-###äÖÈ¾µ½ÎÆÀí###
+###æ¸²æŸ“åˆ°çº¹ç†###
 
-äÖÈ¾µ½ÎÆÀíºÜÖ±¹Û¡£¼òµ¥µØ°ó¶¨Ö¡»º´æ£¬È»ºóÏñÍù³£Ò»Ñù»­³¡¾°¡£ÇáËÉ¸ã¶¨£¡
+æ¸²æŸ“åˆ°çº¹ç†å¾ˆç›´è§‚ã€‚ç®€å•åœ°ç»‘å®šå¸§ç¼“å­˜ï¼Œç„¶åŽåƒå¾€å¸¸ä¸€æ ·ç”»åœºæ™¯ã€‚è½»æ¾æžå®šï¼
 ```cpp
 // Render to our framebuffer
 glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
 glViewport(0,0,1024,768); // Render on the whole framebuffer, complete from the lower left corner to the upper right
 ```
-fragment shaderÖ»ÐèÉÔ×÷µ÷Õû£º
+fragment shaderåªéœ€ç¨ä½œè°ƒæ•´ï¼š
 ```glsl
 layout(location = 0) out vec3 color;
 ```
-ÕâÒâÎ¶×ÅÃ¿µ±ÐÞ¸Ä±äÁ¿¡°color¡±Ê±£¬Êµ¼ÊÐÞ¸ÄÁË0ºÅäÖÈ¾Ä¿±ê£»ÕâÊÇÒòÎªÖ®Ç°µ÷ÓÃÁË`glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, renderedTexture, 0);
+è¿™æ„å‘³ç€æ¯å½“ä¿®æ”¹å˜é‡â€œcolorâ€æ—¶ï¼Œå®žé™…ä¿®æ”¹äº†0å·æ¸²æŸ“ç›®æ ‡ï¼›è¿™æ˜¯å› ä¸ºä¹‹å‰è°ƒç”¨äº†`glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, renderedTexture, 0);
 
-×¢Òâ£º×îºóÒ»¸ö²ÎÊý±íÊ¾mipmapµÄ¼¶±ð£¬Õâ¸ö0ºÍGL_COLOR_ATTACHMENT0Ã»ÓÐÈÎºÎ¹ØÏµ¡£
+æ³¨æ„ï¼šæœ€åŽä¸€ä¸ªå‚æ•°è¡¨ç¤ºmipmapçš„çº§åˆ«ï¼Œè¿™ä¸ª0å’ŒGL_COLOR_ATTACHMENT0æ²¡æœ‰ä»»ä½•å…³ç³»ã€‚
 
-###Ê¹ÓÃäÖÈ¾³öµÄÎÆÀí###
-ÎÒÃÇ½«»­Ò»¸ö¼òµ¥µÄÆÌÂúÆÁÄ»µÄËÄ±ßÐÎ¡£ÐèÒªbuffer¡¢shader¡¢ID¡­¡­
+###ä½¿ç”¨æ¸²æŸ“å‡ºçš„çº¹ç†###
+æˆ‘ä»¬å°†ç”»ä¸€ä¸ªç®€å•çš„é“ºæ»¡å±å¹•çš„å››è¾¹å½¢ã€‚éœ€è¦bufferã€shaderã€IDâ€¦â€¦
 ```cpp
 // The fullscreen quad's FBO
 GLuint quad_VertexArrayID;
@@ -102,13 +102,13 @@ GLuint quad_programID = LoadShaders( "Passthrough.vertexshader", "SimpleTexture.
 GLuint texID = glGetUniformLocation(quad_programID, "renderedTexture");
 GLuint timeID = glGetUniformLocation(quad_programID, "time");
 ```
-ÏÖÔÚÏëäÖÈ¾µ½ÆÁÄ»ÉÏµÄ»°£¬±ØÐë°ÑglBindFramebufferµÄµÚ¶þ¸ö²ÎÊýÉèÎª0¡£
+çŽ°åœ¨æƒ³æ¸²æŸ“åˆ°å±å¹•ä¸Šçš„è¯ï¼Œå¿…é¡»æŠŠglBindFramebufferçš„ç¬¬äºŒä¸ªå‚æ•°è®¾ä¸º0ã€‚
 ```cpp
 // Render to the screen
 glBindFramebuffer(GL_FRAMEBUFFER, 0);
 glViewport(0,0,1024,768); // Render on the whole framebuffer, complete from the lower left corner to the upper right
 ```
-ÎÒÃÇÓÃÏÂÃæÕâ¸öshaderÀ´»­È«ÆÁµÄËÄ±ßÐÎ£º
+æˆ‘ä»¬ç”¨ä¸‹é¢è¿™ä¸ªshaderæ¥ç”»å…¨å±çš„å››è¾¹å½¢ï¼š
 ```glsl
 #version 330 core
 
@@ -124,53 +124,53 @@ void main(){
 }
 ``` 
 
-Õâ¶Î´úÂëÖ»ÊÇ¼òµ¥µØ²ÉÑùÎÆÀí£¬¼ÓÉÏÒ»¸öËæÊ±¼ä±ä»¯µÄÎ¢Ð¡Æ«ÒÆ¡£
+è¿™æ®µä»£ç åªæ˜¯ç®€å•åœ°é‡‡æ ·çº¹ç†ï¼ŒåŠ ä¸Šä¸€ä¸ªéšæ—¶é—´å˜åŒ–çš„å¾®å°åç§»ã€‚
 
-½á¹û
+ç»“æžœ
 ---
 <img class="alignnone size-large wp-image-326" title="wavvy" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/wavvy-1024x793.png" alt="" width="640" height="495" />
 
-½øÒ»²½Ì½Ë÷
+è¿›ä¸€æ­¥æŽ¢ç´¢
 ---
-###Ê¹ÓÃÉî¶È###
-ÔÚÒ»Ð©Çé¿öÏÂ£¬Ê¹ÓÃÒÑäÖÈ¾µÄÎÆÀí¿ÉÄÜÐèÒªÉî¶È¡£±¾ÀýÖÐ£¬ÏñÏÂÃæÕâÑù£¬¼òµ¥µØäÖÈ¾µ½ÎÆÀíÖÐ£º
+###ä½¿ç”¨æ·±åº¦###
+åœ¨ä¸€äº›æƒ…å†µä¸‹ï¼Œä½¿ç”¨å·²æ¸²æŸ“çš„çº¹ç†å¯èƒ½éœ€è¦æ·±åº¦ã€‚æœ¬ä¾‹ä¸­ï¼Œåƒä¸‹é¢è¿™æ ·ï¼Œç®€å•åœ°æ¸²æŸ“åˆ°çº¹ç†ä¸­ï¼š
 ```cpp
 glTexImage2D(GL_TEXTURE_2D, 0,GL_DEPTH_COMPONENT24, 1024, 768, 0,GL_DEPTH_COMPONENT, GL_FLOAT, 0);
 ```
-(¡°24¡±ÊÇ¾«¶È¡£Äã¿ÉÒÔ°´Ðè´Ó16,24,32ÖÐÑ¡¡£Í¨³£24¸ÕºÃ)
+(â€œ24â€æ˜¯ç²¾åº¦ã€‚ä½ å¯ä»¥æŒ‰éœ€ä»Ž16,24,32ä¸­é€‰ã€‚é€šå¸¸24åˆšå¥½)
 
-ÉÏÃæÕâÐ©ÒÑ¾­×ã¹»ÄúÆð²½ÁË¡£¿Î³ÌÔ´ÂëÖÐÓÐÍêÕûµÄÊµÏÖ¡£
+ä¸Šé¢è¿™äº›å·²ç»è¶³å¤Ÿæ‚¨èµ·æ­¥äº†ã€‚è¯¾ç¨‹æºç ä¸­æœ‰å®Œæ•´çš„å®žçŽ°ã€‚
 
-ÔËÐÐ¿ÉÄÜÓÐµãÂý£¬ÒòÎªÇý¶¯ÎÞ·¨Ê¹ÓÃ[Hi-Z](http://developer.amd.com/media/gpu_assets/Depth_in-depth.pdf)ÕâÀàÓÅ»¯¡£
+è¿è¡Œå¯èƒ½æœ‰ç‚¹æ…¢ï¼Œå› ä¸ºé©±åŠ¨æ— æ³•ä½¿ç”¨[Hi-Z](http://developer.amd.com/media/gpu_assets/Depth_in-depth.pdf)è¿™ç±»ä¼˜åŒ–ã€‚
 
-ÏÂÍ¼µÄÉî¶È²ã´ÎÒÑ¾­¾­¹ýÊÖ¶¯¡°ÓÅ»¯¡±¡£Í¨³££¬Éî¶ÈÎÆÀí²»»áÕâÃ´ÇåÎú¡£Éî¶ÈÎÆÀíÖÐ£¬½ü = Z½Ó½ü0 = ÑÕÉ«Éî£» Ô¶ = Z½Ó½ü1 = ÑÕÉ«Ç³¡£
+ä¸‹å›¾çš„æ·±åº¦å±‚æ¬¡å·²ç»ç»è¿‡æ‰‹åŠ¨â€œä¼˜åŒ–â€ã€‚é€šå¸¸ï¼Œæ·±åº¦çº¹ç†ä¸ä¼šè¿™ä¹ˆæ¸…æ™°ã€‚æ·±åº¦çº¹ç†ä¸­ï¼Œè¿‘ = ZæŽ¥è¿‘0 = é¢œè‰²æ·±ï¼› è¿œ = ZæŽ¥è¿‘1 = é¢œè‰²æµ…ã€‚
 
 <img class="alignnone size-large wp-image-337" title="wavvydepth" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/wavvydepth-1024x793.png" alt="" width="640" height="495" />
 
-###¶àÖØ²ÉÑù###
-ÄÜ¹»ÓÃ¶àÖØ²ÉÑùÎÆÀíÀ´Ìæ´ú»ù´¡ÎÆÀí£ºÖ»ÐèÒªÔÚC++´úÂëÖÐ½«glTexImage2DÌæ»»Îª[glTexImage2DMultisample](http://www.opengl.org/sdk/docs/man3/xhtml/glTexImage2DMultisample.xml)£¬ÔÚfragment shaderÖÐ½«`sampler2D/texture`Ìæ»»Îª`sampler2DMS/texelFetch`¡£ 
+###å¤šé‡é‡‡æ ·###
+èƒ½å¤Ÿç”¨å¤šé‡é‡‡æ ·çº¹ç†æ¥æ›¿ä»£åŸºç¡€çº¹ç†ï¼šåªéœ€è¦åœ¨C++ä»£ç ä¸­å°†glTexImage2Dæ›¿æ¢ä¸º[glTexImage2DMultisample](http://www.opengl.org/sdk/docs/man3/xhtml/glTexImage2DMultisample.xml)ï¼Œåœ¨fragment shaderä¸­å°†`sampler2D/texture`æ›¿æ¢ä¸º`sampler2DMS/texelFetch`ã€‚ 
 
-µ«Òª×¢Òâ£º`texelFetch`¶à³öÁËÒ»¸ö²ÎÊý£¬±íÊ¾²ÉÑùµÄÊýÁ¿¡£»»¾ä»°Ëµ£¬¾ÍÊÇÃ»ÓÐ×Ô¶¯¡°ÂË²¨¡±£¨ÔÚ¶àÖØ²ÉÑùÖÐ£¬ÕýÈ·µÄÊõÓïÊÇ¡°·Ö±æÂÊ£¨resolution£©¡±£©¹¦ÄÜ¡£
+ä½†è¦æ³¨æ„ï¼š`texelFetch`å¤šå‡ºäº†ä¸€ä¸ªå‚æ•°ï¼Œè¡¨ç¤ºé‡‡æ ·çš„æ•°é‡ã€‚æ¢å¥è¯è¯´ï¼Œå°±æ˜¯æ²¡æœ‰è‡ªåŠ¨â€œæ»¤æ³¢â€ï¼ˆåœ¨å¤šé‡é‡‡æ ·ä¸­ï¼Œæ­£ç¡®çš„æœ¯è¯­æ˜¯â€œåˆ†è¾¨çŽ‡ï¼ˆresolutionï¼‰â€ï¼‰åŠŸèƒ½ã€‚
 
-ËùÒÔÐèÒªÄã×Ô¼º½â¾ö¶àÖØ²ÉÑùµÄÎÆÀí£¬ÁíÍâ£¬·Ç¶àÖØ²ÉÑùÎÆÀí£¬ÊÇ¶à¿÷ÁíÒ»¸ö×ÅÉ«Æ÷¡£
+æ‰€ä»¥éœ€è¦ä½ è‡ªå·±è§£å†³å¤šé‡é‡‡æ ·çš„çº¹ç†ï¼Œå¦å¤–ï¼Œéžå¤šé‡é‡‡æ ·çº¹ç†ï¼Œæ˜¯å¤šäºå¦ä¸€ä¸ªç€è‰²å™¨ã€‚
 
-Ã»ÓÐÊ²Ã´ÄÑµã£¬Ö»ÊÇÌå»ýÅÓ´ó¡£
+æ²¡æœ‰ä»€ä¹ˆéš¾ç‚¹ï¼Œåªæ˜¯ä½“ç§¯åºžå¤§ã€‚
 
-###¶àÖØäÖÈ¾Ä¿±ê###
-Äã¿ÉÄÜÐèÒªÍ¬Ê±Ð´¶à¸öÎÆÀí¡£
+###å¤šé‡æ¸²æŸ“ç›®æ ‡###
+ä½ å¯èƒ½éœ€è¦åŒæ—¶å†™å¤šä¸ªçº¹ç†ã€‚
 
-¼òµ¥µØ´´½¨Èô¸ÉÎÆÀí£¨¶¼ÒªÓÐÕýÈ·¡¢Ò»ÖÂµÄ´óÐ¡£¡£©£¬µ÷ÓÃglFramebufferTexture£¬ÎªÃ¿Ò»¸öÎÆÀíÉèÖÃÒ»¸ö²»Í¬µÄcolor attachement£¬ÓÃ¸üÐÂµÄ²ÎÊý£¨Èç`(2,{GL_COLOR_ATTACHMENT0,GL_COLOR_ATTACHMENT1,GL_DEPTH_ATTACHMENT})`Ò»Ñù£©µ÷ÓÃglDrawBuffers£¬È»ºóÔÚÆ¬¶Ï×ÅÉ«Æ÷ÖÐ¶àÌí¼ÓÒ»¸öÊä³ö±äÁ¿£º
+ç®€å•åœ°åˆ›å»ºè‹¥å¹²çº¹ç†ï¼ˆéƒ½è¦æœ‰æ­£ç¡®ã€ä¸€è‡´çš„å¤§å°ï¼ï¼‰ï¼Œè°ƒç”¨glFramebufferTextureï¼Œä¸ºæ¯ä¸€ä¸ªçº¹ç†è®¾ç½®ä¸€ä¸ªä¸åŒçš„color attachementï¼Œç”¨æ›´æ–°çš„å‚æ•°ï¼ˆå¦‚`(2,{GL_COLOR_ATTACHMENT0,GL_COLOR_ATTACHMENT1,GL_DEPTH_ATTACHMENT})`ä¸€æ ·ï¼‰è°ƒç”¨glDrawBuffersï¼Œç„¶åŽåœ¨ç‰‡æ–­ç€è‰²å™¨ä¸­å¤šæ·»åŠ ä¸€ä¸ªè¾“å‡ºå˜é‡ï¼š
 ```glsl
 layout(location = 1) out vec3 normal_tangentspace; // or whatever
 ```
-ÌáÊ¾1£ºÈç¹ûÕæÐèÒªÔÚÎÆÀíÖÐÊä³öÏòÁ¿£¬¸¡µãÎÆÀíÒ²ÊÇÓÐµÄ£¬¿ÉÒÔÓÃ16»ò32Î»¾«¶È´úÌæ8Î»¡­¡­¿´¿´[glTexImage2D](http://www.opengl.org/sdk/docs/man/xhtml/glTexImage2D.xml)µÄ²Î¿¼ÊÖ²á£¨ËÑGL_FLOAT£©¡£
-ÌáÊ¾2£º¶ÔÓÚÒÔÇ°°æ±¾µÄOpenGL£¬ÇëÊ¹ÓÃglFragData[1] = myvalue¡£
+æç¤º1ï¼šå¦‚æžœçœŸéœ€è¦åœ¨çº¹ç†ä¸­è¾“å‡ºå‘é‡ï¼Œæµ®ç‚¹çº¹ç†ä¹Ÿæ˜¯æœ‰çš„ï¼Œå¯ä»¥ç”¨16æˆ–32ä½ç²¾åº¦ä»£æ›¿8ä½â€¦â€¦çœ‹çœ‹[glTexImage2D](http://www.opengl.org/sdk/docs/man/xhtml/glTexImage2D.xml)çš„å‚è€ƒæ‰‹å†Œï¼ˆæœGL_FLOATï¼‰ã€‚
+æç¤º2ï¼šå¯¹äºŽä»¥å‰ç‰ˆæœ¬çš„OpenGLï¼Œè¯·ä½¿ç”¨glFragData[1] = myvalueã€‚
 
-Á·Ï°
+ç»ƒä¹ 
 ---
-- ÊÔÊ¹ÓÃ`glViewport(0,0,512,768)`´úÌæ`glViewport(0,0,1024,768)`£»£¨Ö¡»º´æ¡¢ÆÁÄ»Á½ÖÖÇé¿ö¶¼ÊÔÊÔ£©
-- ÔÚ×îºóÒ»¸öfragment shaderÖÐ³¢ÊÔÒ»ÏÂÓÃÆäËûUV×ø±ê
-- ÊÔÓÃÒ»¸öÕæÕýµÄ±ä»»¾ØÕó±ä»»ËÄ±ßÐÎ¡£Ê×ÏÈÓÃÓ²±àÂë·½Ê½¡£È»ºó³¢ÊÔÊ¹ÓÃ`controls.hpp`ÀïÃæµÄº¯Êý£¬¹Û²ìµ½ÁËÊ²Ã´ÏÖÏó£¿
+- è¯•ä½¿ç”¨`glViewport(0,0,512,768)`ä»£æ›¿`glViewport(0,0,1024,768)`ï¼›ï¼ˆå¸§ç¼“å­˜ã€å±å¹•ä¸¤ç§æƒ…å†µéƒ½è¯•è¯•ï¼‰
+- åœ¨æœ€åŽä¸€ä¸ªfragment shaderä¸­å°è¯•ä¸€ä¸‹ç”¨å…¶ä»–UVåæ ‡
+- è¯•ç”¨ä¸€ä¸ªçœŸæ­£çš„å˜æ¢çŸ©é˜µå˜æ¢å››è¾¹å½¢ã€‚é¦–å…ˆç”¨ç¡¬ç¼–ç æ–¹å¼ã€‚ç„¶åŽå°è¯•ä½¿ç”¨`controls.hpp`é‡Œé¢çš„å‡½æ•°ï¼Œè§‚å¯Ÿåˆ°äº†ä»€ä¹ˆçŽ°è±¡ï¼Ÿ
 
 > &copy; http://www.opengl-tutorial.org/
 
