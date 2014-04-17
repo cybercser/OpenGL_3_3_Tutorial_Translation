@@ -1,81 +1,81 @@
-Math Cheatsheet
-ÊıÑ§±¸Íüµ¥
-Èı½ÇÑ§
+ï»¿Math Cheatsheet
+æ•°å­¦å¤‡å¿˜å•
+ä¸‰è§’å­¦
 Pi
-ÕıÏÒºÍÓàÏÒ
-µ¥Î»Ô²
-ÏòÁ¿
-Æë´Î×ø±ê
-³¤¶È
-²æ³Ë
-µã³Ë
-¼Ó·¨ºÍ¼õ·¨
-³Ë·¨
-¹éÒ»»¯
-¾ØÕó
-¾ØÕóÓë¾ØÕó³Ë·¨
-¾ØÕóÓëÏòÁ¿³Ë·¨
-³£ÓÃµÄ×ª»»
+æ­£å¼¦å’Œä½™å¼¦
+å•ä½åœ†
+å‘é‡
+é½æ¬¡åæ ‡
+é•¿åº¦
+å‰ä¹˜
+ç‚¹ä¹˜
+åŠ æ³•å’Œå‡æ³•
+ä¹˜æ³•
+å½’ä¸€åŒ–
+çŸ©é˜µ
+çŸ©é˜µä¸çŸ©é˜µä¹˜æ³•
+çŸ©é˜µä¸å‘é‡ä¹˜æ³•
+å¸¸ç”¨çš„è½¬æ¢
 
-Èı½ÇÑ§
+ä¸‰è§’å­¦
 Pi
 const float pi = 3.14159265f; // but an infinity of digits in reality
-ÕıÏÒÓëÓàÏÒ
+æ­£å¼¦ä¸ä½™å¼¦
 (From http://commons.wikimedia.org/wiki/User:Geek3 , under GNU Free Documentation License )
-µ¥Î»Ô²
+å•ä½åœ†
 ( Modified from http://en.wikipedia.org/wiki/User:Gustavb under Crative Commons 3.0 )
-t±íÊ¾°´»¡¶ÈËãµÄÒ»¸ö½Ç¶È
+tè¡¨ç¤ºæŒ‰å¼§åº¦ç®—çš„ä¸€ä¸ªè§’åº¦
 0 radians = 0 degrees
 180 degrees = Pi radians
-360 degrees ( ÕûÔ²) = 2*Pi radians
+360 degrees ( æ•´åœ†) = 2*Pi radians
 90 degrees = Pi/2 radians
 
-ÏòÁ¿
-Ê±¿ÌÇå³şÊÇÔÚÄÄ¸ö×ø±êÏµÏÂ±íÊ¾µÄÏòÁ¿¡£¸ü¶àÏ¸½Ú²é¿´µÚÈı²¿·Ö¡£
-Æë´Î×ø±ê
-Ò»¸öÈıÎ¬ÏòÁ¿ÊÇ(x, y, z),µ«Æë´Î×ø±êÏµÏÂÈıÎ¬ÏòÁ¿ÊÇ(x, y, z, w).
-w=0 : ±íÊ¾Ò»¸ö·½Ïò
-w=1 : ±íÊ¾Ò»¸öÎ»ÖÃ
-else : ÈÔÈ»¿ÉÄÜÕıÈ·£¬µ«×îºÃÖªµÀÄãÔÚ×öÊ²Ã´.
-Ò»¸öÆë´Î×ø±êÏòÁ¿Ö»ÄÜ³ËÒÔ4*4µÄ¾ØÕó¡£
+å‘é‡
+æ—¶åˆ»æ¸…æ¥šæ˜¯åœ¨å“ªä¸ªåæ ‡ç³»ä¸‹è¡¨ç¤ºçš„å‘é‡ã€‚æ›´å¤šç»†èŠ‚æŸ¥çœ‹ç¬¬ä¸‰éƒ¨åˆ†ã€‚
+é½æ¬¡åæ ‡
+ä¸€ä¸ªä¸‰ç»´å‘é‡æ˜¯(x, y, z),ä½†é½æ¬¡åæ ‡ç³»ä¸‹ä¸‰ç»´å‘é‡æ˜¯(x, y, z, w).
+w=0 : è¡¨ç¤ºä¸€ä¸ªæ–¹å‘
+w=1 : è¡¨ç¤ºä¸€ä¸ªä½ç½®
+else : ä»ç„¶å¯èƒ½æ­£ç¡®ï¼Œä½†æœ€å¥½çŸ¥é“ä½ åœ¨åšä»€ä¹ˆ.
+ä¸€ä¸ªé½æ¬¡åæ ‡å‘é‡åªèƒ½ä¹˜ä»¥4*4çš„çŸ©é˜µã€‚
 
-³¤¶È
-ÀàËÆÓÚµÑ¿¨¶û¾àÀë£ºsqrt( x*x + y*y + z*z ). w²»¼ÆËãÔÚÄÚ.
+é•¿åº¦
+ç±»ä¼¼äºç¬›å¡å°”è·ç¦»ï¼šsqrt( x*x + y*y + z*z ). wä¸è®¡ç®—åœ¨å†….
 
-²æ³Ë
+å‰ä¹˜
 ( Modified from http://en.wikipedia.org/wiki/User:Acdx , former image under Creative Commons 3.0 )
-²æ³Ë·ûºÅÓÃX¡£length( a x b ) == length(a)*length(b)£¬Òò´ËÄã¿ÉÄÜÏë°Ñ½á¹ûnormalize()¡£
+å‰ä¹˜ç¬¦å·ç”¨Xã€‚length( a x b ) == length(a)*length(b)ï¼Œå› æ­¤ä½ å¯èƒ½æƒ³æŠŠç»“æœnormalize()ã€‚
 
-µã³Ë
+ç‚¹ä¹˜
 ( from http://en.wikipedia.org/wiki/File:Dot_Product.svg )
-A.B = length(A)*length(B)*cos(Theta) , µ«ÊÇ¸ü¶àÊ±ºò¼ÆËãÎªA.x*B.x +A.y*B.y +A.z*B.z
+A.B = length(A)*length(B)*cos(Theta) , ä½†æ˜¯æ›´å¤šæ—¶å€™è®¡ç®—ä¸ºA.x*B.x +A.y*B.y +A.z*B.z
 
-¼Ó·¨ºÍ¼õ·¨
-·ÖÁ¿ĞÎÊ½ :
+åŠ æ³•å’Œå‡æ³•
+åˆ†é‡å½¢å¼ :
 res.x = A.x + B.x
 res.y = A.y + B.y
 ...
  
 
-³Ë·¨
-·ÖÁ¿ĞÎÊ½:
+ä¹˜æ³•
+åˆ†é‡å½¢å¼:
 res.x = A.x * B.x
 res.y = A.y * B.y
 ...
 
-¹éÒ»»¯
-½«ÏòÁ¿³ıÒÔËüµÄ³¤¶È£º
+å½’ä¸€åŒ–
+å°†å‘é‡é™¤ä»¥å®ƒçš„é•¿åº¦ï¼š
 normalizedVector = vec * ( 1.0f / vec.length() )
 
 
-¾ØÕó
-¾ØÕóÓë¾ØÕó³Ë·¨
-ÓÃÒ»¸öÆ½ÒÆ¾ØÕóÎªÀı×Ó£º
+çŸ©é˜µ
+çŸ©é˜µä¸çŸ©é˜µä¹˜æ³•
+ç”¨ä¸€ä¸ªå¹³ç§»çŸ©é˜µä¸ºä¾‹å­ï¼š
 
-¾ØÕóÏòÁ¿³Ë·¨
+çŸ©é˜µå‘é‡ä¹˜æ³•
 
-³£ÓÃ±ä»»
+å¸¸ç”¨å˜æ¢
 
 
-...µ«ÊÇÔÚÄãµÄ×ÅÉ«Æ÷ÖĞ£¬Ò²¿ÉÒÔÔÚÇĞÏß¿Õ¼äÖĞ±íÊ¾ÏòÁ¿¡£µ±Äã×öºóÆÚĞ§¹û£¨post-effects£©Ê±Ò²¿ÉÒÔÔÚÍ¼Ïñ¿Õ¼äÖĞ±íÊ¾¡£
-¡­ but in your shaders, you can also represent your vectors in tangent space. And in image-space when you do post-effects.
+...ä½†æ˜¯åœ¨ä½ çš„ç€è‰²å™¨ä¸­ï¼Œä¹Ÿå¯ä»¥åœ¨åˆ‡çº¿ç©ºé—´ä¸­è¡¨ç¤ºå‘é‡ã€‚å½“ä½ åšåæœŸæ•ˆæœï¼ˆpost-effectsï¼‰æ—¶ä¹Ÿå¯ä»¥åœ¨å›¾åƒç©ºé—´ä¸­è¡¨ç¤ºã€‚
+â€¦ but in your shaders, you can also represent your vectors in tangent space. And in image-space when you do post-effects.
