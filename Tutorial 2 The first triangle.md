@@ -106,9 +106,9 @@
 
 着色器编程使用GLSL(GL Shading Language)，属于OpenGL的一部分。与C、Java不同，GLSL必须在运行时编译，这意味着每次启动程序，所有的着色器将重新编译。
 
-这两个shader通常单独存放在文件里。本例中有```SimpleFragmentShader.fragmentshader```和```SimpleVertexShader.vertexshader```两个shader。扩展名无关紧要，也可以是.txt或者.glsl。
+这两个着色器通常单独存放在文件里。本例中有```SimpleFragmentShader.fragmentshader```和```SimpleVertexShader.vertexshader```两个着色器。扩展名无关紧要，也可以是.txt或者.glsl。
 
-以下是加载shader的代码。没必要完全理解它，因为在程序中这些操作一般只需执行一次，结合注释能看懂就够了。其他课程代码都用到了这个函数，因此将其放在一个单独的文件中：```common/loadShader.cpp```。注意，shader和buffer object一样不能直接访问：我们仅拥有它的ID，其真正的实现隐藏在驱动程序中。
+以下是加载着色器的代码。没必要完全理解，因为在程序中这些操作一般只需执行一次，结合注释能看懂就够了。其他课程代码都用到了这个函数，因此将其放在一个单独的文件中：```common/loadShader.cpp```。注意，着色器和缓冲对象一样不能直接访问：我们仅拥有其ID，其真正的实现隐藏在驱动程序中。
 ```cpp
     GLuint LoadShaders(const char * vertex_file_path,const char * fragment_file_path) {
 
@@ -185,9 +185,8 @@
     
         return ProgramID;
     }
-```
-###顶点着色器
 
+###顶点着色器
 先写顶点着色器。
 第一行告诉编译器我们将用OpenGL 3语法。
 ```glsl
@@ -201,22 +200,22 @@
 
 - 在GLSL中“```vec3```”代表一个三维向量。类似但不等同于之前声明三角形的```glm::vec3```。最重要的是，如果我们在C++中使用三维向量，那么在GLSL中也要相应地使用三维向量。
 - "```layout(location = 0)```"指向存储```vertexPosition_modelspace```属性（attribute）的缓冲。每个顶点有多种属性：位置，一种或多种颜色，一个或多个纹理坐标等等。OpenGL并不清楚什么是颜色，它只能识别```vec3```这样的数据类型。因此我们必须将```glvertexAttribPointer```函数的第一个参数值赋给```layout```，以此告知OpenGL每个缓冲对应的是哪种属性数据。第二个参数“0”并不重要，也可以换成12（但是不能超过```glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &v)）```，关键是C++和GLSL两边数值必须保持一致。
-- “```vertexPosition_modelspace```”这个变量名可以任取，其中保存的是顶点位置，vertex shader每次运行时都会用到。
+- “```vertexPosition_modelspace```”这个变量名可以任取，其中保存的是顶点位置，顶点着色器每次运行时都会用到。
 - “```in```”表明是这是输入数据。不久我们将会看到“out”关键字。
 
 
-每个顶点都会调用main函数（和C语言一样）：
+每个顶点都会调用```main```函数（和C语言一样）：
 ```glsl
     void main(){
 ```
-这里的main函数只是简单地将缓冲里的值作为顶点位置。因此如果位置是(1,1)，那么三角形有一个顶点位于屏幕的右上角。
+这里的```main```函数只是简单地将缓冲里的值作为顶点位置。因此如果位置是(1,1)，那么三角形有一个顶点位于屏幕的右上角。
 在下一课中我们将看到怎样对输入位置做一些更有趣的计算。
 ```glsl
         gl_Position.xyz = vertexPosition_modelspace;
     	gl_Position.w = 1.0;
     }
 ```
-```gl_Position```是仅有的几个内置变量之一：您必须给它赋值。其他操作都是可选的，我们将在第四课中看到究竟有哪些“其他操作”。
+```gl_Position```是仅有的几个内置变量之一：您必须对其赋值。其他操作都是可选的，我们将在第四课中看到究竟有哪些“其他操作”。
 
 ###片段着色器
 这就是我们的第一个片段着色器，它仅仅简单将每个片段的颜色设为红色。（记住，我们采用了4倍抗锯齿，因此每个像素有4个片段）
@@ -241,7 +240,7 @@
 ```cpp
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 ```
-然后让OpenGL使用您的shader：
+然后让OpenGL使用您的着色器：
 ```cpp
     // Use our shader
     glUseProgram(programID);
