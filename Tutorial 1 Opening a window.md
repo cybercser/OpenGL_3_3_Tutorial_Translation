@@ -1,5 +1,5 @@
-﻿
-第一课：打开一个窗口    {#Welcome}
+
+第一课：打开一个窗口
 =====================
 [TOC]
 导语
@@ -19,9 +19,9 @@
 如前所述，无需预备知识；不过，先把“旧式OpenGL”（glBegin()这类东西）忘掉吧。
 在这里，您将学到新式OpenGL（OpenGL 3、4），而多数网上教程还在讲“旧式OpenGL”（OpenGL 1、2）。所以，在您的脑袋乱成一团浆糊之前，先把过时的知识清空吧。
 
-Build课程中的代码
+生成课程中的代码
 --------
-所有课程代码都能在Windows、Linux、和Mac上build，过程大体相同：
+所有课程代码都能在Windows、Linux、和Mac上生成，过程大体相同：
 
  1. **更新驱动** ！！赶快更新吧。别怪我没提醒您哟。
  2. 下载C++编译器
@@ -33,7 +33,7 @@ Build课程中的代码
 
 各平台的详细过程如下。您可能要根据实际情况做些调整。若不确定，请按照Windows平台说明操作。
 
-###在Windows上build
+###在Windows上生成
 
  1. 更新驱动小菜一碟。直接去NVIDIA或者AMD的官网下载。若不清楚GPU的型号：控制面板->系统和安全->系统->设备管理器->显示适配器。如果是Intel集成显卡，一般由OEM（Dell、HP…）提供驱动。
  2. 建议用Visual Studio 2010 Express来编译。[这里](http://www.microsoft.com/express/Downloads/#2010-Visual-CPP)可以免费下载。若喜欢用MinGW，推荐[Qt Creator](http://qt-project.org/)。IDE可根据个人喜好选择。下列步骤是按Visual Studio讲解的，其他IDE差别不大。
@@ -61,7 +61,7 @@ Build课程中的代码
 <img class="size-medium wp-image-544 alignnone" title="StartupProject" src="http://www.opengl-tutorial.org/wp-content/uploads/2012/04/StartupProject-185x300.png" alt="" width="185" height="300">
 <img class="alignright size-medium wp-image-546" title="WorkingDir" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/WorkingDir-300x211.png" alt="" width="300" height="211">
 
-###在Linux上build
+###在Linux上生成
 
 Linux版本众多，这里不可能列出所有的平台。可根据实际情况自行调整，也不妨看一下发行版文档。
 
@@ -87,7 +87,7 @@ Linux版本众多，这里不可能列出所有的平台。可根据实际情况
  6. 点击下面的锤子图标。现在教程可以从```tutorials/```文件夹启动了。
  7. 要想在QtCreator中运行教程源码，点击Projects->Execution parameters->Working Directory，选择着色器、纹理和模型所在目录。以第二课为例：```~/opengl-tutorial/tutorial02_red_triangle/```
 
-###在Mac上build
+###在Mac上生成
 
 Mac OS不支持OpenGL 3.3。最近，搭载MacOS 10.7 Lion和兼容型GPU的Mac机可以跑OpenGL 3.2了，但3.3还不行；所以我们用2.1移植版的课程代码。除此外，其他步骤和Windows类似（也支持Makefiles，此处不赘述）：
 
@@ -186,7 +186,7 @@ Mac OS不支持OpenGL 3.3。最近，搭载MacOS 10.7 Lion和兼容型GPU的Mac�
  
 glfwSetWindowTitle( "Tutorial 01" );
 ```
-build并运行。一个窗口弹出后立即关闭了。可不是嘛，还没设置等待用户Esc按键再关闭呢：
+生成并运行。一个窗口弹出后立即关闭了。可不是嘛，还没设置等待用户Esc按键再关闭呢：
 ```cpp
     // Ensure we can capture the escape key being pressed below
     glfwEnable( GLFW_STICKY_KEYS );
