@@ -53,21 +53,21 @@
         1.0f,-1.0f, 1.0f
     };
 ```
-OpenGL的缓冲区由一些标准的函数（glGenBuffers, glBindBuffer, glBufferData, glVertexAttribPointer）来创建、绑定、填充和配置；这些可参阅第二课。绘制的函数调用也没变，只需改绘制的点的个数
+OpenGL的缓冲由一些标准的函数（`glGenBuffers`, `glBindBuffer`, `glBufferData`, `glVertexAttribPointer`）来创建、绑定、填充和配置；若有遗忘，可参见第二课。绘制的调用也没变，只需改变绘制的点的个数
 ```cpp
     // Draw the triangle !
     glDrawArrays(GL_TRIANGLES, 0, 12*3); // 12*3 indices starting at 0 -> 12 triangles -> 6 squares
 ```
-对于这段代码，有几点要说明一下：
+关于这段代码，有几点要说明一下：
 
 - 截至目前我们使用的三维模型都是固定的：只能在源码中修改模型，重新编译，然后祈祷不要出什么差错。我们将在第七课中学习如何动态地加载模型。
 - 实际上，每个顶点至少出现了三次（在以上代码中搜索“-1.0f,-1.0f,-1.0f”看看）。这严重浪费了内存空间。我们将在第九课中学习怎样对此进行优化。
 
-现在您已具备绘制一个白色立方体的所有条件。试着让shader运行起来吧<img src="http://www.opengl-tutorial.org/wp-includes/images/smilies/icon_smile.gif" alt=":)" class="wp-smiley">
+现在您已具备绘制一个白色立方体的所有条件。试着让着色器运行起来吧<img src="http://www.opengl-tutorial.org/wp-includes/images/smilies/icon_smile.gif" alt=":)" class="wp-smiley">
 
 增色添彩
 --------
-从概念上讲，颜色与位置是一回事：就是数据嘛。OpenGL术语中它们都被称作“属性（attribute）”。其实我们之前已用`glEnableVertexAttribArray()`和`glVertexAttribPointer()`设置过属性了。现在加上颜色属性，代码很相似。
+从概念上讲，颜色与位置是一回事：就是数据嘛。OpenGL术语中称之为“属性（attribute）”。其实我们之前已用`glEnableVertexAttribArray()`和`glVertexAttribPointer()`设置过属性了。现在加上颜色属性，代码很相似。
 
 首先声明颜色：每个顶点一个RGB三元组。这里随机生成一些颜色，所以效果看起来可能不太好；您可以调整得更好些，例如把顶点的位置作为颜色值。
 ```cpp
@@ -111,7 +111,7 @@ OpenGL的缓冲区由一些标准的函数（glGenBuffers, glBindBuffer, glBuffe
         0.982f,  0.099f,  0.879f
     };
 ```
-缓冲区的创建、绑定和填充方法与之前一样：
+缓冲的创建、绑定和填充方法与之前一样：
 ```cpp
     GLuint colorbuffer;
     glGenBuffers(1, &amp;colorbuffer);
@@ -132,12 +132,12 @@ OpenGL的缓冲区由一些标准的函数（glGenBuffers, glBindBuffer, glBuffe
         (void*)0                          // array buffer offset
     );
 ```
-现在在vertex shader中已经能访问这个新增的缓冲区了：
+现在在顶点着色器中已经能访问这个新增的缓冲区了：
 ```glsl
     // Notice that the “1” here equals the “1” in glVertexAttribPointer
     layout(location = 1) in vec3 vertexColor;
 ```
-这一课的vertex shader没有什么复杂的效果，仅仅是简单地把颜色传递到fragment shader：
+这一课的顶点着色器没有什么复杂的效果，仅仅是简单地把颜色传递到片段着色器：
 ```glsl
     // Output data ; will be interpolated for each fragment.
     out vec3 fragmentColor;
@@ -151,7 +151,7 @@ OpenGL的缓冲区由一些标准的函数（glGenBuffers, glBindBuffer, glBuffe
         fragmentColor = vertexColor;
     }
 ```
-在fragment shader中要再次声明片断颜色：
+在片段着色器中要再次声明片段颜色：
 ```glsl
     // Interpolated values from the vertex shaders
     in vec3 fragmentColor;
@@ -175,23 +175,23 @@ OpenGL的缓冲区由一些标准的函数（glGenBuffers, glBindBuffer, glBuffe
 
 <img class="agnnone size-fl wp-image-109" title="FarNear" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/FarNear.png" alt="" width="189" height="94" />
 
-似乎挺好。现在画“远”的三角形：
+似乎挺好。现在画“远”三角形：
 
 <img class="agnnone size-fl wp-image-110" title="NearFar" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/NearFar.png" alt="" width="189" height="94" />
 
-它遮住了“近”三角形！它本应该在“近”三角形后面的！我们的立方体问题就在这里：一些理应被遮挡的面，因为绘制次序靠后，竟然变成可见的了。我们将用深度缓存（Z-Buffer）算法解决它。
+它遮住了“近”三角形！它本应该在“近”三角形后面的！我们的立方体问题就在这里：一些理应被遮挡的面，因为绘制次序靠后，竟然变成可见的了。我们将用深度缓冲（Z-Buffer）算法解决它。
 
 *便签1* 
 : 如果您没发现问题，把相机放到(4,3,-3)试试
 
 *便签2* 
-: 如果“颜色和位置同为属性”，那为什么颜色要声明`out vec3 fragmentColor`，而位置不需要？实际上，位置有点特殊：它是唯一必须赋初值的（否则OpenGL不知道在哪画三角形）。所以在vertex shader里，`gl_Position`是内置变量。
+: 如果“颜色和位置同为属性”，那为什么颜色要声明`out vec3 fragmentColor`，而位置不需要？实际上，位置有点特殊：它是唯一必须赋初值的（否则OpenGL不知道在哪画三角形）。所以在顶点着色器里，`gl_Position`是内置变量。
 
-深度缓存（Z-Buffer）
+深度缓冲（Z-Buffer）
 --------
-该问题的解决方案是：在缓冲区中存储每个fragment的深度（即“Z”值）；并且每次绘制fragment之前要确保当前fragment确实比先前绘制的fragment深度值更小。
+该问题的解决方案是：在缓冲中存储每个片段的深度（即“Z”值）；并且每次绘制片段之前要比较当前与先前片段的深度值，看谁离摄像机更近。
 
-您可以自己实现深度缓存，但让硬件自己去做更简单：
+您可以自己实现深度缓冲，但让硬件自动完成更简单：
 
     // Enable depth test
     glEnable(GL_DEPTH_TEST);
@@ -205,7 +205,7 @@ OpenGL的缓冲区由一些标准的函数（glGenBuffers, glBindBuffer, glBuffe
 练习
 --------
 
-- 在不同的位置画立方体**和**三角形。你得构造两个MVP矩阵，在main loop中进行两次绘制调用，但shader只需一个。
+- 在不同的位置画立方体**和**三角形。你得构造两个MVP矩阵，在主循环中进行两次绘制调用，但只需一个着色器。
 
 
 - 自己生成颜色值。一些点子：随机生成颜色，这样每次运行时颜色都不同；根据顶点位置生成颜色；把前面两种思路结合起来；或其他新创意<img src="http://www.opengl-tutorial.org/wp-includes/images/smilies/icon_smile.gif" alt=":)" class="wp-smiley">。若您不了解C，参考以下语法：
@@ -217,7 +217,7 @@ OpenGL的缓冲区由一些标准的函数（glGenBuffers, glBindBuffer, glBuffe
             g_color_buffer_data[3*v+2] = your blue color here;
         }
 ```
-- 完成上面习题后，尝试每一帧都改变颜色。您得在每一帧都调用glBufferData。请确保已先绑定（glBindBuffer）了合适的缓冲区！
+- 完成上面习题后，尝试每帧都改变颜色。您得在每帧都调用`glBufferData`。请确保已绑定（`glBindBuffer`）了合适的缓冲区！
 
 
 > &copy; http://www.opengl-tutorial.org/

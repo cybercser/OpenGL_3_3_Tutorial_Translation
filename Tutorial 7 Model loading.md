@@ -1,4 +1,4 @@
-﻿第七课：模型加载
+第七课：模型加载
 ===
 [TOC]
 
@@ -6,7 +6,7 @@
 
 本课将学习从文件中加载3D模型。和加载纹理类似，我们先写一个小的、功能有限的加载器，接着再为大家介绍几个比我们写的更好的、实用的库。
 
-为了让课程尽可能简单，我们将采用简单、常用的OBJ格式。同样也是出于简单原则，我们只处理每个顶点有一个UV坐标和一个法向量的OBJ文件（目前你不需要知道什么是法向量）。
+为了让课程尽可能简单，我们将采用简单、常用的OBJ格式。同样也是出于简单原则，我们只处理每个顶点有一个UV坐标和一个法线的OBJ文件（目前你不需要知道什么是法线）。
 
 加载OBJ模型
 ---
@@ -78,7 +78,7 @@ OBJ文件大概是这个模样：
 - `usemtl`和`mtlib`描述了模型的外观。本课用不到。
 - v代表顶点
 - vt代表顶点的纹理坐标
-- vn代表顶点的法向
+- vn代表顶点的法线
 - f代表面
 
 v vt vn都很好理解。f比较麻烦。例如`f 8/11/7 7/12/7 6/10/7`：
@@ -86,13 +86,13 @@ v vt vn都很好理解。f比较麻烦。例如`f 8/11/7 7/12/7 6/10/7`：
 - 8/11/7描述了三角形的第一个顶点
 - 7/12/7描述了三角形的第二个顶点
 - 6/10/7描述了三角形的第三个顶点
-- 对于第一个顶点，8指向要用的顶点。此例中是-1.000000 1.000000 \-1.000000（索引从1开始，和C++中从0开始不同）
+- 对于第一个顶点，8指向要用的顶点。此例中是-1.000000 1.000000 -1.000000（C++中索引从0开始，OBJ文件中索引从1开始，）
 - 11指向要用的纹理坐标。此例中是0.748355 0.998230。
-- 7指向要用的法向。此例中是0.000000 1.000000 -0.000000。
+- 7指向要用的法线。此例中是0.000000 1.000000 -0.000000。
 
 我们称这些数字为索引。若几个顶点共用同一个坐标，索引就显得很方便，文件中只需保存一个“V”，可以多次引用，节省了存储空间。
 
-其弊端在于我们无法让OpenGL混用顶点、纹理和法向索引。因此本课采用的方法是创建一个标准的、未加索引的模型。等第九课时再讨论索引，届时将会介绍如何解决OpenGL的索引问题。
+其弊端在于我们无法让OpenGL混用顶点、纹理和法线索引。因此本课采用的方法是创建一个标准的、未加索引的模型。等第九课时再讨论索引，届时将会介绍如何解决OpenGL的索引问题。
 
 ###用Blender创建OBJ文件
 我们写的蹩脚加载器功能实在有限，因此在导出模型时得格外小心。下图展示了在Blender中导出模型的情形：
@@ -100,7 +100,7 @@ v vt vn都很好理解。f比较麻烦。例如`f 8/11/7 7/12/7 6/10/7`：
 <img class="alignnone size-full wp-image-697" title="Blender" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/Blender.png" alt="" width="321" height="529">
 
 ###读取OBJ文件
-OK，真正开始编码了。我们需要一些临时变量存储.obj文件的内容：
+OK，真正开始写代码了。我们需要一些临时变量存储.obj文件的内容：
 ```cpp
     std::vector< unsigned int > vertexIndices, uvIndices, normalIndices;
     std::vector< glm::vec3 > temp_vertices;
@@ -146,7 +146,7 @@ OK，真正开始编码了。我们需要一些临时变量存储.obj文件的�
 ```
 也就是说，如果不是“v”而是“vt”，那后面一定是2个float值，于是以这2个值创建一个`glm::vec2`变量，添加到数组。
 
-以同样的方式处理法向：
+以同样的方式处理法线：
 ```cpp
     } else if ( strcmp( lineHeader, "vn" ) == 0 ){
         glm::vec3 normal;
@@ -188,7 +188,7 @@ OK，真正开始编码了。我们需要一些临时变量存储.obj文件的�
 ```cpp
     unsigned int vertexIndex = vertexIndices[i];
 ```
-因此坐标是temp_vertices[ vertexIndex-1 ]（-1是因为C++的下标从0开始，而OBJ的索引从1开始，还记得吗？）：
+因此坐标是`temp_vertices[ vertexIndex-1 ]`（-1是因为C++的下标从0开始，而OBJ的索引从1开始，还记得吗？）：
 ```cpp
     glm::vec3 vertex = temp_vertices[ vertexIndex-1 ];
 ```
@@ -196,11 +196,11 @@ OK，真正开始编码了。我们需要一些临时变量存储.obj文件的�
 ```cpp
     out_vertices.push_back(vertex);
 ```
-UV和法向同理，任务完成！
+UV和法线同理，任务完成！
 
 使用加载的数据
 ---
-到这一步，几乎什么变化都没发生。这次我们不再声明一个static const GLfloat g_vertex_buffer_data[] = {…}，而是创建一个顶点数组（UV和法向同理）。用正确的参数调用loadOBJ：
+到这一步，几乎没什么变化。这次我们不再声明`static const GLfloat g_vertex_buffer_data[] = {…}`，而是创建一个顶点数组（UV和法线同理）。用正确的参数调用`loadOBJ`：
 ```cpp
     // Read our .obj file
     std::vector< glm::vec3 > vertices;
@@ -212,18 +212,18 @@ UV和法向同理，任务完成！
 ```cpp
     glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices[0], GL_STATIC_DRAW);
 ```
-结束了！
+就是这样啦！
 
 结果
 ---
-不好意思，纹理不好看。我不太擅长美工<img src="http://www.opengl-tutorial.org/wp-includes/images/smilies/icon_sad.gif" alt=":(" class="wp-smiley">。欢迎您提供一些好看的纹理。
+不好意思，这个纹理不大漂亮。我不太擅长美工<img src="http://www.opengl-tutorial.org/wp-includes/images/smilies/icon_sad.gif" alt=":(" class="wp-smiley">。欢迎您提供一些漂亮的纹理。
 
 <img class="alignnone size-medium wp-image-670" title="ModelLoading" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/ModelLoading-300x232.png" alt="" width="300" height="232">
 
 
 其他模型格式及加载器
 ---
-这个小巧的加载器应该比较适合初学，不过别在实际中使用它。参考一下[实用链接和工具](http://www.opengl-tutorial.org/miscellaneous/useful-tools-links/)页面，看看有什么能用的。不过请注意，直到第九课才会*真正*用到这些工具。
+这个小巧的加载器应该比较适合初学，不过别在实际中使用它。参考一下[实用链接和工具](http://www.opengl-tutorial.org/miscellaneous/useful-tools-links/)页面，看看有什么能用的工具。不过请注意，直到第九课才会*真正*用到这些工具。
 
 > &copy; http://www.opengl-tutorial.org/
 
