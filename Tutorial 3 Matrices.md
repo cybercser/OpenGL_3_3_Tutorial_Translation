@@ -128,7 +128,7 @@ w还是没变。您也许会问“缩放一个向量”有什么用？嗯，大�
     glm::rotate( angle_in_degrees, myRotationAxis );
 ```
 
-###复合变换（Cumulating transformations）
+###累积变换（Cumulating transformations）
 前面已经学习了如何旋转、平移和缩放向量。把这些矩阵相乘就能将它们组合起来，例如：
 ```cpp
     TransformedVector = TranslationMatrix * RotationMatrix * ScaleMatrix * OriginalVector;
@@ -136,7 +136,7 @@ w还是没变。您也许会问“缩放一个向量”有什么用？嗯，大�
 
 **！！！注意！！！**这行代码**首先**执行缩放，**接着**旋转，**最后**平移。这就是矩阵乘法的工作方式。
 
-变换的顺序不同，得出的结果也不同。体验一下：
+变换的顺序不同，得出的结果也不同。您不妨亲自尝试一下：
 
 - 向前一步（小心别磕着爱机）然后左转；
 - 左转，然后向前一步
