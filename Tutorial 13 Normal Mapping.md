@@ -382,14 +382,14 @@ if (glm::dot(glm::cross(n, t), b) < 0.0f){
 在`computeTangentBasis()`末对每个顶点都做这个操作。
 
 ###镜面纹理（Specular texture）###
-纯粹出于乐趣，我在代码里加上了镜面纹理；取代了原先作为镜面颜色的灰色`vec3(0.3,0.3,0.3)`，现在看起来像这样：
+为了更有趣一些，我在代码里加上了镜面纹理；取代了原先作为镜面颜色的灰色`vec3(0.3,0.3,0.3)`。镜面纹理看起来像这样：
 
 <img class="alignnone size-full wp-image-317" title="specular" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/specular.jpg" alt="" width="351" height="335" />
 
 
 <img class="alignnone size-large wp-image-316" title="normalmappingwithspeculartexture" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/normalmappingwithspeculartexture-1024x793.png" alt="" width="640" height="495" />
 
-注意，现在水泥部分始终是黑色的，这是因为如上镜面纹理中没有镜面分量。
+请注意，由于如上镜面纹理中没有镜面分量，水泥部分均呈黑色。
 
 ###用立即模式进行调试###
 本站的初衷是让大家**不再**使用已被废弃、缓慢、问题频出的立即模式。
@@ -400,7 +400,7 @@ if (glm::dot(glm::cross(n, t), b) < 0.0f){
 
 这里，我们在立即模式下画了一些线条表示切线空间。
 
-要进入立即模式，得关闭3.3 Core Profile：
+要进入立即模式，必须先关闭3.3 Core Profile：
 
 ```cpp
 glfwOpenWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
