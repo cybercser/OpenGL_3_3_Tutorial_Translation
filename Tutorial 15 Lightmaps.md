@@ -1,28 +1,28 @@
-﻿第十五课：光照贴图（Lightmap）
+第十五课：光照贴图（Lightmap）
 ===
 [TOC]
  
 简介
 ---
-这堂课是视频课程，没有介绍新的OpenGL相关技术/语法。不过，大家会学习如何利用现有知识，生成高质量的阴影。
+这节视频课程不介绍新的OpenGL技术/语法，而是教大家用已学到的技术生成高质量的阴影。
 
-本课介绍了用Blender创建简单场景的方法；还介绍了如何烘培（bake）光照贴图（lightmap），以便在你的项目中使用。
+本课介绍怎样用Blender创建简单场景；还介绍了如何烘培光照贴图，并应用到实际中。
 
 <img class="alignnone size-large wp-image-345" title="lighmappedroom" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/lighmappedroom-1024x793.png" alt="" width="640" height="495" />
 
-无需Blender预备知识，我会讲解包括快捷键的所有内容
+本课不需要Blender预备知识，我会讲解快捷键等内容。
 
 关于光照贴图
 ---
-光照图是永久、一次性地烘焙好的。也就是说光照图是完全静态的，你不能在运行时移动光源，连删除都不行。
+光照贴图是预先一次性烘焙好的。也就是说光照贴图完全是静态的，你不能实时地移动甚至删除光源。
 
-但对于阳光这种光源来说，光照图还是大有用武之地的；在不会打碎灯泡的室内场景中，也是可以的。2009年发布的《镜之边缘》（*Mirror Edge*）室内、室外场景中大量采用了光照图。
+但对于阳光这种光源来说，光照贴图还是大有用处的；在灯泡不会破碎的室内场景中，也可以用光照贴图。2009年发布的《镜之边缘》（*Mirror Edge*）室内外场景就大量采用了光照贴图。
 
-更重要的是，光照图很容易配置，速度无可匹敌。
+更重要的是，光照贴图很容易配置，渲染速度无出其右。
 
 视频
 ---
-这是个1024x768 高清视频。
+本视频分辨率为1024x768。
 
 [Youku 标清含中文字幕](http://v.youku.com/v_show/id_XNDg5MjYzMzk2.html)
 [Vimeo 高清原版视频](http://player.vimeo.com/video/24359223?title=0&byline=0&portrait=0)
@@ -33,16 +33,16 @@
 
 <img class="alignnone size-large wp-image-346" title="positivebias" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/positivebias-1024x793.png" alt="" width="640" height="495" />
 
-这是由mipmap造成的。从远处观察时，mipmap对纹素做了混合。纹理背景中的黑色像素点和光照图中的像素点混合在了一起。为了避免这一点，可以采取如下措施：
+这是由mipmap造成的。从远处观察时，mipmap对纹素做了混合。纹理背景中的黑色像素和光照贴图中的像素混合在了一起。为了避免这一点，可以采取如下措施：
 
-- 让Blender在UV图的limits上生成一个margin。这个margin参数位于bake面板。要想效果更好，可以把margin值设为20个纹素。
-- 获取纹理时，加上一个偏离（bias）：
+- 让Blender在UV贴图的边界上生成白边（margin）。这个`margin`参数位于`bake`面板。要想效果更好，可以把`margin`值设为20个纹素。
+- 获取纹理时，加上一个偏差（bias）：
 ```
 color = texture2D( myTextureSampler, UV, -2.0 ).rgb;
 ```
--2是偏离量。这个值是通过不断尝试得出的。上面的截图中bias值为+2，也就是说OpenGL将在原本的mipmap层次上再加两层（因此，纹素大小变为原来的1/16，瑕疵也随之变小了）。-
+-2是偏差。这个值是通过不断尝试得出的。上面的截图中偏差值为+2，也就是说OpenGL将在原本的mipmap层次上再加两层（因此，纹素大小变为原来的1/16，瑕疵也随之变小了）。-
 
-- 后期处理中可将背景填充为黑色，这一点我后面还会再讲。
+- 后期处理中可将背景填充为黑色，这一点后续还会讲解。
 	
 > &copy; http://www.opengl-tutorial.org/
 
