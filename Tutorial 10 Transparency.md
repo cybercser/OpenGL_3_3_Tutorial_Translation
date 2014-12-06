@@ -4,7 +4,7 @@
 
 alpha通道
 ---
-alpha通道的概念很简单。我们以前的计算结果是RGB值，现在改为RGBA：
+alpha通道的概念很简单。我们以前的计算结果是RGB值，现在则是RGBA值：
 
 ```
     // Ouput data : it's now a vec4
@@ -35,11 +35,11 @@ alpha通道的概念很简单。我们以前的计算结果是RGB值，现在改
 
 <img class="alignnone size-full wp-image-282" title="transparencyorder" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/transparencyorder.png" alt="" width="500" height="255" />
 
-我们的场景中也出现了同样的现象。试着稍稍改变一下视角：
+我们的场景中也出现了同样的现象。试着稍稍改变一下观察点：
 
 <img class="alignnone size-large wp-image-288" title="transparencybad" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/transparencybad-1024x793.png" alt="" width="640" height="495" />
 
-原来这还是个十分棘手的问题。你在游戏中也没怎么见过透明的东西，对吧？
+原来这还是个十分棘手的问题。您在游戏中也没怎么见过透明的东西，是吧？
 
 ###常见解决方案###
 
@@ -55,8 +55,8 @@ alpha通道的概念很简单。我们以前的计算结果是RGB值，现在改
 
 这么做可以解决问题（下一节还会介绍它），但是：
 
-- 你将受限于填充率。亦即每个片段会写10、20次，也许更多次。这对力不从心的内存总线来说太繁重了。通常，深度缓冲可以自动丢弃“远”片段；但这里我们已显式地对片段进行了排序，故深度缓冲实际上没起作用。
-- 这些操作，每个像素上都会执行4遍（我们用了4倍多重采样抗锯齿（MSAA）），除非用了什么高明的优化。
+- 您将受限于填充率。亦即每个片段会写10、20次，也许更多次。这对力不从心的内存总线来说太繁重了。通常，深度缓冲可以自动丢弃“远”片段；但这里我们已显式地对片段进行了排序，因此深度缓冲实际上没起作用。
+- 这些操作，每个像素上都会执行4遍（我们用了4倍多重采样抗锯齿（MSAA）），除非用了什么巧妙的优化。
 - 透明三角形排序很耗时
 - 若要逐个三角形地切换纹理，或者更糟糕，切换着色器——性能会大打折扣。不要这么做。
 
@@ -64,16 +64,16 @@ alpha通道的概念很简单。我们以前的计算结果是RGB值，现在改
 
 - 限制透明多边形的数量
 - 对所有透明多边形使用同一个着色器和纹理
-- 若这些透明多边形必须看起来很不同，请用纹理区分！
-- 若不排序，效果也还行，那最好别排序。
+- 若这些透明多边形本就是外表各异的，那就用不同的纹理
+- 若不排序时效果还凑合，那就不排序好了。
 
 ###顺序无关透明###
-如果你的引擎确实需要顶尖的透明效果，这里有一些技术值得研究一番：
+如果您的引擎确实需要顶级的透明效果，这里有一些值得研究的技术：
 
 - [The original 2001 Depth Peeling paper](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.18.9286&rep=rep1&type=pdf)：像素级精细度，但速度不快
 - [Dual Depth Peeling](http://developer.download.nvidia.com/SDK/10/opengl/src/dual_depth_peeling/doc/DualDepthPeeling.pdf)：小幅改进
 - 桶排序相关的几篇论文。把片段存到数组，在着色器中进行深度排序。
-- [ATI’s Mecha Demo](http://fr.slideshare.net/hgruen/oit-and-indirect-illumination-using-dx11-linked-lists)：又好又快，但实现起来有难度，需要最新的硬件。用链表存储fragment。
+- [ATI’s Mecha Demo](http://fr.slideshare.net/hgruen/oit-and-indirect-illumination-using-dx11-linked-lists)：效果速度俱佳，但实现起来有难度，需要最新的硬件。用链表存储片段。
 - [Cyril Crassin’s variation on the ATI’s  technique](http://blog.icare3d.org/2010/07/opengl-40-abuffer-v20-linked-lists-of.html)：实现难度更大
 
 注意，即便是《小小大星球》（*Little Big Planet*）这种刚出炉的、运行在高端主机上的游戏，也只用了一层透明。

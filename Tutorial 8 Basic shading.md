@@ -30,14 +30,14 @@
 ###三角形法线
 
 一个平面的法线是一个长度为1并且垂直于这个平面的向量。
-一个三角形的法线是一个长度为1并且垂直于这个三角形的向量。通过简单地将三角形两条边进行叉乘计算（向量a和b的叉乘结果是一个同时垂直于a和b的向量，还记得吗？），然后归一化：使长度为1.伪代码如下：
+一个三角形的法线是一个长度为1并且垂直于这个三角形的向量。通过简单地将三角形两条边进行叉乘计算（向量a和b的叉乘结果是一个同时垂直于a和b的向量，还记得吗？），然后归一化：使长度为1。伪代码如下：
 
     triangle ( v1, v2, v3 )
     edge1 = v2-v1
     edge2 = v3-v1
     triangle.normal = cross(edge1, edge2).normalize()
 
-不要将法线(normal)和`normalize()`混淆。`Normalize()`是让一个向量（任意向量，不一定必须是normal）除以其长度，从而使新长度为1。法线(normal)则是某一类向量的名字。
+不要将法线(normal)和`normalize()`混淆。`Normalize()`是让一个向量（任意向量，不一定是法线）除以其长度，从而使新长度为1。法线(normal)则是某一类向量的名字。
 
 ###顶点法线
 
@@ -83,11 +83,11 @@
 
 当一定量的光线到达某表面，该表面根据光到达时的角度而不同程度地被照亮。
 
-如果光线垂直于表面，它将汇聚在一小片表面上。如果它以一个倾斜角到达表面，相同的强度光照亮更大一片表面：
+如果光线垂直于表面，它将汇聚在一小片表面上。如果同等强度的光线以一个倾斜角到达表面，则其照亮的面积更大：
 
 <img class="alignnone size-full wp-image-227" title="diffuseAngle" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/diffuseAngle.png" alt="" width="600" height="500" />
 
-这意味着在斜射下，表面的点会较黑（但是记住，更多的点会被照射到，总光强度仍然是一样的）
+这意味着斜射下的表面各点会较暗（但请记住，更多的点会被照射到，总光强度仍然是一样的）
 
 也就是说，当计算像素的颜色时，入射光和表面法线的夹角很重要。故有：
 
@@ -104,7 +104,7 @@
 在这段代码中，`n`是表面法线，`l`是从表面到光源的单位向量（和光线方向相反。虽然不直观，但能简化数学计算）。
 
 ###注意正负号
-求`cosTheta`的公式有漏洞。如果光源在三角形后面，`n`和`l`方向相反，那么`n.l`是负值。这意味着colour=一个负数，没有意义。因此这种情况须用```clamp()```将`cosTheta`赋值为0：
+求`cosTheta`的公式有漏洞。如果光源在三角形后面，`n`和`l`方向相反，那么`n.l`是负值。这意味着colour将是一个负值，没有意义。因此这种情况下必须用```clamp()```将`cosTheta`截取为0：
 ```glsl
     // Cosine of the angle between the normal and the light direction,
     // clamped above 0
@@ -117,7 +117,7 @@
 ```
 
 ###材质颜色
-当然，输出颜色也依赖于材质颜色。在下图中，白光由绿、红、蓝光组成。当光碰到红色材质时，绿光和蓝光被吸收，只有红光得以保留。
+当然，输出颜色也受材质颜色的影响。在下图中，白光由绿、红、蓝光组成。当光碰到红色材质时，绿光和蓝光被吸收，只有红光得以保留。
 
 <img class="alignnone size-full wp-image-226" title="diffuseRed" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/diffuseRed.png" alt="" width="500" height="303" />
 
@@ -127,7 +127,7 @@
 ```
 
 ###建立光照模型
-首先假设在空间中有一个点光源，它像蜡烛一样向所有方向发射光线，。
+首先假设在空间中有一个点光源，它像蜡烛一样向所有方向发射光线。
 
 对于该光源，我们的表面收到的光通量（luminous flux）依赖于表面到光源的距离：越远光越少。实际上，光通量与距离的平方成反比：
 ``` glsl
@@ -177,7 +177,7 @@
 
 这段代码看起来很牛，其实就是第三课的所学内容：矩阵。每个向量命名时，都嵌入了所在的空间名，这样在跟踪时更简单。 **这种做法值得借鉴。**
 
-M和V分别是模型和视图矩阵，并用与MVP完全相同的方式传给着色器。
+M和V分别是模型和观察矩阵，并用与MVP完全相同的方式传给着色器。
 
 ###实战时间
 现在有了编写漫反射光源的一切必要条件。赶快动手把它实现出来吧。<img src="http://www.opengl-tutorial.org/wp-includes/images/smilies/icon_smile.gif" alt=":)" class="wp-smiley">
@@ -187,7 +187,7 @@ M和V分别是模型和视图矩阵，并用与MVP完全相同的方式传给着
 
 <img class="alignnone size-large wp-image-228" title="diffuse_only" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/diffuse_only-1024x793.png" alt="" width="640" height="495" />
 
-这次的结果比之前的好，不过还是感觉少了些什么。特别是由于使用了```clamp()```，Suzanne的背后完全是黑色的。
+这次的结果比之前的好，不过还是感觉少了些什么。特别是由于使用了`clamp()`，Suzanne的背后完全是黑色的。
 
 环境光(Ambient)分量
 ---
@@ -223,7 +223,7 @@ M和V分别是模型和视图矩阵，并用与MVP完全相同的方式传给着
 
 <img class="alignnone size-full wp-image-232" title="specular" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/specular.png" alt="" width="500" height="251" />
 
-如图所示，镜面反射光形成了一个波瓣（lobe）。极端情况下，漫反射分量可为零，这时波瓣非常窄（所有的光往一个方向反射），这就形成了镜子。
+如图所示，镜面反射光形成了一个波瓣（lobe）。极端情况下，漫反射分量可为零，这时波瓣非常窄（所有的光往一个方向反射），这样就形成了镜子。
 
 **（确实可以通过调整参数值得到镜面；但在这个例子中镜面反射的只有光源，渲染结果看起来会很奇怪)**
 ```glsl
@@ -248,7 +248,7 @@ M和V分别是模型和视图矩阵，并用与MVP完全相同的方式传给着
     
 `R`是反射光的方向，`E`是视线的反方向（就像之前对“l”的假设）；如果二者夹角很小，意味着视线与反射光线重合。
 
-`pow(cosAlpha,5)`用来控制镜面反射的波瓣。可以增大第二个参数（译者注：镜面高光指数）来得到更大的波瓣。
+`pow(cosAlpha,5)`用来控制镜面反射的波瓣。可以通过增大第二个参数（译注：镜面高光指数）得到更大的波瓣。
 
 ###最终结果
 <img class="alignnone size-large wp-image-233" title="diffuse_ambiant_specular" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/diffuse_ambiant_specular-1024x793.png" alt="" width="640" height="495" />

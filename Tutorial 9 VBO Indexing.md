@@ -10,7 +10,7 @@
 
 <img class="alignnone size-full wp-image-267 whiteborder" title="indexing" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/indexing1.png" alt="" width="600" height="375">
 
-索引缓冲存储的是整数；每个三角形有三个整数索引，分别指向各种*属性缓冲（attribute buffer）*（顶点位置、颜色、UV坐标、其他UV坐标、法线缓冲法线等）。这和OBJ文件格式有些类似，但一个最大的区别在于：索引缓冲**只有一个**。这意味着如果某个顶点是两个三角形的公共顶点，那么该顶点的所有属性在两个三角形中必须都是一致的。（译注：举个例子，假设三角形T1、T2有公共顶点V，但在T1中，V的法线为N1，在T2中V的法线为N2，那么由于仅有一个索引缓冲，因此必须视顶点V为两个不同的顶点V1、V2，即使V1、V2的位置相同。换句话说，顶点是由位置、颜色、UV坐标、法线等等属性共同来定义的。属性不同则视为不同顶点。这与我们在几何学中单纯以空间位置区别顶点是不同的。）
+索引缓冲存储的是整数；每个三角形有三个整数索引，分别指向各种*属性缓冲（attribute buffer）*（顶点位置、颜色、UV坐标、其他UV坐标、法线缓冲法线等）。这和OBJ文件格式有些类似，但一个最大的区别在于：索引缓冲**只有一个**。这也就是说仅当某顶点的所有属性（译注：即位置、颜色、UV坐标、法线等等）在两个三角形中都相同时，我们才认为此顶点是两个三角形的公共顶点。
 
 公共顶点？不同顶点？
 ---
@@ -74,13 +74,13 @@ OpenGL中的索引VBO
 
 完整的C++代码位于`common/vboindexer.cpp`，注释很详尽。如果理解了以上算法，读懂代码应该没问题。
 
-若两顶点的坐标、UV坐标和法线都相等，则认为两顶点是同一顶点。若还有其他属性，就视具体情况而定了。
+若两顶点的坐标、UV坐标和法线都相等，则认为两顶点是同一顶点。若还有其他属性，就得视具体情况而定了。
 
 为了简单，我们采用了性能较差的线性搜索来寻找相似顶点。实际中用`std::map`更合适。
 
 补充：FPS计数器
 ---
-虽与索引无直接关系，但现在去看看“FPS计数器”是很合适的——这样我们就能看到索引究竟能提升多少性能。[“工具——调试器”](http://www.opengl-tutorial.org/miscellaneous/useful-tools-links/#header-4)中还有些其他和性能相关的工具。
+虽与索引无直接关系，但现在去看看[“FPS计数器”](http://www.opengl-tutorial.org/miscellaneous/an-fps-counter/)是很合适的——这样我们就能看到索引究竟能提升多少性能。[“工具——调试器”](http://www.opengl-tutorial.org/miscellaneous/useful-tools-links/#header-4)中还有其他与性能相关的工具。
 
 
 > &copy; http://www.opengl-tutorial.org/

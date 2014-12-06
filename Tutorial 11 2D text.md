@@ -37,7 +37,7 @@ API
     std::vector<glm::vec2> vertices;
     std::vector<glm::vec2> UVs;
 ```
-文本中的每个字母，都要计算其四边形包围盒的顶点坐标，然后添加两个三角形（组成一个四边形）：
+然后为文本中的每个字符计算其四边形包围盒的顶点坐标，然后添加（组成这个四边形的）两个三角形：
 
 ```
     for ( unsigned int i=0 ; i<length ; i++ ){
@@ -47,7 +47,7 @@ API
         glm::vec2 vertex_down_right = glm::vec2( x+i*size+size, y????? );
         glm::vec2 vertex_down_left? = glm::vec2( x+i*size???? , y????? );
     
-        vertices.push_back(vertex_up_left?? );
+        vertices.push_back(vertex_up_left );
         vertices.push_back(vertex_down_left );
         vertices.push_back(vertex_up_right? );
     
@@ -55,19 +55,19 @@ API
         vertices.push_back(vertex_up_right);
         vertices.push_back(vertex_down_left);
 ```
-轮到UV坐标了。计算左上角的坐标：
+最后计算UV坐标。左上角坐标的计算方式如下：
 
 ```
         char character = text[i];
         float uv_x = (character%16)/16.0f;
         float uv_y = (character/16)/16.0f;
 ```
-这样做是可行的（只能说基本上行得通，详见下文），因为[A的ASCII值](http://www.asciitable.com/)为65。
+这样做是可行的（只能说基本上行得通，详见下文），因为[A的ASCII码](http://www.asciitable.com/)为65。
 65%16 = 1，因此A位于第1列（列号从0开始）。
 
 65/16 = 4，因此A位于第4行（这是整数除法，所以结果不是想象中的4.0625）
 
-两者都除以16.0以使之落于[0.0 - 1.0]区间内，这正是OpenGL纹理所需的。
+两者都除以16.0使之符合OpenGL的[0.0 - 1.0]纹理坐标范围。
 
 现在只需对顶点重复相同的操作：
 

@@ -5,7 +5,7 @@
 欢迎来到第十三课！今天的内容是法线贴图（normal mapping）。
 
 
-学完[第八课：基本着色](http://www.opengl-tutorial.org/beginners-tutorials/tutorial-8-basic-shading/)后，我们知道了如何用三角形法线得到不错的着色效果。需要注意的是，截至目前，每个顶点仅有一条法线。在三角形内部，法线是平滑过渡的，而颜色则是通过纹理采样得到的（译注：三角形内部法线由插值计算得出，自然是平滑过渡的；颜色则是经纹理采样得来，点与点之间的颜色变化是无规律的）。法线贴图的基本思想就是给予法线类似的变化。
+学完[第八课：基本着色](http://www.opengl-tutorial.org/beginners-tutorials/tutorial-8-basic-shading/)后，我们知道了如何用三角形法线得到不错的着色效果。需要注意的是，截至目前，每个顶点仅有一条法线。在三角形内部，法线是平滑过渡的，而颜色则是通过纹理采样得到的（译注：三角形内部法线由插值计算得出，颜色则是直接从纹理取数据）。法线贴图的基本思想就是像纹理采样一样为法线取值。
 
 法线纹理
 ---
@@ -18,7 +18,7 @@
 ```
 normal = (2*color)-1 // on each component
 ```
-由于法线基本都是指向“曲面外侧”的（按照惯例，X轴朝右，Y轴朝上），因此法线纹理整体呈蓝色，
+由于法线基本都是指向“曲面外侧”的（按照惯例，X轴朝右，Y轴朝上），因此法线纹理整体呈蓝色。
 
 法线纹理的映射方式和漫反射纹理相似。麻烦之处在于如何将法线从各三角形局部空间（切线空间tangent space，亦称图像空间image space）变换到模型空间（着色计算所采用的空间）。
 
@@ -133,7 +133,7 @@ void computeTangentBasis(
 ###索引###
 索引VBO的方法和之前类似，仅有些许不同。
 
-找到相似顶点（相同的坐标、法线、纹理坐标）后，我们不直接用它的切线、副法线，而是取其均值。因此，只需把旧代码修改一下：
+找到相似顶点（相同的坐标、法线、纹理坐标）后，我们不直接用它的切线、副法线，而是取其均值。因此，只需把老代码修改一下：
 
 ```cpp
         // Try to find a similar vertex in out_XXXX
@@ -382,7 +382,7 @@ if (glm::dot(glm::cross(n, t), b) < 0.0f){
 在`computeTangentBasis()`末对每个顶点都做这个操作。
 
 ###镜面纹理（Specular texture）###
-为了更有趣一些，我在代码里加上了镜面纹理；取代了原先作为镜面颜色的灰色`vec3(0.3,0.3,0.3)`。镜面纹理看起来像这样：
+为了增强趣味性，我在代码里加上了镜面纹理；取代了原先作为镜面颜色的灰色`vec3(0.3,0.3,0.3)`。镜面纹理看起来像这样：
 
 <img class="alignnone size-full wp-image-317" title="specular" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/specular.jpg" alt="" width="351" height="335" />
 
@@ -391,7 +391,7 @@ if (glm::dot(glm::cross(n, t), b) < 0.0f){
 
 请注意，由于如上镜面纹理中没有镜面分量，水泥部分均呈黑色。
 
-###用立即模式进行调试###
+###用立即模式（immediate mode）进行调试###
 本站的初衷是让大家**不再**使用已被废弃、缓慢、问题频出的立即模式。
 
 不过，用立即模式进行调试却十分方便：
@@ -419,7 +419,7 @@ glLoadMatrixf((const GLfloat*)&MV[0]);
 ```cpp
 glUseProgram(0);
 ```
-然后画线条（本例中法线都已被归一化，乘以0.1，置于对应顶点上）：
+然后绘制线条（本例中法线都已被归一化，乘以0.1，置于对应顶点上）：
 
 ```cpp
 glColor3f(0,0,1);
@@ -454,7 +454,7 @@ color.xyz = LightDirection_tangentspace;
 - 可视化前，变量是否需要归一化取决于具体情况。
 - 如果结果不易理解，就逐个分量可视化。比如，只观察红色，而将绿色和蓝色分量强制设为0。
 - alpha值过于复杂，别折腾<img src="http://www.opengl-tutorial.org/wp-includes/images/smilies/icon_smile.gif" alt=":)" class="wp-smiley">
-- 若想将一个负值可视化，可以采用和处理法线纹理一样的技巧：转而把`(v+1.0)/2.0`可视化，于是黑色就代表-1，而白色代表+1。只不过这样做使结果不那么显而易见。
+- 若想将一个负值可视化，可以采用和处理法线纹理一样的技巧：转而把`(v+1.0)/2.0`可视化，于是黑色就代表-1，而白色代表+1。只不过这样做会让结果不直观。
 
 ###利用变量名进行调试###
 前面已经讲过了，搞清楚向量所处的空间是关键。千万别用摄像机空间里的向量点乘模型空间里的向量。
@@ -462,14 +462,14 @@ color.xyz = LightDirection_tangentspace;
 给向量名称添加“_modelspace”后缀可以有效地避免这类计算错误。
 
 ###怎样制作法线贴图###
-作者James O’Hare。点击图片可放大。
+作者James O’Hare。点击图片放大。
 
 <img title="normalMapMiniTut" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/normalMapMiniTut-320x1024.jpg" alt="How to create a normal map" width="320" height="1024">
 
 练习
 ---
 - 在`indexVBO_TBN`函数中，做加法前先把向量归一化，观察其作用。
-- 用颜色可视化其他向量（如`instance`、`EyeDirection_tangentspace`），试着解释你看到的结果。
+- 用颜色可视化其他向量（如`instance`、`EyeDirection_tangentspace`），试着解释您看到的结果。
 
 工具和链接
 ---

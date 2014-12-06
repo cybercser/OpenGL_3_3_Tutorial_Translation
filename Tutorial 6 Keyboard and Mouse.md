@@ -9,9 +9,9 @@
 
 接口
 ---
-这段代码在整个课程中多次被使用，因此把它单独放在文件`common/controls.cpp`中，然后在`common/controls.hpp`中声明函数接口，这样`tutorial06.cpp`就能使用它们了。
+这段代码在整个课程中多次被使用，因此把它单独放在`common/controls.cpp`中，然后在`common/controls.hpp`中声明函数接口，这样`tutorial06.cpp`就能使用它们了。
 
-与上节课相比，`tutorial06.cpp`里的代码变动很小。主要的变化是：每帧都计算MVP（投影视图矩阵）矩阵，而不像之前那样只算一次。现在把这段代码加到主循环中：
+与上节课相比，`tutorial06.cpp`里的代码变动很小。主要的变化是：每帧都计算MVP矩阵，而不像之前那样只算一次。现在把这段代码加到主循环中：
 ```cpp
     do{
     
@@ -29,9 +29,9 @@
 ```
 这段代码需要3个新函数：
 
-- `computeMatricesFromInputs()`读键盘和鼠标操作，然后计算投影视图矩阵。这就是奇妙所在。
+- `computeMatricesFromInputs()`读键盘和鼠标操作，然后计算投影观察矩阵。这一步正是精华所在。
 - `getProjectionMatrix()`返回计算好的投影矩阵。
-- `getViewMatrix()`返回计算好的视图矩阵。
+- `getViewMatrix()`返回计算好的观察矩阵。
 
 这只是一种实现方式，当然，如果您不喜欢这些函数，不妨自行修改。
 
@@ -54,7 +54,7 @@
     float mouseSpeed = 0.005f;
     FoV is the level of zoom. 80° = very wide angle, huge deformations. 60° - 45° : standard. 20° : big zoom.
 ```
-首先根据输入，重新计算位置，水平角，竖直角和视野（FoV）；再由它们算出视图和投影矩阵。
+首先根据输入，重新计算位置，水平角，竖直角和视野（FoV）；再由它们算出观察和投影矩阵。
 
 ###朝向
 读取鼠标位置很简单：
@@ -64,7 +64,7 @@
     int xpos, ypos;
     glfwGetMousePos(&xpos, &ypos);
 ```
-我们需要把光标放到屏幕中心，否则它将很快移到屏幕外，导致无法响应。
+我们要把光标放到屏幕中心，否则它将很快移到屏幕外，失去响应。
 ```cpp
     // Reset mouse position for next frame
     glfwSetMousePos(1024/2, 768/2);
@@ -81,10 +81,10 @@
 
 - 1024/2 - xpos表示鼠标离窗口中心点的距离。这个值越大，转动角越大。
 - float(...)是浮点数转换，使乘法顺利进行
-- `mouseSpeed`用来加速或减慢旋转，可以随你调整或让用户选择。
-- += : 如果你没移动鼠标，`1024/2-xpos`的值为零，`horizontalAngle+=0`不改变`horizontalAngle`的值。如果你用的是"="，每帧视角都被强制转回到原始方向，这就不好了。
+- `mouseSpeed`用来加速或减慢旋转，可以任意调整或让用户选择。
+- += : 如果没移动鼠标，`1024/2-xpos`的值为零，`horizontalAngle+=0`不改变`horizontalAngle`的值。如果用的是"="，每帧视角都被强制转回到原始方向，这可不是我们想要的效果。
 
-现在，在世界空间中计算代表视线方向的向量，。
+现在，在世界空间中计算代表视线方向的向量。
 ```cpp
     // Direction : Spherical coordinates to Cartesian coordinates conversion
     glm::vec3 direction(
@@ -93,15 +93,15 @@
         cos(verticalAngle) * cos(horizontalAngle)
     );
 ```   
-这是一种标准计算，如果您不了解余弦和正弦，下面有一个简短的解释：
+这是一种标准计算，如果您不懂余弦和正弦，下面有一个简短的解释：
 
 <img class="alignnone whiteborder" title="Trigonometric circle" src="http://www.numericana.com/answer/trig.gif" alt="" width="150" height="150" />
 
 上面的公式，只是上图在三维空间下的推广。
 
-我们想算出摄像机的“上方向”。“上方向”不一定是Y轴正方向：您俯视时，『朝上方向』实际上是水平的。这里有一个例子，位置相同，视点相同的摄像机，却有不同的“上方向”。
+我们想算出摄像机的“上”。“上”不一定是Y轴正方向：您俯视时，“上”实际上是水平的。这里有一个例子，位置相同，视点相同的摄像机，却有不同的“上”。
 
-本例中“摄像机的右边”这个方向始终保持不变，指向水平方向。您可以试试：保持手臂水平伸直，向正上方看、向下看、随意看。现在定义“右方向”向量：因为是水平的，故Y坐标为零，X和Z值就像上图中的一样，只是角度旋转了90°，或Pi/2弧度。
+本例中“摄像机的右边”这个方向始终保持不变，指向水平方向。您可以试试：保持手臂水平伸直，向正上方看、向下看、随意看。现在定义“右”向量：因为是水平的，故Y坐标为零，X和Z值就像上图中的一样，只是角度旋转了90°，或Pi/2弧度。
 ```cpp
     // Right vector
     glm::vec3 right = glm::vec3(
@@ -110,7 +110,7 @@
         cos(horizontalAngle - 3.14f/2.0f)
     );
 ```
-我们有一个“右方向”和一个视线方向，或者说是『前方向』。“上方向”垂直于这两者。一个很有用的数学工具可以轻松地将三者联系起来：叉乘。
+我们有一个“右”和一个视线方向（或者说是“前”）。“上”与两者垂直。叉乘是一个很有用的数学工具，可以轻松地将三者联系起来：
 ```cpp
     // Up vector : perpendicular to both direction and right
     glm::vec3 up = glm::cross( right, direction );
@@ -118,7 +118,7 @@
 叉乘的具体含义是什么？很简单，回忆第三课讲到的右手定则。第一个向量是大拇指；第二个是食指；叉乘的结果就是中指。这种方法十分快捷。
 
 ###位置
-代码十分直观。顺便说下，由于我使用的是法语azerty键盘，美式键盘的awsd键位对应的实际上是zqsd，因此我用上/下/右/左键而没用wsad。qwerz键盘更不一样，更别提韩语键盘了。我甚至不知道韩国人用的键盘是什么布局，我猜肯定和我的大不相同。
+代码十分直观。顺便说下，由于我使用的是法语azerty键盘，美式键盘的awsd键位对应的实际上是zqsd，因此我用上/下/右/左键而没用wsad。qwerz键盘更不一样，更别提韩语键盘了。我甚至不知道韩国人用的键盘是什么布局。我猜肯定和我的大不相同。
 ```cpp
     // Move forward
     if (glfwGetKey( GLFW_KEY_UP ) == GLFW_PRESS){
@@ -137,28 +137,28 @@
         position -= right * deltaTime * speed;
     }
 ```
-这里唯一特别的是`deltaTime`。您决不会希望每帧偏移1单元的，原因很简单：
+这里唯一特别的是`deltaTime`。您决不会希望每帧偏移1个单位距离的，原因很简单：
 
-- 如果你有一台快电脑，fps = 60，你每秒移动60\*speed个单位。
-- 如果你有一台慢电脑，fps = 20，你每秒移动20\*speed个单位。
+- 如果您的电脑运行速度快，fps = 60，您每秒将移动60\*speed个单位。
+- 如果您的电脑运行速度慢，fps = 20，您每秒将移动20\*speed个单位。
 
-不能拿电脑性能作为速度不稳的借口；你得用“前一帧到现在的时间”或“时间间隔（deltaTime）”来控制移动步长。
+不能拿电脑性能作为速度不稳的借口；您得用“前一帧到现在的时间”或“时间间隔（deltaTime）”来控制移动步长。
 
-- 如果你有一台快电脑，fps = 60，你每帧移动1/60\*speed个单位，每秒移动1\*speed个单位。
-- 如果你有一台慢电脑，fps = 20，你每帧移动1/20\*speed个单位，每秒移动1\*speed个单位。
+- 如果您的电脑运行速度快，fps = 60，您每帧将移动1/60\*speed个单位，每秒移动1\*speed个单位。
+- 如果您的电脑运行速度慢，fps = 20，您每帧将移动1/20\*speed个单位，每秒移动1\*speed个单位。
 
 这就好多了。`deltaTime`很容易算：
 
     double currentTime = glfwGetTime();
     float deltaTime = float(currentTime - lastTime);
 
-###视场角
+###视野
 为了增添趣味，我们可以用鼠标滚轮控制视野，实现简单的缩放：
 ```cpp
     float FoV = initialFoV - 5 * glfwGetMouseWheel();
 ```
 ###计算矩阵
-矩阵计算过程非常直观。使用的函数和前面几乎相同，仅参数不同。
+矩阵计算非常直观，使用的函数和前面几乎相同，仅参数不同。
 ```cpp
     // Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit &lt;-&gt; 100 units
     ProjectionMatrix = glm::perspective(FoV, 4.0f / 3.0f, 0.1f, 100.0f);

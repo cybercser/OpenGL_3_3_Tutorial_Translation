@@ -135,7 +135,7 @@ void main(){
 ---
 <img class="alignnone size-large wp-image-326" title="wavvy" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/wavvy-1024x793.png" alt="" width="640" height="495" />
 
-深入探索
+延伸阅读
 ---
 ###使用深度###
 在某些情况下可能还需要深度才能使用渲染的纹理。如下面例子所示，创建渲染纹理：
@@ -157,12 +157,10 @@ glTexImage2D(GL_TEXTURE_2D, 0,GL_DEPTH_COMPONENT24, 1024, 768, 0,GL_DEPTH_COMPON
 
 不过要特别小心：`texelFetch`多了一个表示采样数量的参数。换句话说就是没有自动“过滤”（在多重采样中，正确的术语是“分辨率（resolution）”）。
 
-因此需要你自己处理多重采样纹理……［原文不通顺，待定］
+因此您可能得在着色器中自行多重采样。这个步骤难度不大，但工作量较大。
 
-难度不大，但工作量较大。
-
-###多个渲染目标###
-你可以同时对多个纹理进行写入。
+###多渲染目标###
+您可以同时对多个纹理进行写入。
 
 创建若干纹理（都要有正确、一致的尺寸！），调用`glFramebufferTexture`，为每个纹理设置不同的颜色依附，以新参数（如`(2,{GL_COLOR_ATTACHMENT0,GL_COLOR_ATTACHMENT1,GL_DEPTH_ATTACHMENT})`）调用`glDrawBuffers`，然后在片段着色器中添加一个输出变量：
 ```glsl

@@ -104,7 +104,7 @@
 ###编译着色器
 在最简配置下，您得有两个着色器：一个叫顶点着色器（vertex shader），它将作用于每个顶点上；另一个叫片段着色器（fragment shader），它将作用于每一个采样点。我们采用4倍抗锯齿，因此每个像素有四个采样点。
 
-着色器编程使用GLSL(GL Shading Language)，属于OpenGL的一部分。与C、Java不同，GLSL必须在运行时编译，这意味着每次启动程序，所有的着色器将重新编译。
+着色器编程使用GLSL(GL Shading Language)，属于OpenGL的一部分。与C、Java不同，GLSL必须在运行时编译，这意味着每次启动程序时，所有的着色器将重新编译。
 
 这两个着色器通常单独存放在文件里。本例中有```SimpleFragmentShader.fragmentshader```和```SimpleVertexShader.vertexshader```两个着色器。扩展名无关紧要，也可以是.txt或者.glsl。
 

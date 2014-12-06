@@ -29,7 +29,7 @@
 
 附录
 ---
-用OpenGL渲染时，你大概会注意到一些瑕疵（这里故意把瑕疵放大了）：
+用OpenGL渲染时，您大概会注意到一些瑕疵（这里故意把瑕疵放大了）：
 
 <img class="alignnone size-large wp-image-346" title="positivebias" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/positivebias-1024x793.png" alt="" width="640" height="495" />
 
@@ -40,7 +40,7 @@
 ```
 color = texture2D( myTextureSampler, UV, -2.0 ).rgb;
 ```
--2是偏差。这个值是通过不断尝试得出的。上面的截图中偏差值为+2，也就是说OpenGL将在原本的mipmap层次上再加两层（因此，纹素大小变为原来的1/16，瑕疵也随之变小了）。-
+-2是偏差。这个值是通过不断尝试得出的。上面的截图中偏差值为+2，也就是说OpenGL将在原本的mipmap层次上再加两层（因此，纹素大小变为原来的1/16，瑕疵也随之变小了）。
 
 - 后期处理中可将背景填充为黑色，这一点后续还会讲解。
 	

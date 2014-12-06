@@ -2,11 +2,11 @@
 ===
 [TOC]
 
-目前为止，我们一直在用硬编码描述立方体。您一定也觉得这是种很笨拙、很不便的办法。
+目前为止，我们一直在用硬编码描述立方体。您一定也觉得这是种很笨拙、很麻烦的办法。
 
 本课将学习从文件中加载3D模型。和加载纹理类似，我们先写一个小的、功能有限的加载器，接着再为大家介绍几个比我们写的更好的、实用的库。
 
-为了让课程尽可能简单，我们将采用简单、常用的OBJ格式。同样也是出于简单原则，我们只处理每个顶点有一个UV坐标和一个法线的OBJ文件（目前你不需要知道什么是法线）。
+为了让课程尽可能简单，我们将采用简单、常用的OBJ格式。同样也是出于简单原则，我们只处理每个顶点有一个UV坐标和一个法线的OBJ文件（目前不需要知道什么是法线）。
 
 加载OBJ模型
 ---
@@ -107,7 +107,7 @@ OK，真正开始写代码了。我们需要一些临时变量存储.obj文件�
     std::vector< glm::vec2 > temp_uvs;
     std::vector< glm::vec3 > temp_normals;
 ```
-学第五课纹理立方体时您你已学会打开文件了：
+学第五课带纹理的立方体时您你已学会打开文件了：
 ```cpp
     FILE * file = fopen(path, "r");
     if( file == NULL ){
@@ -216,14 +216,14 @@ UV和法线同理，任务完成！
 
 结果
 ---
-不好意思，这个纹理不大漂亮。我不太擅长美工<img src="http://www.opengl-tutorial.org/wp-includes/images/smilies/icon_sad.gif" alt=":(" class="wp-smiley">。欢迎您提供一些漂亮的纹理。
+不好意思，这个纹理不大漂亮。我不太擅长美术<img src="http://www.opengl-tutorial.org/wp-includes/images/smilies/icon_sad.gif" alt=":(" class="wp-smiley">。欢迎您提供一些漂亮的纹理。
 
 <img class="alignnone size-medium wp-image-670" title="ModelLoading" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/ModelLoading-300x232.png" alt="" width="300" height="232">
 
 
 其他模型格式及加载器
 ---
-这个小巧的加载器应该比较适合初学，不过别在实际中使用它。参考一下[实用链接和工具](http://www.opengl-tutorial.org/miscellaneous/useful-tools-links/)页面，看看有什么能用的工具。不过请注意，直到第九课才会*真正*用到这些工具。
+这个小巧的加载器应该比较适合初学，不过别在实际中使用它。参考一下[实用链接和工具](http://www.opengl-tutorial.org/miscellaneous/useful-tools-links/)页面，看看有什么能用的。不过请注意，直到第九课才会*真正*用到这些工具。
 
 > &copy; http://www.opengl-tutorial.org/
 

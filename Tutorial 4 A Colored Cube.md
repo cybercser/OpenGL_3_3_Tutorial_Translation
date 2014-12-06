@@ -53,7 +53,7 @@
         1.0f,-1.0f, 1.0f
     };
 ```
-OpenGL的缓冲由一些标准的函数（`glGenBuffers`, `glBindBuffer`, `glBufferData`, `glVertexAttribPointer`）来创建、绑定、填充和配置；若有遗忘，可参见第二课。绘制的调用也没变，只需改变绘制的点的个数
+OpenGL的缓冲由一些标准的函数（`glGenBuffers`, `glBindBuffer`, `glBufferData`, `glVertexAttribPointer`）来创建、绑定、填充和配置；若有遗忘，可参见第二课。绘制的调用也没变，只需改变绘制的点的个数：
 ```cpp
     // Draw the triangle !
     glDrawArrays(GL_TRIANGLES, 0, 12*3); // 12*3 indices starting at 0 -> 12 triangles -> 6 squares
@@ -132,7 +132,7 @@ OpenGL的缓冲由一些标准的函数（`glGenBuffers`, `glBindBuffer`, `glBuf
         (void*)0                          // array buffer offset
     );
 ```
-现在在顶点着色器中已经能访问这个新增的缓冲区了：
+现在在顶点着色器中已经能访问这个新增的缓冲了：
 ```glsl
     // Notice that the “1” here equals the “1” in glVertexAttribPointer
     layout(location = 1) in vec3 vertexColor;
@@ -182,7 +182,7 @@ OpenGL的缓冲由一些标准的函数（`glGenBuffers`, `glBindBuffer`, `glBuf
 它遮住了“近”三角形！它本应该在“近”三角形后面的！我们的立方体问题就在这里：一些理应被遮挡的面，因为绘制次序靠后，竟然变成可见的了。我们将用深度缓冲（Z-Buffer）算法解决它。
 
 *便签1* 
-: 如果您没发现问题，把相机放到(4,3,-3)试试
+: 如果您没发现问题，把摄像机放到(4,3,-3)试试
 
 *便签2* 
 : 如果“颜色和位置同为属性”，那为什么颜色要声明`out vec3 fragmentColor`，而位置不需要？实际上，位置有点特殊：它是唯一必须赋初值的（否则OpenGL不知道在哪画三角形）。所以在顶点着色器里，`gl_Position`是内置变量。
@@ -205,10 +205,10 @@ OpenGL的缓冲由一些标准的函数（`glGenBuffers`, `glBindBuffer`, `glBuf
 练习
 --------
 
-- 在不同的位置画立方体**和**三角形。你得构造两个MVP矩阵，在主循环中进行两次绘制调用，但只需一个着色器。
+- 在不同的位置画立方体**和**三角形。您得构造两个MVP矩阵，在主循环中进行两次绘制调用，但只需一个着色器。
 
 
-- 自己生成颜色值。一些点子：随机生成颜色，这样每次运行时颜色都不同；根据顶点位置生成颜色；把前面两种思路结合起来；或其他新创意<img src="http://www.opengl-tutorial.org/wp-includes/images/smilies/icon_smile.gif" alt=":)" class="wp-smiley">。若您不了解C，参考以下语法：
+- 自己生成颜色值。一些点子：随机生成颜色，这样每次运行时颜色都不同；根据顶点位置生成颜色；把前面两种思路结合起来；或其他创意<img src="http://www.opengl-tutorial.org/wp-includes/images/smilies/icon_smile.gif" alt=":)" class="wp-smiley">。若您不了解C，参考以下语法：
 ```cpp
         static GLfloat g_color_buffer_data[12*3*3];
         for (int v = 0; v < 12*3 ; v++){
@@ -217,7 +217,7 @@ OpenGL的缓冲由一些标准的函数（`glGenBuffers`, `glBindBuffer`, `glBuf
             g_color_buffer_data[3*v+2] = your blue color here;
         }
 ```
-- 完成上面习题后，尝试每帧都改变颜色。您得在每帧都调用`glBufferData`。请确保已绑定（`glBindBuffer`）了合适的缓冲区！
+- 完成上面习题后，尝试每帧都改变颜色。您得在每帧都调用`glBufferData`。请确保已绑定（`glBindBuffer`）了合适的缓冲！
 
 
 > &copy; http://www.opengl-tutorial.org/

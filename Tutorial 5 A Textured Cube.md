@@ -13,13 +13,13 @@
 
 关于UV坐标
 ---
-给一个模型贴纹理时，需要通过某种方式告诉OpenGL用哪一块图像来填充三角形。这是借助UV坐标来实现的。
+给模型贴纹理时，我们需要通过UV坐标来告诉OpenGL用哪块图像填充三角形。
 
 每个顶点除了位置坐标外还有两个浮点数坐标：U和V。这两个坐标用于访问纹理，如下图所示：
 
 <img class="alignnone size-full wp-image-116" title="UVintro" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/UVintro.png" alt="" width="662" height="337">
 
-注意纹理是怎样在三角形上扭曲的。
+注意观察纹理是怎样在三角形上扭曲的。
 
 自行加载.BMP图片
 ---
@@ -247,7 +247,7 @@
 
 <img class="alignnone size-full wp-image-133" title="linear" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/04/linear1.png" alt="" width="440" height="240">
 
-线性过滤可以显著改善纹理质量，应用较多。但若想获得更高质量的纹理，可以采用各向异性过滤，不过速度上有些慢。
+线性过滤可以显著改善纹理质量，应用较多。但若想获得更高质量的纹理，可以采用各向异性过滤，不过速度有些慢。
 
 ###各向异性过滤（Anisotropic filtering）
 这种方法逼近了真正片段中的纹素区块。例如下图中稍稍旋转了的纹理，各向异性过滤将沿蓝色矩形框的主方向，作一定数量的采样（即所谓的“各向异性层级”），计算出其内的颜色。
@@ -303,7 +303,7 @@
 ```
 压缩纹理
 ---
-学到这儿，你可能会问：那JPEG格式的纹理又该怎样加载呢？
+学到这儿，您可能会问：那JPEG格式的纹理又该怎样加载呢？
 简答：用不着考虑这些文件格式，您还有更好的选择。
 
 ###创建压缩纹理
@@ -411,7 +411,7 @@
         return textureID;
 ```
 ###反转UV坐标
-DXT压缩源自DirectX。和OpenGL相比，DirectX中的V纹理坐标是反过来的。所以使用压缩纹理时得用(coord.v, 1.0-coord.v)来获取正确的纹素。这步操作何时执行都可以：可以在导出脚本中执行，可以在加载器中执行，也可以在着色器中执行……
+DXT压缩源自DirectX。和OpenGL相比，DirectX中的V纹理坐标是反过来的。所以使用压缩纹理时得用(coord.v, 1.0-coord.v)来获取正确的纹素。可以在导出脚本、加载器、着色器等环节中执行这步操作。
 
 总结
 ---
