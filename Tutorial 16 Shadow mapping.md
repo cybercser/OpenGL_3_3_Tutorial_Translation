@@ -1,18 +1,18 @@
-﻿第十六课：阴影贴图（Shadow mapping）
+第十六课：阴影贴图（Shadow mapping）
 ===
 [TOC]
 
-第十五课中已经学习了如何创建光照贴图。光照贴图可用于静态对象的光照，其阴影效果也很不错，但无法处理运动的对象。
+第十五课中我们学习了如何创建光照贴图。光照贴图适用于表现静态光照，阴影效果很不错，但无法处理运动的对象。
 
-阴影贴图是目前（截止2012年）最好的生成动态阴影的方法。此法最大的优点是易于实现，缺点是想完全**正确**地实现不大容易。
+阴影贴图是目前（截止2012年）最好的生成动态阴影的方法。阴影贴图最大的优点是易于实现，缺点是很难完全**正确**地实现。
 
-本课首先介绍基本算法，探究其缺陷，然后实现一些优化。由于撰写本文时（2012），阴影贴图技术还在被广泛地研究；我们将提供一些指导，以便你根据自身需要，进一步改善你的阴影贴图。
+本课首先介绍基本算法，探究其缺点，然后进行优化。由于撰写本文时（2012），阴影贴图技术尚属研究热点，因此我们将仅提供一些指导意见，以便你根据需求改善阴影贴图质量。
 
 基本的阴影贴图
 ---
-基本的阴影贴图算法包含两个步骤。首先，从光源的视角将场景渲染一次，只计算每个片断的深度。接着从正常的视角把场景再渲染一次，渲染时要测试当前片断是否位于阴影中。
+基本的阴影贴图算法包含两个步骤（pass）。首先，从光源的视角将场景渲染一次，只计算每个片段的深度。接着从正常的视角把场景再渲染一次，渲染时要测试当前片段是否位于阴影中。
 
-“是否在阴影中”的测试实际上非常简单。如果当前采样点比阴影贴图中的同一点离光源更远，那说明场景中有一个物体比当前采样点离光源更近；即当前片断位于阴影中。
+测试某片段是否“位于阴影中”实际上非常简单。如果当前采样点比阴影贴图中的同一点离光源更远，那说明场景中有个物体比当前采样点离光源更近；也就是说，当前片段位于阴影中。
 
 
 下图可以帮你理解上述原理：
@@ -20,12 +20,12 @@
 <img class="alignnone size-full wp-image-532 whiteborder" title="shadowmapping" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/08/shadowmapping.png" alt="" width="636" height="272" />
 
 ###渲染阴影贴图###
-本课只考虑平行光——一种位于无限远处，其光线可视为相互平行的光源。故可用正交投影矩阵来渲染阴影贴图。正交投影矩阵和一般的透视投影矩阵差不多，只不过未考虑透视——因此无论距离相机多远，物体的大小看起来都是一样的。
+本课只考虑平行光——一种位于无限远处、光线可视为相互平行的光源。因此，我们可以用正交投影矩阵来渲染阴影贴图。正交投影矩阵和一般的透视投影矩阵差不多，只不过未考虑透视——因此无论距离摄像机多远，物体的大小看起来都是一样的。
 
 ###设置渲染目标和MVP矩阵###
-十四课中，大家学习了把场景渲染到纹理，以便稍后从shader中访问的方法。 
+第十四课中，大家学习了把场景渲染到纹理，并从着色器中访问该纹理。 
 
-这里采用了一幅1024x1024、16位深度的纹理来存储阴影贴图。对于阴影贴图来说，通常16位绰绰有余;你可以自由地试试别的数值。注意，这里采用的是深度纹理，而非深度渲染缓冲区（这个要留到后面进行采样）。
+这里我们采用了一张1024x1024、16位深度的纹理来存储阴影贴图。对于阴影贴图来说，16位通常绰绰有余；你也可以随便试试别的数值。注意，由于后期还要进行采样，因此我们这里采用的是深度纹理，而非深度缓冲。
 
 ```cpp
 // The framebuffer, which regroups 0, 1, or more textures, and 0 or 1 depth buffer.
@@ -51,10 +51,10 @@
  if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
  return false;
 ```
-MVP矩阵用于从光源的视角绘制场景，其计算过程如下：
+MVP矩阵用于从光源的视角渲染场景，其计算过程如下：
 
-* 投影矩阵是正交矩阵，可将整个场景包含到一个AABB（axis-aligned box, 轴向包围盒）里，该包围盒在X、Y、Z轴上的坐标范围分别为(-10,10)、(-10,10)、(-10,20)。这样做是为了让整个场景始终可见，这一点在“再进一步”小节还会讲到。
-* 视图矩阵对场景做了旋转，这样在观察坐标系中，光源的方向就是-Z方向（需要温习[第三课]
+* 投影矩阵是正交矩阵，可将整个场景包含到一个AABB（axis-aligned box, 轴向包围盒）里，该包围盒在X、Y、Z轴上的坐标范围分别为(-10,10)、(-10,10)、(-10,20)。这样做是为了让**可见**的场景始终可见，这一点在“深入研究”一节将有详述。
+* 观察矩阵对场景做了旋转，这样在摄像机空间中，光源的方向就是-Z方向（温故[第三课](http://www.opengl-tutorial.org/beginners-tutorials/tutorial-3-matrices/)）
 * 模型矩阵可设为任意值。
 ```cpp
 glm::vec3 lightInvDir = glm::vec3(0.5f,2,2);
@@ -69,8 +69,8 @@ glm::vec3 lightInvDir = glm::vec3(0.5f,2,2);
  // in the "MVP" uniform
  glUniformMatrix4fv(depthMatrixID, 1, GL_FALSE, &depthMVP[0][0])
 ```
-###Shaders###
-这一次渲染中所用的着色器很简单。顶点着色器仅仅简单地计算一下顶点的齐次坐标：
+###着色器###
+这次渲染中所用的着色器很简单。顶点着色器仅仅简单地计算一下顶点的齐次坐标：
 
 ```glsl
 #version 330 core
@@ -86,7 +86,7 @@ void main(){
 }
 ```
 
-fragment shader同样简单：只需将片断的深度值写到location 0（即写入深度纹理）。
+片段着色器同样简单：只需将片段的深度值写到location 0（即写入深度纹理）。
 
 ```glsl
 #version 330 core
@@ -99,10 +99,10 @@ void main(){
     fragmentdepth = gl_FragCoord.z;
 }
 ```
-渲染阴影贴图比渲染一般的场景要快一倍多，因为只需写入低精度的深度值，不需要同时写深度值和颜色值。显存带宽往往是影响GPU性能的关键因素。
+渲染阴影贴图比渲染一般的场景要快一倍多，这是因为只需写入低精度的深度值，不需要同时写深度和颜色。显存带宽往往是影响GPU性能的关键因素。
 
 ###结果###
-渲染出的纹理如下所示：
+渲染出的纹理如下图所示：
 
 <img class="alignnone size-full wp-image-383" title="DepthTexture" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/08/DepthTexture.png" alt="" width="512" height="511" />
 
@@ -110,16 +110,16 @@ void main(){
 
 使用阴影贴图
 ---
-###基本shader###
-现在回到普通的着色器。对于每一个计算出的fragment，都要测试其是否位于阴影贴图之“后”。
+###基本着色器###
+现在回到普通的着色器。对于每个计算出的片段，都要测试其是否位于阴影贴图之“后”。
 
-为了做这个测试，需要计算：**在创建阴影贴图所用的坐标系中**，当前片断的坐标。因此要依次用通常的`MVP`矩阵和`depthMVP`矩阵对其做变换。
+为了进行这个测试，我们需要计算当前片段**在创建阴影贴图时所用的空间中**的坐标。因此要分别用通常的`MVP`矩阵和`depthMVP`矩阵对其做变换。
 
-不过还需要一些技巧。将depthMVP与顶点坐标相乘得到的是齐次坐标，坐标范围为[-1,1]，而纹理采样的取值范围却是[0,1]。
+不过，这里还需要一些技巧。将`depthMVP`与顶点坐标相乘得到的是齐次坐标，坐标范围为[-1,1]，而纹理采样的取值范围却是[0,1]。
 
-举个例子，位于屏幕中央的fragment的齐次坐标应该是(0,0)；但要对纹理中心进行采样，UV坐标就应该是(0.5,0.5)。
+举个例子，位于屏幕中央的片段的齐次坐标应该是(0,0)；但要对纹理中心进行采样，UV坐标就应该是(0.5,0.5)。
 
-这个问题可以通过在片断着色器中调整采样坐标来修正，但用下面这个矩阵去乘齐次坐标则更为高效。这个矩阵将坐标除以2（主对角线上[-1,1] -> [-0.5, 0.5]），然后平移（最后一行[-0.5, 0.5] -> [0,1]）。
+这个问题可以通过在片段着色器中调整采样坐标来修正，但用下面这个矩阵去乘齐次坐标则更为高效。这个矩阵将坐标除以2（主对角线上[-1,1] -> [-0.5, 0.5]），然后平移（最后一行[-0.5, 0.5] -> [0,1]）。
 
 ```cpp
 glm::mat4 biasMatrix(
@@ -130,7 +130,7 @@ glm::mat4 biasMatrix(
 );
 glm::mat4 depthBiasMVP = biasMatrix*depthMVP;
 ```
-终于可以写vertex shader了。和之前的差不多，不过这次要输出两个坐标。
+终于可以写定点着色器了。这个顶点着色器与以往的基本相同，不过这次要输出两个坐标。
 
 * `gl_Position`是当前相机所在坐标系下的顶点坐标
 * `ShadowCoord`是上一个相机（光源）所在坐标系下的顶点坐标
@@ -142,12 +142,12 @@ gl_Position =  MVP * vec4(vertexPosition_modelspace,1);
 // Same, but with the light's view matrix
 ShadowCoord = DepthBiasMVP * vec4(vertexPosition_modelspace,1);
 ```
-fragment shader就很简单了：
+片段着色器就很简单了：
 
 * `texture2D( shadowMap, ShadowCoord.xy ).z` 是光源到距离最近的遮挡物之间的距离。
 * `ShadowCoord.z`是光源和当前片断之间的距离
 
-……因此，若当前fragment比最近的遮挡物还远，那意味着这个片断位于（这个最近的遮挡物的）阴影中
+……因此，若当前片段比最近的遮挡物还远，那意味着这个片段位于（这个最近的遮挡物的）阴影中
 ```glsl
 float visibility = 1.0;
 if ( texture2D( shadowMap, ShadowCoord.xy ).z  <  ShadowCoord.z){
@@ -184,7 +184,7 @@ color =
 
 <img class="alignnone size-full wp-image-531 whiteborder" title="shadow-acne" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/08/shadow-acne.png" alt="" width="266" height="183" />
 
-通常的“补救措施”是加上一个误差容限（error margin）：仅当当前fragment的深度（再次提醒，这里指的是从光源的坐标系得到的深度值）确实比光照贴图像素的深度要大时，才将其判定为阴影。这可以通过添加一个偏差（bias）来办到：
+通常的“补救措施”是加上一个误差容限（error margin）：仅当当前片段的深度（再次提醒，这里指的是从光源的视角得到的深度值）比光照贴图像素的深度要大得多时，才将其判定为阴影。这可以通过添加一个偏差（bias）来办到：
 
 ```glsl
 float bias = 0.005;
@@ -209,7 +209,7 @@ bias = clamp(bias, 0,0.01);
 
 <img class="alignnone size-large wp-image-389" title="VariableBias" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/08/VariableBias-1024x793.png" alt="" width="640" height="495" />
 
-还有一个技巧，不过这个技巧灵不灵得看具体的几何形状。此技巧只渲染阴影中的背面。这就对厚墙的几何形状提出了硬性要求（请看下一节——阴影悬空（Peter Panning），不过即使有瑕疵，也只会出现在阴影遮蔽下的表面上。【译者注：在迪斯尼经典动画[《小飞侠》](http://movie.douban.com/subject/1296538/)中，小飞侠彼得·潘的影子和身体分开了，小仙女温蒂又给他缝好了。】
+还有一个技巧，不过这个技巧是否奏效得看具体的几何形状。此技巧只渲染阴影中的背面。这就对厚墙的几何形状提出了硬性要求（请看下一节——彼得潘现象（Peter Panning），不过即使有瑕疵，也只会出现在阴影遮蔽下的表面上。【译者注：在迪斯尼经典动画[《小飞侠》](http://movie.douban.com/subject/1296538/)中，小飞侠彼得·潘的影子和身体分开了，小仙女温蒂又给他缝好了。】
 
 <img class="alignnone size-full wp-image-533 whiteborder" title="shadowmapping-backfaces" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/08/shadowmapping-backfaces.png" alt="" width="592" height="327" />
 
@@ -226,33 +226,33 @@ bias = clamp(bias, 0,0.01);
 ```cpp
     glCullFace(GL_BACK); // Cull back-facing triangles -> draw only front-facing triangles
 ```
-代码中也用了这个方法，和“加入偏差”联合使用。
+除了“偏差”，代码中也采用了这个方法。
 
-###阴影悬空（Peter Panning）###
-现在没有阴影瑕疵了，但地面的光照效果还是不对，看上去墙面好像悬在半空（因此术语称为“阴影悬空”）。实际上，加上偏差会加剧阴影悬空。
+###彼得潘现象（Peter Panning）###
+现在没有阴影瑕疵了，但地面的光照效果还是不对劲，墙面看上去好像悬在半空（因此术语称为“彼得潘现象”）。实际上，加上偏差会加剧阴影悬空。
 
 <img class="alignnone size-full wp-image-395" title="PeterPanning" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/08/PeterPanning.png" alt="" width="150" height="254" />
 
 这个问题很好修正：避免使用薄的几何形体就行了。这样做有两个好处：
 
 * 首先，（把物体增厚）解决了阴影悬空问题：物体比偏差值要大得多，于是一切麻烦烟消云散了
-* 其次，可在渲染光照贴图时启用背面剔除，因为现在，墙壁上有一个面面对光源，就可以遮挡住墙壁的另一面，而这另一面恰好作为背面被剔除了，无需渲染。
+* 其次，可在渲染光照贴图时启用背面剔除，因为现在，墙壁上有一个面面对着光源，这样就可以遮挡住墙壁的另一面，而这另一面恰好作为背面被剔除了，无需渲染。
 
 缺点就是要渲染的三角形增多了（每帧多了一倍的三角形！）
 
 <img class="alignnone size-large wp-image-385" title="NoPeterPanning" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/08/NoPeterPanning-1024x793.png" alt="" width="640" height="495" />
 
-###走样###
-即使是使用了这些技巧，你还是会发现阴影的边缘上有一些走样。换句话说，就是一个像素点是白的，邻近的一个像素点是黑的，中间缺少平滑过渡。
+###锯齿###
+即使是使用了这些技巧，你还是会发现阴影的边缘上有一些锯齿。换句话说，就是一个像素点是白的，邻近的一个像素点是黑的，中间缺少平滑过渡。
 
 <img class="alignnone size-full wp-image-394" title="Aliasing" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/08/Aliasing.png" alt="" width="69" height="145" />
 
-###PCF（percentage closer filtering，百分比渐近滤波）###
-一个最简单的改善方法是把阴影贴图的`sampler`类型改为**`sampler2DShadow`**。这么做的结果是，每当对阴影贴图进行一次采样时，硬件就会对相邻的纹素进行采样，并对它们全部进行比较，对比较的结果做双线性滤波后返回一个[0,1]之间的float值。
+###PCF（percentage closer filtering，百分比渐近过滤）###
+一个最简单的改善方法是把阴影贴图的`sampler`类型改为**`sampler2DShadow`**。这么做的结果是，每当对阴影贴图进行一次采样时，硬件就会对相邻的纹素进行采样，并对它们全部进行比较，对比较的结果做双线性滤波后返回一个[0,1]之间的浮点数。
 
 例如，0.5即表示有两个采样点在阴影中，两个采样点在光明中。
 
-注意，它和对滤波后深度图做单次采样有区别！一次“比较”，返回的是true或false；PCF返回的是4个“true或false”值的插值结果
+注意，要把这个和“对过滤后的深度贴图进行单次采样“区别开来！一次“比较”，返回的是true或false；PCF返回的是4个“true或false”值的插值结果。
 
 <img class="alignnone size-full wp-image-517" title="PCF_1tap" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/08/PCF_1tap.png" alt="" width="555" height="395" />
 
@@ -268,7 +268,7 @@ for (int i=0;i<4;i++){
   }
 }
 ```
-`poissonDisk`是一个常量数组，其定义看起来像这样：
+`poissonDisk`是一个常量数组，其定义如下：
 
 ```glsl
 vec2 poissonDisk[4] = vec2[](
@@ -278,11 +278,11 @@ vec2 poissonDisk[4] = vec2[](
   vec2( 0.34495938, 0.29387760 )
 );
 ```
-这样，根据阴影贴图采样点个数的多少，生成的fragment会随之变明或变暗。
+这样，随着阴影贴图采样点个数增多或减少，生成的片段会随之变亮或变暗。
 
 <img class="alignnone size-large wp-image-386" title="SoftShadows" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/08/SoftShadows-1024x793.png" alt="" width="640" height="495" />
 
-常量700.0确定了采样点的“分散”程度。散得太密，还是会发生走样；散得太开，会出现**条带**（截图中未使用PCF，以便让条带现象更明显；其中做了16次采样）
+常量700.0确定了采样点的“分散”程度。散得太密，还是会出现锯齿；散得太开，则会出现**条带**（截图中未使用PCF，以使条带现象更明显；其中做了16次采样）
 
 <img class="alignnone size-large wp-image-387" title="SoftShadows_Close" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/08/SoftShadows_Close-1024x793.png" alt="" width="640" height="495" />
 
@@ -295,7 +295,7 @@ vec2 poissonDisk[4] = vec2[](
 ```glsl
     for (int i=0;i<4;i++) {
     int index = // A random number between 0 and 15, different for each pixel (and each i !)
-    visibility -= 0.2*(1.0-texture( shadowMap, vec3(ShadowCoord.xy + poissonDisk[index]/700.0,  (ShadowCoord.z-bias)/ShadowCoord.w) ));
+    visibility -= 0.2*(1.0-texture( shadowMap, vec3(ShadowCoord.xy + poissonDisk[index]/700.0,  (ShadowCoord.z-bias)/ShadowCoord.w) ));
     }
 ```
 可用如下代码（返回一个[0,1]间的随机数）产生随机数
@@ -306,25 +306,25 @@ vec2 poissonDisk[4] = vec2[](
 ```
 本例中，`seed4`是参数`i`和`seed`的组成的vec4向量（这样才会是在4个位置做采样）。参数seed的值可以选用`gl_FragCoord`（像素的屏幕坐标），或者`Position_worldspace`：
 ```cpp
-         //  - A random sample, based on the pixel's screen location.
-        //    No banding, but the shadow moves with the camera, which looks weird.
+         //  - A random sample, based on the pixel's screen location.
+        //    No banding, but the shadow moves with the camera, which looks weird.
         int index = int(16.0*random(gl_FragCoord.xyy, i))%16;
-        //  - A random sample, based on the pixel's position in world space.
-        //    The position is rounded to the millimeter to avoid too much aliasing
+        //  - A random sample, based on the pixel's position in world space.
+        //    The position is rounded to the millimeter to avoid too much aliasing
         //int index = int(16.0*random(floor(Position_worldspace.xyz*1000.0), i))%16;
 ```
-这样做之后，上图中的那种条带就消失了，不过噪点却显现出来了。不过，一些“漂亮的”噪点可比上面那些条带“好看”多了。
+这样做之后，上图中的那种条带就消失了，不过噪点却显现出来了。不过，“漂亮的”噪点可比上面那些条带“好看”多了。
 
 <img class="alignnone size-full wp-image-518" title="PCF_stratified_4tap" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/08/PCF_stratified_4tap.png" alt="" width="565" height="287" />
 
-上述三个例子的实现请参见tutorial16/ShadowMapping.fragmentshader。
+上述三个例子的实现请参见`tutorial16/ShadowMapping.fragmentshader`。
 
 深入研究
 ---
-即使把这些技巧都用上，仍有很多方法可以提升阴影质量。下面是最常见的一些方法：
+即使把这些技巧都用上，阴影质量仍有提升余地。下面是最常见的一些方法：
 
-###早优化（Early bailing）###
-不要把采样次数设为16，太大了，四次采样足矣。若这四个点都在光明或都在阴影中，那就算做16次采样效果也一样：这就叫过早优化。若这些采样点明暗各异，那你很可能位于阴影边界上，这时候进行16次采样才是合情理的。
+###Early bailing###
+不要把采样次数设为16，太大了，四次采样足矣。若这四个点都在光明或都在阴影中，那就算做16次采样效果也一样：这就是early bailing。若这些采样点明暗各异，那你很可能位于阴影边界上，这时候进行16次采样才是合情理的。
 
 ###聚光灯（Spot lights）###
 处理聚光灯这种光源时，不需要多大的改动。最主要的是：把正交投影矩阵换成透视投影矩阵：
@@ -335,9 +335,9 @@ glm::mat4 depthProjectionMatrix = glm::perspective<float>(45.0f, 1.0f, 2.0f, 50.
 glm::mat4 depthViewMatrix = glm::lookAt(lightPos, lightPos-lightInvDir, glm::vec3(0,1,0));
 ```
 
-大部分都一样，只不过用的不是正交视域四棱锥，而是透视视域四棱锥。考虑到透视除法，采用了texture2Dproj。（见“第四课——矩阵”的脚注）
+大部分都一样，只不过用的不是正交视域四棱锥，而是透视视域四棱锥。考虑到透视除法，采用了`texture2Dproj`。（见“第四课——矩阵”的脚注）
 
-第二步，在shader中，把透视考虑在内。（见“第四课——矩阵”的脚注。简而言之，透视投影矩阵根本就没做什么透视。这一步是由硬件完成的，只是把投影的坐标除以了w。这里在着色器中模拟这一步操作，因此得自己做透视除法。顺便说一句，正交矩阵产生的齐次向量w始终为1，这就是为什么正交矩阵没有任何透视效果。）
+第二步，在着色器中，把透视考虑在内。（见“第四课——矩阵”的脚注。简而言之，透视投影矩阵根本就没做什么透视。这一步是由硬件完成的，只是把投影的坐标除以了w。这里在着色器中模拟这一步操作，因此得自己做透视除法。顺便说一句，正交矩阵产生的齐次向量w始终为1，这就是为什么正交矩阵没有任何透视效果。）
 
 用GLSL完成此操作主要有两种方法。第二种方法利用了内置的`textureProj`函数，但两种方法得出的效果是一样的。
 
@@ -349,7 +349,7 @@ if ( textureProj( shadowMap, ShadowCoord.xyw ).z  <  (ShadowCoord.z-bias)/Shadow
 ###点光源（Point lights）###
 大部分是一样的，不过要做深度立方体贴图（cubemap）。立方体贴图包含一组6个纹理，每个纹理位于立方体的一面，无法用标准的UV坐标访问，只能用一个代表方向的三维向量来访问。
 
-空间各个方向的深度都保存着，保证点光源各方向都能投射影子。T
+空间各个方向的深度都保存着，保证点光源各方向都能投射影子。
 
 ###多个光源组合###
 该算法可以处理多个光源，但别忘了，每个光源都要做一次渲染，以生成其阴影贴图。这些计算极大地消耗了显存，也许很快你的显卡带宽就吃紧了。
