@@ -49,9 +49,9 @@
 ```cpp
     // Open the file
     FILE * file = fopen(imagepath,"rb");
-    if (!file)                              
+    if (!file)
     {
-        printf("Image could not be opened\n"); 
+        printf("Image could not be opened\n");
         return 0;
     }
 ```
@@ -91,10 +91,10 @@
 ```cpp
     // Create a buffer
     data = new unsigned char [imageSize];
-     
+
     // Read the actual data from the file into the buffer
     fread(data,1,imageSize,file);
-     
+
     //Everything is in memory now, the file can be closed
     fclose(file);
 ```
@@ -105,13 +105,13 @@
     // Create one OpenGL texture
     GLuint textureID;
     glGenTextures(1, &textureID);
-     
+
     // "Bind" the newly created texture : all future texture functions will modify this texture
     glBindTexture(GL_TEXTURE_2D, textureID);
-     
+
     // Give the image to OpenGL
     glTexImage2D(GL_TEXTURE_2D, 0,GL_RGB, width, height, 0, GL_BGR, GL_UNSIGNED_BYTE, data);
-     
+
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 ```
@@ -129,18 +129,18 @@
 先来看看片段着色器。大部分代码一目了然：
 ```glsl
     #version 330 core
-     
+
     // Interpolated values from the vertex shaders
     in vec2 UV;
-     
+
     // Ouput data
     out vec3 color;
-     
+
     // Values that stay constant for the whole mesh.
     uniform sampler2D myTextureSampler;
-     
+
     void main(){
-     
+
         // Output color = color of the texture at the specified UV
         color = texture( myTextureSampler, UV ).rgb;
     }
@@ -153,22 +153,22 @@
 顶点着色器也很简单，只需把UV坐标传给片段着色器：
 ```glsl
     #version 330 core
-     
+
     // Input vertex data, different for all executions of this shader.
     layout(location = 0) in vec3 vertexPosition_modelspace;
     layout(location = 1) in vec2 vertexUV;
-     
+
     // Output data ; will be interpolated for each fragment.
     out vec2 UV;
-     
+
     // Values that stay constant for the whole mesh.
     uniform mat4 MVP;
-     
+
     void main(){
-     
+
         // Output position of the vertex, in clip space : MVP * position
         gl_Position =  MVP * vec4(vertexPosition_modelspace,1);
-     
+
         // UV of the vertex. No special space for this one.
         UV = vertexUV;
     }
@@ -279,24 +279,24 @@
 `loadBMP_custom`函数很棒，因为这是我们自己写的！不过用专门的库更好。GLFW就可以加载纹理（仅限TGA文件）：
 ```cpp
     GLuint loadTGA_glfw(const char * imagepath){
-     
+
         // Create one OpenGL texture
         GLuint textureID;
         glGenTextures(1, &textureID);
-     
+
         // "Bind" the newly created texture : all future texture functions will modify this texture
         glBindTexture(GL_TEXTURE_2D, textureID);
-     
+
         // Read the file, call glTexImage2D with the right parameters
         glfwLoadTexture2D(imagepath, 0);
-     
+
         // Nice trilinear filtering.
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         glGenerateMipmap(GL_TEXTURE_2D);
-     
+
         // Return the ID of the texture we just created
         return textureID;
     }
@@ -317,21 +317,21 @@
 - 导出为.DDS文件。
 
 至此，图像已压缩为可被GPU直接使用的格式。在着色中随时调用`texture()`均可以实时解压。这一过程看似很慢，但由于它节省了很多内存空间，传输的数据量就少了。传输内存数据开销很大；纹理解压缩却几乎不耗时（有专门的硬件负责此事）。一般情况下，采用压缩纹理可使性能提升20%。
-	
+
 ###使用压缩纹理
 来看看怎样加载压缩纹理。这和加载BMP的代码很相似，只不过文件头的结构不一样：
 ```cpp
     GLuint loadDDS(const char * imagepath){
-     
+
         unsigned char header[124];
-     
+
         FILE *fp;
-     
+
         /* try to open the file */
         fp = fopen(imagepath, "rb");
         if (fp == NULL)
             return 0;
-     
+
         /* verify the type of file */
         char filecode[4];
         fread(filecode, 1, 4, fp);
@@ -339,10 +339,10 @@
             fclose(fp);
             return 0;
         }
-     
+
         /* get the surface desc */
-        fread(&header, 124, 1, fp); 
-     
+        fread(&header, 124, 1, fp);
+
         unsigned int height      = *(unsigned int*)&(header[8 ]);
         unsigned int width         = *(unsigned int*)&(header[12]);
         unsigned int linearSize     = *(unsigned int*)&(header[16]);
@@ -386,32 +386,32 @@
         // Create one OpenGL texture
         GLuint textureID;
         glGenTextures(1, &textureID);
-     
+
         // "Bind" the newly created texture : all future texture functions will modify this texture
         glBindTexture(GL_TEXTURE_2D, textureID);
 ```
 现在只需逐个填充mipmap：
-```cpp    
+```cpp
         unsigned int blockSize = (format == GL_COMPRESSED_RGBA_S3TC_DXT1_EXT) ? 8 : 16;
         unsigned int offset = 0;
-     
+
         /* load the mipmaps */
         for (unsigned int level = 0; level < mipMapCount && (width || height); ++level)
         {
             unsigned int size = ((width+3)/4)*((height+3)/4)*blockSize;
-            glCompressedTexImage2D(GL_TEXTURE_2D, level, format, width, height, 
+            glCompressedTexImage2D(GL_TEXTURE_2D, level, format, width, height,
                 0, size, buffer + offset);
-     
+
             offset += size;
             width  /= 2;
             height /= 2;
         }
-        free(buffer); 
-     
+        free(buffer);
+
         return textureID;
 ```
 ###反转UV坐标
-DXT压缩源自DirectX。和OpenGL相比，DirectX中的V纹理坐标是反过来的。所以使用压缩纹理时得用(coord.v, 1.0-coord.v)来获取正确的纹素。可以在导出脚本、加载器、着色器等环节中执行这步操作。
+DXT压缩源自DirectX。和OpenGL相比，DirectX中的V纹理坐标是反过来的。所以使用压缩纹理时得用(coord.u, 1.0-coord.v)来获取正确的纹素。可以在导出脚本、加载器、着色器等环节中执行这步操作。
 
 总结
 ---
