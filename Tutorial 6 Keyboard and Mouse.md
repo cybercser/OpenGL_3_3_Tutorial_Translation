@@ -1,7 +1,8 @@
 第六课：键盘和鼠标
 ===
-
 [TOC]
+
+Tags: OpenGL 教程
 
 欢迎来到第六课！
 
@@ -13,19 +14,19 @@
 
 与上节课相比，`tutorial06.cpp`里的代码变动很小。主要的变化是：每帧都计算MVP矩阵，而不像之前那样只算一次。现在把这段代码加到主循环中：
 ```cpp
-    do{
-    
-        // ...
-    
-        // Compute the MVP matrix from keyboard and mouse input
-        computeMatricesFromInputs();
-        glm::mat4 ProjectionMatrix = getProjectionMatrix();
-        glm::mat4 ViewMatrix = getViewMatrix();
-        glm::mat4 ModelMatrix = glm::mat4(1.0);
-        glm::mat4 MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
-    
-        // ...
-    }
+do{
+
+// ...
+
+// Compute the MVP matrix from keyboard and mouse input
+computeMatricesFromInputs();
+glm::mat4 ProjectionMatrix = getProjectionMatrix();
+glm::mat4 ViewMatrix = getViewMatrix();
+glm::mat4 ModelMatrix = glm::mat4(1.0);
+glm::mat4 MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
+
+// ...
+}
 ```
 这段代码需要3个新函数：
 
@@ -41,18 +42,18 @@
 ---
 我们需要几个变量。
 ```cpp
-    // position
-    glm::vec3 position = glm::vec3( 0, 0, 5 );
-    // horizontal angle : toward -Z
-    float horizontalAngle = 3.14f;
-    // vertical angle : 0, look at the horizon
-    float verticalAngle = 0.0f;
-    // Initial Field of View
-    float initialFoV = 45.0f;
-    
-    float speed = 3.0f; // 3 units / second
-    float mouseSpeed = 0.005f;
-    FoV is the level of zoom. 80° = very wide angle, huge deformations. 60° - 45° : standard. 20° : big zoom.
+// position
+glm::vec3 position = glm::vec3( 0, 0, 5 );
+// horizontal angle : toward -Z
+float horizontalAngle = 3.14f;
+// vertical angle : 0, look at the horizon
+float verticalAngle = 0.0f;
+// Initial Field of View
+float initialFoV = 45.0f;
+
+float speed = 3.0f; // 3 units / second
+float mouseSpeed = 0.005f;
+FoV is the level of zoom. 80° = very wide angle, huge deformations. 60° - 45° : standard. 20° : big zoom.
 ```
 首先根据输入，重新计算位置，水平角，竖直角和视野（FoV）；再由它们算出观察和投影矩阵。
 
@@ -60,22 +61,22 @@
 读取鼠标位置很简单：
 
 ```cpp   
-    // Get mouse position
-    int xpos, ypos;
-    glfwGetMousePos(&xpos, &ypos);
+// Get mouse position
+int xpos, ypos;
+glfwGetMousePos(&xpos, &ypos);
 ```
 我们要把光标放到屏幕中心，否则它将很快移到屏幕外，失去响应。
 ```cpp
-    // Reset mouse position for next frame
-    glfwSetMousePos(1024/2, 768/2);
+// Reset mouse position for next frame
+glfwSetMousePos(1024/2, 768/2);
 ```
-注意：这段代码假设窗口大小是1024*768，这不是必须的。您可以用glfwGetWindowSize来设定窗口大小。
+注意：这段代码假设窗口大小是1024*768，这不是必须的。您可以用`glfwGetWindowSize`来设定窗口大小。
 
 计算观察角度：
 ```cpp
-    // Compute new orientation
-    horizontalAngle += mouseSpeed * deltaTime * float(1024/2 - xpos );
-    verticalAngle   += mouseSpeed * deltaTime * float( 768/2 - ypos );
+// Compute new orientation
+horizontalAngle += mouseSpeed * deltaTime * float(1024/2 - xpos );
+verticalAngle   += mouseSpeed * deltaTime * float( 768/2 - ypos );
 ```
 从右往左读这几行代码：
 
@@ -86,56 +87,58 @@
 
 现在，在世界空间中计算代表视线方向的向量。
 ```cpp
-    // Direction : Spherical coordinates to Cartesian coordinates conversion
-    glm::vec3 direction(
-        cos(verticalAngle) * sin(horizontalAngle),
-        sin(verticalAngle),
-        cos(verticalAngle) * cos(horizontalAngle)
-    );
+// Direction : Spherical coordinates to Cartesian coordinates conversion
+glm::vec3 direction(
+cos(verticalAngle) * sin(horizontalAngle),
+sin(verticalAngle),
+cos(verticalAngle) * cos(horizontalAngle)
+);
 ```   
 这是一种标准计算，如果您不懂余弦和正弦，下面有一个简短的解释：
 
-<img class="alignnone whiteborder" title="Trigonometric circle" src="http://www.numericana.com/answer/trig.gif" alt="" width="150" height="150" />
+![Trigonometric circle](http://www.numericana.com/answer/trig.gif)
 
 上面的公式，只是上图在三维空间下的推广。
 
 我们想算出摄像机的“上”。“上”不一定是Y轴正方向：您俯视时，“上”实际上是水平的。这里有一个例子，位置相同，视点相同的摄像机，却有不同的“上”。
 
+![](http://www.opengl-tutorial.org/assets/images/tuto-6-mouse-keyboard/CameraUp.png)
+
 本例中“摄像机的右边”这个方向始终保持不变，指向水平方向。您可以试试：保持手臂水平伸直，向正上方看、向下看、随意看。现在定义“右”向量：因为是水平的，故Y坐标为零，X和Z值就像上图中的一样，只是角度旋转了90°，或Pi/2弧度。
 ```cpp
-    // Right vector
-    glm::vec3 right = glm::vec3(
-        sin(horizontalAngle - 3.14f/2.0f),
-        0,
-        cos(horizontalAngle - 3.14f/2.0f)
-    );
+// Right vector
+glm::vec3 right = glm::vec3(
+sin(horizontalAngle - 3.14f/2.0f),
+0,
+cos(horizontalAngle - 3.14f/2.0f)
+);
 ```
 我们有一个“右”和一个视线方向（或者说是“前”）。“上”与两者垂直。叉乘是一个很有用的数学工具，可以轻松地将三者联系起来：
 ```cpp
-    // Up vector : perpendicular to both direction and right
-    glm::vec3 up = glm::cross( right, direction );
+// Up vector : perpendicular to both direction and right
+glm::vec3 up = glm::cross( right, direction );
 ```
 叉乘的具体含义是什么？很简单，回忆第三课讲到的右手定则。第一个向量是大拇指；第二个是食指；叉乘的结果就是中指。这种方法十分快捷。
 
 ###位置
-代码十分直观。顺便说下，由于我使用的是法语azerty键盘，美式键盘的awsd键位对应的实际上是zqsd，因此我用上/下/右/左键而没用wsad。qwerz键盘更不一样，更别提韩语键盘了。我甚至不知道韩国人用的键盘是什么布局。我猜肯定和我的大不相同。
+代码十分直观。顺便说一下，由于我使用的是法语azerty键盘，美式键盘的awsd键位对应的实际上是zqsd，因此我用上/下/右/左键而没用wsad。qwerz键盘更不一样，更别提韩语键盘了。我甚至不知道韩国人用的键盘是什么布局。我猜肯定和我的大不相同。
 ```cpp
-    // Move forward
-    if (glfwGetKey( GLFW_KEY_UP ) == GLFW_PRESS){
-        position += direction * deltaTime * speed;
-    }
-    // Move backward
-    if (glfwGetKey( GLFW_KEY_DOWN ) == GLFW_PRESS){
-        position -= direction * deltaTime * speed;
-    }
-    // Strafe right
-    if (glfwGetKey( GLFW_KEY_RIGHT ) == GLFW_PRESS){
-        position += right * deltaTime * speed;
-    }
-    // Strafe left
-    if (glfwGetKey( GLFW_KEY_LEFT ) == GLFW_PRESS){
-        position -= right * deltaTime * speed;
-    }
+// Move forward
+if (glfwGetKey( GLFW_KEY_UP ) == GLFW_PRESS){
+position += direction * deltaTime * speed;
+}
+// Move backward
+if (glfwGetKey( GLFW_KEY_DOWN ) == GLFW_PRESS){
+position -= direction * deltaTime * speed;
+}
+// Strafe right
+if (glfwGetKey( GLFW_KEY_RIGHT ) == GLFW_PRESS){
+position += right * deltaTime * speed;
+}
+// Strafe left
+if (glfwGetKey( GLFW_KEY_LEFT ) == GLFW_PRESS){
+position -= right * deltaTime * speed;
+}
 ```
 这里唯一特别的是`deltaTime`。您决不会希望每帧偏移1个单位距离的，原因很简单：
 
@@ -149,29 +152,29 @@
 
 这就好多了。`deltaTime`很容易算：
 
-    double currentTime = glfwGetTime();
-    float deltaTime = float(currentTime - lastTime);
+double currentTime = glfwGetTime();
+float deltaTime = float(currentTime - lastTime);
 
 ###视野
 为了增添趣味，我们可以用鼠标滚轮控制视野，实现简单的缩放：
 ```cpp
-    float FoV = initialFoV - 5 * glfwGetMouseWheel();
+float FoV = initialFoV - 5 * glfwGetMouseWheel();
 ```
 ###计算矩阵
 矩阵计算非常直观，使用的函数和前面几乎相同，仅参数不同。
 ```cpp
-    // Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit &lt;-&gt; 100 units
-    ProjectionMatrix = glm::perspective(FoV, 4.0f / 3.0f, 0.1f, 100.0f);
-    // Camera matrix
-    ViewMatrix = glm::lookAt(
-        position,           // Camera is here
-        position+direction, // and looks here : at the same position, plus &quot;direction&quot;
-        up                  // Head is up (set to 0,-1,0 to look upside-down)
-    );
+// Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit &lt;-&gt; 100 units
+ProjectionMatrix = glm::perspective(FoV, 4.0f / 3.0f, 0.1f, 100.0f);
+// Camera matrix
+ViewMatrix = glm::lookAt(
+position,           // Camera is here
+position+direction, // and looks here : at the same position, plus &quot;direction&quot;
+up                  // Head is up (set to 0,-1,0 to look upside-down)
+);
 ```
 结果
 ---
-<img class="alignnone size-full wp-image-372" title="moveanim" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/moveanim.gif" alt="" width="206" height="159" />
+![moveanim](http://www.opengl-tutorial.org/assets/images/tuto-6-mouse-keyboard/moveanim.gif)
 
 ###背面剔除
 现在可以自由移动鼠标了，您会观察到：如果移动到立方体内部，多边形仍然会显示。这看起来理所当然，实则大有优化的余地。实际上在常见应用中您绝不会身处立方体内部。
@@ -184,8 +187,8 @@
 
 开启背面剔除十分简单：
 ```cpp
-    // Cull triangles which normal is not towards the camera
-    glEnable(GL_CULL_FACE);
+// Cull triangles which normal is not towards the camera
+glEnable(GL_CULL_FACE);
 ```
 练习
 ---
@@ -195,4 +198,4 @@
 
 > &copy; http://www.opengl-tutorial.org/
 
-> Written with [StackEdit](https://stackedit.io/).
+> Written with [Cmd Markdown](https://www.zybuluo.com/mdeditor).
