@@ -1,14 +1,16 @@
 第十五课：光照贴图（Lightmap）
 ===
 [TOC]
- 
+
+Tags： OpenGL 教程 
+
 简介
 ---
 这节视频课程不介绍新的OpenGL技术/语法，而是教大家用已学到的技术生成高质量的阴影。
 
 本课介绍怎样用Blender创建简单场景；还介绍了如何烘培光照贴图，并应用到实际中。
 
-<img class="alignnone size-large wp-image-345" title="lighmappedroom" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/lighmappedroom-1024x793.png" alt="" width="640" height="495" />
+![lighmappedroom](http://www.opengl-tutorial.org/assets/images/tuto-15-lightmaps/lighmappedroom.png)
 
 本课不需要Blender预备知识，我会讲解快捷键等内容。
 
@@ -31,7 +33,7 @@
 ---
 用OpenGL渲染时，您大概会注意到一些瑕疵（这里故意把瑕疵放大了）：
 
-<img class="alignnone size-large wp-image-346" title="positivebias" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/positivebias-1024x793.png" alt="" width="640" height="495" />
+![positivebias](http://www.opengl-tutorial.org/assets/images/tuto-15-lightmaps/positivebias.png)
 
 这是由mipmap造成的。从远处观察时，mipmap对纹素做了混合。纹理背景中的黑色像素和光照贴图中的像素混合在了一起。为了避免这一点，可以采取如下措施：
 
@@ -43,7 +45,7 @@ color = texture2D( myTextureSampler, UV, -2.0 ).rgb;
 -2是偏差。这个值是通过不断尝试得出的。上面的截图中偏差值为+2，也就是说OpenGL将在原本的mipmap层次上再加两层（因此，纹素大小变为原来的1/16，瑕疵也随之变小了）。
 
 - 后期处理中可将背景填充为黑色，这一点后续还会讲解。
-	
+
 > &copy; http://www.opengl-tutorial.org/
 
-> Written with [StackEdit](https://stackedit.io/).
+> Written with [Cmd Markdown](https://www.zybuluo.com/mdeditor).

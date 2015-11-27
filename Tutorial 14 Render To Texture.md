@@ -2,6 +2,8 @@
 ===
 [TOC]
 
+Tags： OpenGL 教程
+
 “渲染到纹理”是一种特效方法，基本思想是将场景渲染到可重用的纹理中。其应用包括：游戏内置摄像机（in-game camera）、后期处理（post-processing）以及各种超乎想象的特效（GFX，Graphics Effects）。
 
 渲染到纹理
@@ -55,7 +57,7 @@ glDrawBuffers(1, DrawBuffers); // "1" is the size of DrawBuffers
 ```cpp
 // Always check that our framebuffer is ok
 if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-    return false;
+return false;
 ```
 ###渲染到纹理###
 
@@ -89,12 +91,12 @@ glGenVertexArrays(1, &quad_VertexArrayID);
 glBindVertexArray(quad_VertexArrayID);
 
 static const GLfloat g_quad_vertex_buffer_data[] = {
-    -1.0f, -1.0f, 0.0f,
-    1.0f, -1.0f, 0.0f,
-    -1.0f,  1.0f, 0.0f,
-    -1.0f,  1.0f, 0.0f,
-    1.0f, -1.0f, 0.0f,
-    1.0f,  1.0f, 0.0f,
+-1.0f, -1.0f, 0.0f,
+1.0f, -1.0f, 0.0f,
+-1.0f,  1.0f, 0.0f,
+-1.0f,  1.0f, 0.0f,
+1.0f, -1.0f, 0.0f,
+1.0f,  1.0f, 0.0f,
 };
 
 GLuint quad_vertexbuffer;
@@ -125,7 +127,7 @@ uniform sampler2D renderedTexture;
 uniform float time;
 
 void main(){
-    color = texture( renderedTexture, UV + 0.005*vec2( sin(time+1024.0*UV.x),cos(time+768.0*UV.y)) ).xyz;
+color = texture( renderedTexture, UV + 0.005*vec2( sin(time+1024.0*UV.x),cos(time+768.0*UV.y)) ).xyz;
 }
 ``` 
 
@@ -177,4 +179,4 @@ layout(location = 1) out vec3 normal_tangentspace; // or whatever
 
 > &copy; http://www.opengl-tutorial.org/
 
-> Written with [Cmd Markdown](https://zybuluo.com).
+> Written with [Cmd Markdown](https://www.zybuluo.com/mdeditor).

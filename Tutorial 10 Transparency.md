@@ -2,19 +2,21 @@
 ===
 [TOC]
 
+Tags: OpenGL 教程
+
 alpha通道
 ---
 alpha通道的概念很简单。我们以前的计算结果是RGB值，现在则是RGBA值：
 
 ```
-    // Ouput data : it's now a vec4
-    out vec4 color;
+// Ouput data : it's now a vec4
+out vec4 color;
 ```
 
 前三个分量仍可以通过重组操作符（swizzle operator）.xyz访问，最后一个分量通过.a访问：
 
 ```
-    color.a = 0.3;
+color.a = 0.3;
 ```
 
 与直觉相反，alpha代表的是不透明度；因此alpha = 1代表完全不透明，alpha = 0为完全透明。
@@ -24,7 +26,7 @@ alpha通道的概念很简单。我们以前的计算结果是RGB值，现在则
 
 结果如下。既然我们能“看透”模型表面，请确保关闭背面剔除（`glDisable(GL_CULL_FACE) `）。否则我们就发现模型没有了“背”面。
 
-<img class="alignnone size-large wp-image-289" title="transparencyok" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/transparencyok-1024x793.png" alt="" width="640" height="495" />
+![transparencyok](http://www.opengl-tutorial.org/assets/images/tuto-10-transparency/transparencyok.png)
 
 顺序很重要！
 ---
@@ -33,11 +35,11 @@ alpha通道的概念很简单。我们以前的计算结果是RGB值，现在则
 ###问题所在###
 这里我画了一红一绿两个alpha值为50%的正方形。从中可以看出顺序的重要性，最终的颜色显著影响了眼睛对深度的感知。
 
-<img class="alignnone size-full wp-image-282" title="transparencyorder" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/transparencyorder.png" alt="" width="500" height="255" />
+![transparencyorder](http://www.opengl-tutorial.org/assets/images/tuto-10-transparency/transparencyorder.png)
 
 我们的场景中也出现了同样的现象。试着稍稍改变一下观察点：
 
-<img class="alignnone size-large wp-image-288" title="transparencybad" src="http://www.opengl-tutorial.org/wp-content/uploads/2011/05/transparencybad-1024x793.png" alt="" width="640" height="495" />
+![](http://www.opengl-tutorial.org/assets/images/tuto-10-transparency/transparencybad.png)
 
 原来这还是个十分棘手的问题。您在游戏中也没怎么见过透明的东西，是吧？
 
@@ -83,22 +85,22 @@ alpha通道的概念很简单。我们以前的计算结果是RGB值，现在则
 要让上述代码运行起来，得设置好混合函数。
 
 ```cpp
-    // Enable blending
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+// Enable blending
+glEnable(GL_BLEND);
+glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 ```
 
 这意味着
 
-    New color in framebuffer = 
-               current alpha in framebuffer * current color in framebuffer + 
-               (1 - current alpha in framebuffer) * shader's output color
-               
+New color in framebuffer = 
+current alpha in framebuffer * current color in framebuffer + 
+(1 - current alpha in framebuffer) * shader's output color
+
 上图红色方块居上的效果由如下等式得来：
 
-    new color = 0.5*(0,1,0) + (1-0.5)*(1,0.5,0.5); // (the red was already blended with the white background)
-    new color = (1, 0.75, 0.25) = the same orange
+new color = 0.5*(0,1,0) + (1-0.5)*(1,0.5,0.5); // (the red was already blended with the white background)
+new color = (1, 0.75, 0.25) = the same orange
 
 > &copy; http://www.opengl-tutorial.org/
 
-> Written with [StackEdit](https://stackedit.io/).
+> Written with [Cmd Markdown](https://www.zybuluo.com/mdeditor).

@@ -2,6 +2,8 @@
 ===
 [TOC]
 
+Tags： OpenGL 教程
+
 第十五课中我们学习了如何创建光照贴图。光照贴图适用于表现静态光照，阴影效果很不错，但无法处理运动的对象。
 
 阴影贴图是目前（截止2012年）生成动态阴影的最佳方法。阴影贴图的优点是容易实现，缺点是很难完全**正确**地实现。
@@ -28,27 +30,27 @@
 
 ```cpp
 // The framebuffer, which regroups 0, 1, or more textures, and 0 or 1 depth buffer.
- GLuint FramebufferName = 0;
- glGenFramebuffers(1, &FramebufferName);
- glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
+GLuint FramebufferName = 0;
+glGenFramebuffers(1, &FramebufferName);
+glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
 
- // Depth texture. Slower than a depth buffer, but you can sample it later in your shader
- GLuint depthTexture;
- glGenTextures(1, &depthTexture);
- glBindTexture(GL_TEXTURE_2D, depthTexture);
- glTexImage2D(GL_TEXTURE_2D, 0,GL_DEPTH_COMPONENT16, 1024, 1024, 0,GL_DEPTH_COMPONENT, GL_FLOAT, 0);
- glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
- glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
- glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
- glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+// Depth texture. Slower than a depth buffer, but you can sample it later in your shader
+GLuint depthTexture;
+glGenTextures(1, &depthTexture);
+glBindTexture(GL_TEXTURE_2D, depthTexture);
+glTexImage2D(GL_TEXTURE_2D, 0,GL_DEPTH_COMPONENT16, 1024, 1024, 0,GL_DEPTH_COMPONENT, GL_FLOAT, 0);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
- glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthTexture, 0);
+glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthTexture, 0);
 
- glDrawBuffer(GL_NONE); // No color buffer is drawn to.
+glDrawBuffer(GL_NONE); // No color buffer is drawn to.
 
- // Always check that our framebuffer is ok
- if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
- return false;
+// Always check that our framebuffer is ok
+if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+return false;
 ```
 MVP矩阵用于从光源的视角渲染场景，其计算过程如下：
 
@@ -58,15 +60,15 @@ MVP矩阵用于从光源的视角渲染场景，其计算过程如下：
 ```cpp
 glm::vec3 lightInvDir = glm::vec3(0.5f,2,2);
 
- // Compute the MVP matrix from the light's point of view
- glm::mat4 depthProjectionMatrix = glm::ortho<float>(-10,10,-10,10,-10,20);
- glm::mat4 depthViewMatrix = glm::lookAt(lightInvDir, glm::vec3(0,0,0), glm::vec3(0,1,0));
- glm::mat4 depthModelMatrix = glm::mat4(1.0);
- glm::mat4 depthMVP = depthProjectionMatrix * depthViewMatrix * depthModelMatrix;
+// Compute the MVP matrix from the light's point of view
+glm::mat4 depthProjectionMatrix = glm::ortho<float>(-10,10,-10,10,-10,20);
+glm::mat4 depthViewMatrix = glm::lookAt(lightInvDir, glm::vec3(0,0,0), glm::vec3(0,1,0));
+glm::mat4 depthModelMatrix = glm::mat4(1.0);
+glm::mat4 depthMVP = depthProjectionMatrix * depthViewMatrix * depthModelMatrix;
 
- // Send our transformation to the currently bound shader,
- // in the "MVP" uniform
- glUniformMatrix4fv(depthMatrixID, 1, GL_FALSE, &depthMVP[0][0])
+// Send our transformation to the currently bound shader,
+// in the "MVP" uniform
+glUniformMatrix4fv(depthMatrixID, 1, GL_FALSE, &depthMVP[0][0])
 ```
 ###着色器###
 这次渲染中所用的着色器很简单。顶点着色器仅仅简单地计算一下齐次坐标系（homogeneous coodinates）中的顶点位置：
@@ -81,7 +83,7 @@ layout(location = 0) in vec3 vertexPosition_modelspace;
 uniform mat4 depthMVP;
 
 void main(){
- gl_Position =  depthMVP * vec4(vertexPosition_modelspace,1);
+gl_Position =  depthMVP * vec4(vertexPosition_modelspace,1);
 }
 ```
 
@@ -94,8 +96,8 @@ void main(){
 layout(location = 0) out float fragmentdepth;
 
 void main(){
-    // Not really needed, OpenGL does it anyway
-    fragmentdepth = gl_FragCoord.z;
+// Not really needed, OpenGL does it anyway
+fragmentdepth = gl_FragCoord.z;
 }
 ```
 渲染阴影贴图比渲染一般的场景要快一倍多，这是因为只需写入低精度的深度值，不需要同时写深度和颜色。显存带宽往往是影响GPU性能的关键因素。
@@ -157,12 +159,12 @@ visibility = 0.5;
 
 ```glsl
 color =
- // Ambiant : simulates indirect lighting
- MaterialAmbiantColor +
- // Diffuse : "color" of the object
- visibility * MaterialDiffuseColor * LightColor * LightPower * cosTheta+
- // Specular : reflective highlight, like a mirror
- visibility * MaterialSpecularColor * LightColor * LightPower * pow(cosAlpha,5);
+// Ambiant : simulates indirect lighting
+MaterialAmbiantColor +
+// Diffuse : "color" of the object
+visibility * MaterialDiffuseColor * LightColor * LightPower * cosTheta+
+// Specular : reflective highlight, like a mirror
+visibility * MaterialSpecularColor * LightColor * LightPower * pow(cosAlpha,5);
 ```
 ###结果——阴影瑕疵（Shadow acne）###
 
@@ -215,15 +217,15 @@ bias = clamp(bias, 0,0.01);
 渲染阴影贴图时剔除正面的三角形：
 
 ```cpp
-    // We don't use bias in the shader, but instead we draw back faces,
-    // which are already separated from the front faces by a small distance
-    // (if your geometry is made this way)
-    glCullFace(GL_FRONT); // Cull front-facing triangles -> draw only back-facing triangles
+// We don't use bias in the shader, but instead we draw back faces,
+// which are already separated from the front faces by a small distance
+// (if your geometry is made this way)
+glCullFace(GL_FRONT); // Cull front-facing triangles -> draw only back-facing triangles
 ```
 渲染场景时正常地渲染（剔除背面）
 
 ```cpp
-    glCullFace(GL_BACK); // Cull back-facing triangles -> draw only front-facing triangles
+glCullFace(GL_BACK); // Cull back-facing triangles -> draw only front-facing triangles
 ```
 除了使用“偏差”，代码中也采用了上述剔除正面或背面的方法。
 
@@ -262,19 +264,19 @@ bias = clamp(bias, 0,0.01);
 
 ```glsl
 for (int i=0;i<4;i++){
-  if ( texture2D( shadowMap, ShadowCoord.xy + poissonDisk[i]/700.0 ).z  <  ShadowCoord.z-bias ){
-    visibility-=0.2;
-  }
+if ( texture2D( shadowMap, ShadowCoord.xy + poissonDisk[i]/700.0 ).z  <  ShadowCoord.z-bias ){
+visibility-=0.2;
+}
 }
 ```
 `poissonDisk`是一个常量数组，其定义如下：
 
 ```glsl
 vec2 poissonDisk[4] = vec2[](
-  vec2( -0.94201624, -0.39906216 ),
-  vec2( 0.94558609, -0.76890725 ),
-  vec2( -0.094184101, -0.92938870 ),
-  vec2( 0.34495938, 0.29387760 )
+vec2( -0.94201624, -0.39906216 ),
+vec2( 0.94558609, -0.76890725 ),
+vec2( -0.094184101, -0.92938870 ),
+vec2( 0.34495938, 0.29387760 )
 );
 ```
 这样，随着阴影贴图采样点个数增多或减少，生成的片段会随之变亮或变暗。
@@ -292,25 +294,25 @@ vec2 poissonDisk[4] = vec2[](
 
 与之前版本唯一不同的是，这里用了一个随机数来索引`poissonDisk`：
 ```glsl
-    for (int i=0;i<4;i++) {
-    int index = // A random number between 0 and 15, different for each pixel (and each i !)
-    visibility -= 0.2*(1.0-texture( shadowMap, vec3(ShadowCoord.xy + poissonDisk[index]/700.0,  (ShadowCoord.z-bias)/ShadowCoord.w) ));
-    }
+for (int i=0;i<4;i++) {
+int index = // A random number between 0 and 15, different for each pixel (and each i !)
+visibility -= 0.2*(1.0-texture( shadowMap, vec3(ShadowCoord.xy + poissonDisk[index]/700.0,  (ShadowCoord.z-bias)/ShadowCoord.w) ));
+}
 ```
 可用如下代码（返回一个[0,1]间的随机数）产生随机数
 
 ```glsl
-    float dot_product = dot(seed4, vec4(12.9898,78.233,45.164,94.673));
-    return fract(sin(dot_product) * 43758.5453);
+float dot_product = dot(seed4, vec4(12.9898,78.233,45.164,94.673));
+return fract(sin(dot_product) * 43758.5453);
 ```
 本例中，`seed4`是参数`i`和`seed`的组成的vec4向量（这样才会是在4个位置做采样）。参数seed的值可以选用`gl_FragCoord`（像素的屏幕坐标），或者`Position_worldspace`：
 ```cpp
-         //  - A random sample, based on the pixel's screen location.
-        //    No banding, but the shadow moves with the camera, which looks weird.
-        int index = int(16.0*random(gl_FragCoord.xyy, i))%16;
-        //  - A random sample, based on the pixel's position in world space.
-        //    The position is rounded to the millimeter to avoid too much aliasing
-        //int index = int(16.0*random(floor(Position_worldspace.xyz*1000.0), i))%16;
+//  - A random sample, based on the pixel's screen location.
+//    No banding, but the shadow moves with the camera, which looks weird.
+int index = int(16.0*random(gl_FragCoord.xyy, i))%16;
+//  - A random sample, based on the pixel's position in world space.
+//    The position is rounded to the millimeter to avoid too much aliasing
+//int index = int(16.0*random(floor(Position_worldspace.xyz*1000.0), i))%16;
 ```
 这样做之后，上图中的那种条带就消失了，不过噪点却显现出来了。不过，“漂亮的”噪点可比上面那些条带“好看”多了。
 
@@ -395,4 +397,4 @@ CSM和LiSPSM解决的问题相同，但方式有所区别。CSM仅对观察视�
 
 > &copy; http://www.opengl-tutorial.org/
 
-> Written with [Cmd Markdown](https://zybuluo.com/).
+> Written with [Cmd Markdown](https://www.zybuluo.com/mdeditor).

@@ -3,13 +3,15 @@
 ======
 [TOC]
 
+Tags： OpenGL 教程
+
 虽然本课有些超出OpenGL的范围，但是解决了一个常见问题：怎样表示旋转？
 
 《第三课：矩阵》中，我们了解到矩阵可以让点绕某个轴旋转。矩阵可以简洁地表示顶点的变换，但使用难度较大：例如，从最终结果中获取旋转轴就很麻烦。
 
 本课将展示两种最常见的表示旋转的方法：欧拉角（Euler angles）和四元数（Quaternion）。最重要的是，本课将详细解释为何要尽量使用四元数。
 
-<img class="alignnone size-large wp-image-786" title="tuto17" src="http://www.opengl-tutorial.org/wp-content/uploads/2012/08/tuto17-1024x793.png" alt="" width="640" height="495">
+![](http://www.opengl-tutorial.org/assets/images/tuto-17-rotation/tuto17.png)
 
 前言：旋转与朝向（orientation）
 ------
@@ -60,7 +62,7 @@ w = cos(RotationAngle / 2)
 
 `RotationAxis`，顾名思义即旋转轴。`RotationAngle`是旋转的角度。
 
-<img class="alignnone  wp-image-762 whiteborder" title="quaternion" src="http://www.opengl-tutorial.org/wp-content/uploads/2012/08/quaternion.png" alt="" width="305" height="361">
+![](http://www.opengl-tutorial.org/assets/images/tuto-17-rotation/quaternion.png)
 
 因此，四元数实际上存储了一个旋转轴和一个旋转角度。这让旋转的组合变简单了。
 
@@ -145,7 +147,7 @@ mat4 ModelMatrix = TranslationMatrix * RotationMatrix * ScaleMatrix;
 ```cpp
 float matching = quaternion::dot(q1, q2);
 if ( abs(matching-1.0) < 0.001 ){
-    // q1 and q2 are similar
+// q1 and q2 are similar
 }
 ```
 由点积的acos值还可以得到q1和q2间的夹角。
@@ -193,35 +195,35 @@ quat combined_rotation = second_rotation * first_rotation;
 
 ```cpp
 quat RotationBetweenVectors(vec3 start, vec3 dest){
-    start = normalize(start);
-    dest = normalize(dest);
+start = normalize(start);
+dest = normalize(dest);
 
-    float cosTheta = dot(start, dest);
-    vec3 rotationAxis;
+float cosTheta = dot(start, dest);
+vec3 rotationAxis;
 
-    if (cosTheta < -1 + 0.001f){
-        // special case when vectors in opposite directions:
-        // there is no "ideal" rotation axis
-        // So guess one; any will do as long as it's perpendicular to start
-        rotationAxis = cross(vec3(0.0f, 0.0f, 1.0f), start);
-        if (gtx::norm::length2(rotationAxis) < 0.01 ) // bad luck, they were parallel, try again!
-            rotationAxis = cross(vec3(1.0f, 0.0f, 0.0f), start);
+if (cosTheta < -1 + 0.001f){
+// special case when vectors in opposite directions:
+// there is no "ideal" rotation axis
+// So guess one; any will do as long as it's perpendicular to start
+rotationAxis = cross(vec3(0.0f, 0.0f, 1.0f), start);
+if (gtx::norm::length2(rotationAxis) < 0.01 ) // bad luck, they were parallel, try again!
+rotationAxis = cross(vec3(1.0f, 0.0f, 0.0f), start);
 
-        rotationAxis = normalize(rotationAxis);
-        return gtx::quaternion::angleAxis(180.0f, rotationAxis);
-    }
+rotationAxis = normalize(rotationAxis);
+return gtx::quaternion::angleAxis(180.0f, rotationAxis);
+}
 
-    rotationAxis = cross(start, dest);
+rotationAxis = cross(start, dest);
 
-    float s = sqrt( (1+cosTheta)*2 );
-    float invs = 1 / s;
+float s = sqrt( (1+cosTheta)*2 );
+float invs = 1 / s;
 
-    return quat(
-        s * 0.5f,
-        rotationAxis.x * invs,
-        rotationAxis.y * invs,
-        rotationAxis.z * invs
-    );
+return quat(
+s * 0.5f,
+rotationAxis.x * invs,
+rotationAxis.y * invs,
+rotationAxis.z * invs
+);
 
 }
 ```
@@ -277,39 +279,39 @@ quat result = glm::gtc::quaternion::mix(q1, q2, mixFactor);
 ```cpp
 quat RotateTowards(quat q1, quat q2, float maxAngle){
 
-    if( maxAngle < 0.001f ){
-        // No rotation allowed. Prevent dividing by 0 later.
-        return q1;
-    }
+if( maxAngle < 0.001f ){
+// No rotation allowed. Prevent dividing by 0 later.
+return q1;
+}
 
-    float cosTheta = dot(q1, q2);
+float cosTheta = dot(q1, q2);
 
-    // q1 and q2 are already equal.
-    // Force q2 just to be sure
-    if(cosTheta > 0.9999f){
-        return q2;
-    }
+// q1 and q2 are already equal.
+// Force q2 just to be sure
+if(cosTheta > 0.9999f){
+return q2;
+}
 
-    // Avoid taking the long path around the sphere
-    if (cosTheta < 0){
-        q1 = q1*-1.0f;
-        cosTheta *= -1.0f;
-    }
+// Avoid taking the long path around the sphere
+if (cosTheta < 0){
+q1 = q1*-1.0f;
+cosTheta *= -1.0f;
+}
 
-    float angle = acos(cosTheta);
+float angle = acos(cosTheta);
 
-    // If there is only a 2° difference, and we are allowed 5°,
-    // then we arrived.
-    if (angle < maxAngle){
-        return q2;
-    }
+// If there is only a 2° difference, and we are allowed 5°,
+// then we arrived.
+if (angle < maxAngle){
+return q2;
+}
 
-    float fT = maxAngle / angle;
-    angle = maxAngle;
+float fT = maxAngle / angle;
+angle = maxAngle;
 
-    quat res = (sin((1.0f - fT) * angle) * q1 + sin(fT * angle) * q2) / sin(angle);
-    res = normalize(res);
-    return res;
+quat res = (sin((1.0f - fT) * angle) * q1 + sin(fT * angle) * q2) / sin(angle);
+res = normalize(res);
+return res;
 
 }
 ```
@@ -328,4 +330,4 @@ CurrentOrientation = RotateTowards(CurrentOrientation, TargetOrientation, 3.14f 
 
 > &copy; http://www.opengl-tutorial.org/
 
-> Written with [StackEdit](https://stackedit.io/).
+> Written with [Cmd Markdown](https://www.zybuluo.com/mdeditor).

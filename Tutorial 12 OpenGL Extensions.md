@@ -2,6 +2,8 @@
 ===
 [TOC]
 
+Tags: OpenGL 教程
+
 扩展
 ---
 GPU的性能随着更新换代一直在提高，支持渲染更多的三角形和像素。不过，我们不能仅仅只关心硬件性能。为了提升显卡性能，NVIDIA, AMD和Intel还增加了许多新功能。我们来看一些例子。
@@ -11,7 +13,7 @@ GPU的性能随着更新换代一直在提高，支持渲染更多的三角形�
 时光倒流到2002年，那时GPU都没有顶点着色器或片段着色器：一切都硬编码在芯片中。这被称为固定功能流水线（Fixed-Function Pipeline (FFP)）。当时最新的OpenGL 1.3中同样也没有API可以创建、操作和使用所谓的“着色器”，因为那时压根就没有着色器。接着NVIDIA决定用实际代码来取代数以百计的标记和状态量，描述渲染过程。这就是`ARB_fragment_program`的由来。当时还没有GLSL，但你可以写这样的程序：
 
 ```
-    !!ARBfp1.0 MOV result.color, fragment.color; END
+!!ARBfp1.0 MOV result.color, fragment.color; END
 ```
 但若要显式地令OpenGL使用这些代码，您需要一些尚未包含在OpenGL中的特殊函数。在对这条语句进行解释前，我们先来看个例子。
 
@@ -27,7 +29,7 @@ glEnable(GL_TEXTURE); // Incorrect ! You probably meant GL_TEXTURE_2D !
 - 即便在新式的OpenGL 3.3中，扩展仍旧十分有用。
 - 请使用`ARB_debug_output` ！下文有链接。
 
-<img class="alignnone size-large wp-image-622" title="breakpoint" src="http://www.opengl-tutorial.org/wp-content/uploads/2012/02/breakpoint-1024x678.png" alt="" width="640" height="423" />
+![breakpoint](http://www.opengl-tutorial.org/assets/images/tuto-12-ogl-ext/breakpoint.png)
 
 ###复杂方法：获取个别扩展###
 
@@ -37,12 +39,12 @@ glEnable(GL_TEXTURE); // Incorrect ! You probably meant GL_TEXTURE_2D !
 int NumberOfExtensions;
 glGetIntegerv(GL_NUM_EXTENSIONS, &amp;NumberOfExtensions);
 for(i=0; i&lt;NumberOfExtensions; i++) {
-  const GLubyte *ccc=glGetStringi(GL_EXTENSIONS, i);
-  if ( strcmp(ccc, (const GLubyte *)&quot;GL_ARB_debug_output&quot;) == 0 ){
-    // The extension is supported by our hardware and driver
-    // Try to get the &quot;glDebugMessageCallbackARB&quot; function :
-    glDebugMessageCallbackARB  = (PFNGLDEBUGMESSAGECALLBACKARBPROC) wglGetProcAddress(&quot;glDebugMessageCallbackARB&quot;);
-  }
+const GLubyte *ccc=glGetStringi(GL_EXTENSIONS, i);
+if ( strcmp(ccc, (const GLubyte *)&quot;GL_ARB_debug_output&quot;) == 0 ){
+// The extension is supported by our hardware and driver
+// Try to get the &quot;glDebugMessageCallbackARB&quot; function :
+glDebugMessageCallbackARB  = (PFNGLDEBUGMESSAGECALLBACKARBPROC) wglGetProcAddress(&quot;glDebugMessageCallbackARB&quot;);
+}
 }
 ```
 ###简单方法：获取所有扩展###
@@ -73,11 +75,11 @@ NV/AMD/INTEL：顾名思义 =)
 
 ```
 if ( GLEW_NV_path_rendering ){
-    glPathStringNV( ... ); // Draw the shape. Easy !
+glPathStringNV( ... ); // Draw the shape. Easy !
 }else{
-    // Else what ? You still have to draw the lines
-    // on older NVIDIA hardware, on AMD and on INTEL !
-    // So you have to implement it yourself anyway !
+// Else what ? You still have to draw the lines
+// on older NVIDIA hardware, on AMD and on INTEL !
+// So you have to implement it yourself anyway !
 }
 ```
 ###均衡考量###
@@ -109,4 +111,4 @@ if ( GLEW_NV_path_rendering ){
 
 > &copy; http://www.opengl-tutorial.org/
 
-> Written with [StackEdit](https://stackedit.io/).
+> Written with [Cmd Markdown](https://www.zybuluo.com/mdeditor).
